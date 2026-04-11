@@ -34,7 +34,7 @@ export default function LogoMarquee() {
           {[...PARTNERS, ...PARTNERS].map((partner, index) => (
             <div
               key={`${partner.name}-${index}`}
-              className="flex items-center justify-center grayscale opacity-30 hover:grayscale-0 hover:opacity-80 transition-all duration-500 shrink-0"
+              className="flex items-center justify-center grayscale opacity-30 hover:grayscale-0 hover:opacity-100 hover:scale-110 hover:-translate-y-0.5 transition-all duration-300 shrink-0"
             >
               <Image
                 src={partner.logo}

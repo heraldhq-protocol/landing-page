@@ -70,7 +70,7 @@ export default function NavBar() {
           </Link>
           <Button
             asChild
-            className="bg-teal text-bg-base hover:bg-teal/90 font-bold rounded-lg px-5 h-9 text-sm shadow-[0_0_20px_rgba(0,200,150,0.2)] hover:shadow-[0_0_30px_rgba(0,200,150,0.35)] transition-shadow duration-300"
+            className="bg-teal text-bg-base hover:bg-teal/90 font-bold rounded-lg px-5 h-9 text-sm shadow-[0_0_20px_rgba(0,200,150,0.2)] hover:shadow-[0_0_30px_rgba(0,200,150,0.35)] hover:-translate-y-0.5 transition-all duration-300"
           >
             <Link href="https://notify.herald.xyz/register">Register →</Link>
           </Button>

@@ -120,9 +120,9 @@ export default function PricingTable() {
           {TIERS.map((tier) => (
             <div
               key={tier.name}
-              className={`relative flex flex-col rounded-2xl border transition-all duration-300 overflow-hidden ${
+              className={`relative flex flex-col rounded-2xl border transition-all duration-300 overflow-hidden hover:-translate-y-2 hover:shadow-2xl hover:shadow-teal/10 ${
                 tier.highlighted
-                  ? "bg-bg-elevated border-teal/50 shadow-[0_0_40px_rgba(0,200,150,0.12)]"
+                  ? "bg-bg-elevated border-teal/50 shadow-[0_0_60px_rgba(20,184,166,0.15)] ring-1 ring-teal/30"
                   : "bg-bg-surface border-border hover:border-border-2"
               }`}
             >
@@ -212,12 +212,10 @@ export default function PricingTable() {
               <div className="p-7 pt-0">
                 <Button
                   asChild
-                  className={`w-full h-11 font-bold rounded-xl text-sm transition-all duration-300 group ${
+                  className={`w-full h-11 font-bold rounded-xl text-sm transition-all duration-300 group hover:-translate-y-1 ${
                     tier.highlighted
                       ? "bg-teal text-bg-base hover:bg-teal/90 shadow-[0_0_20px_rgba(0,200,150,0.25)] hover:shadow-[0_0_32px_rgba(0,200,150,0.4)]"
-                      : tier.price === null
-                      ? "bg-bg-elevated border border-border-2 text-text-primary hover:border-teal/40 hover:text-teal"
-                      : "bg-bg-elevated border border-border-2 text-text-primary hover:border-teal/40 hover:text-teal"
+                      : "bg-bg-elevated border border-border-2 text-text-primary hover:border-teal/50 hover:text-teal hover:shadow-lg hover:shadow-teal/10"
                   }`}
                 >
                   <Link href={tier.ctaHref} className="flex items-center justify-center gap-2">

@@ -44,24 +44,28 @@ const accentMap: Record<string, {
   border: string;
   iconBg: string;
   glow: string;
+  shadow: string;
 }> = {
   teal: {
     icon: "text-teal",
-    border: "hover:border-teal/40",
+    border: "hover:border-teal/50",
     iconBg: "bg-teal/10 border-teal/20",
     glow: "bg-teal/20",
+    shadow: "hover:shadow-teal/10",
   },
   purple: {
     icon: "text-purple",
-    border: "hover:border-purple/40",
+    border: "hover:border-purple/50",
     iconBg: "bg-purple/10 border-purple/20",
     glow: "bg-purple/20",
+    shadow: "hover:shadow-purple/10",
   },
   amber: {
     icon: "text-amber",
-    border: "hover:border-amber/40",
+    border: "hover:border-amber/50",
     iconBg: "bg-amber/10 border-amber/20",
     glow: "bg-amber/20",
+    shadow: "hover:shadow-amber/10",
   },
 };
 
@@ -94,7 +98,7 @@ export default function FeatureGrid() {
             return (
               <div
                 key={i}
-                className={`group relative p-8 rounded-2xl bg-bg-surface border border-border ${a.border} transition-all duration-300 overflow-hidden`}
+                className={`group relative p-8 rounded-2xl bg-bg-surface border border-border flex flex-col items-start ${a.border} transition-all duration-300 overflow-hidden hover:-translate-y-1.5 hover:shadow-2xl ${a.shadow}`}
               >
                 {/* Hover glow — top right corner */}
                 <div

@@ -42,7 +42,7 @@ export default function HowItWorks() {
         y: 40,
         stagger: 0.2,
         duration: 0.8,
-        ease: "power3.out",
+        ease: "back.out(1.2)",
         scrollTrigger: {
           trigger: container.current,
           start: "top 72%",
@@ -55,7 +55,7 @@ export default function HowItWorks() {
         transformOrigin: "left center",
         stagger: 0.2,
         duration: 0.6,
-        ease: "power2.out",
+        ease: "back.out(1.2)",
         scrollTrigger: {
           trigger: container.current,
           start: "top 65%",
@@ -100,10 +100,10 @@ export default function HowItWorks() {
           {STEPS.map((step, i) => {
             const Icon = step.icon;
             return (
-              <div
-                key={i}
-                className="step-item group relative p-8 rounded-2xl bg-bg-surface border border-border hover:border-teal/30 transition-all duration-500"
-              >
+              <div key={i} className="step-item">
+                <div
+                  className="group relative h-full p-8 rounded-2xl bg-bg-surface border border-border hover:border-teal/50 hover:-translate-y-1 hover:shadow-xl hover:shadow-teal/10 transition-all duration-300"
+                >
                 {/* Step number — large background character */}
                 <div className="absolute top-4 right-6 font-mono text-6xl font-black text-border/60 select-none leading-none">
                   {step.number}
@@ -133,6 +133,7 @@ export default function HowItWorks() {
                   {step.desc}
                 </p>
               </div>
+            </div>
             );
           })}
         </div>

@@ -39,7 +39,7 @@ export default function DualValueProp() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
           {/* ── Protocol card ────────────────────────────────────────── */}
-          <div className="group relative p-10 rounded-3xl bg-bg-surface border border-border overflow-hidden hover:border-purple/40 transition-all duration-500">
+          <div className="group relative p-10 rounded-3xl bg-bg-surface border border-border overflow-hidden hover:border-purple/50 hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple/15 transition-all duration-500">
             {/* Purple ambient glow */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-purple/8 blur-3xl rounded-full pointer-events-none group-hover:opacity-150 transition-opacity duration-700" />
 
@@ -77,7 +77,7 @@ export default function DualValueProp() {
             {/* CTA */}
             <Button
               asChild
-              className="bg-purple hover:bg-purple/90 text-white rounded-xl px-7 h-11 font-bold shadow-[0_0_24px_rgba(124,58,237,0.25)] hover:shadow-[0_0_36px_rgba(124,58,237,0.4)] transition-shadow duration-300 group/btn"
+              className="bg-purple hover:bg-purple/90 text-white rounded-xl px-7 h-11 font-bold shadow-[0_0_24px_rgba(124,58,237,0.25)] hover:-translate-y-1 hover:shadow-[0_0_36px_rgba(124,58,237,0.4)] transition-all duration-300 group/btn"
             >
               <Link href="https://app.herald.xyz" className="flex items-center gap-2">
                 Start integrating
@@ -103,7 +103,7 @@ export default function DualValueProp() {
           </div>
 
           {/* ── User card ─────────────────────────────────────────────── */}
-          <div className="group relative p-10 rounded-3xl bg-bg-elevated border border-border overflow-hidden hover:border-teal/40 transition-all duration-500">
+          <div className="group relative p-10 rounded-3xl bg-bg-elevated border border-border overflow-hidden hover:border-teal/50 hover:-translate-y-2 hover:shadow-2xl hover:shadow-teal/15 transition-all duration-500">
             {/* Teal ambient glow */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-teal/6 blur-3xl rounded-full pointer-events-none group-hover:opacity-150 transition-opacity duration-700" />
 
@@ -142,7 +142,7 @@ export default function DualValueProp() {
             <Button
               asChild
               variant="outline"
-              className="border-teal/40 text-teal hover:bg-teal/8 hover:border-teal/70 rounded-xl px-7 h-11 font-bold transition-all duration-300 group/btn"
+              className="border-teal/40 text-teal hover:bg-teal/8 hover:border-teal/70 rounded-xl px-7 h-11 font-bold hover:-translate-y-1 hover:shadow-lg hover:shadow-teal/10 transition-all duration-300 group/btn"
             >
               <Link href="https://notify.herald.xyz/register" className="flex items-center gap-2">
                 Register for free
