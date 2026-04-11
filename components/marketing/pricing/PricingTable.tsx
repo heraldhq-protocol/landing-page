@@ -100,7 +100,6 @@ export default function PricingTable() {
       <div className="absolute inset-0 bg-linear-to-b from-bg-base via-bg-surface/15 to-bg-base pointer-events-none" />
 
       <div className="container mx-auto px-6 relative">
-
         {/* ── Header ─────────────────────────────────────────────────── */}
         <div className="text-center mb-16">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-text-muted mb-4">
@@ -111,7 +110,8 @@ export default function PricingTable() {
             <span className="text-teal">Pay in USDC when you scale.</span>
           </h2>
           <p className="text-text-secondary text-lg max-w-lg mx-auto">
-            No credit card required. Pay with any Solana wallet via native USDC streaming.
+            No credit card required. Pay with any Solana wallet via native USDC
+            streaming.
           </p>
         </div>
 
@@ -135,7 +135,9 @@ export default function PricingTable() {
               <div className="p-7 pb-6">
                 {/* Tier name + badge */}
                 <div className="flex items-center justify-between mb-4">
-                  <span className={`text-sm font-bold font-display ${tier.highlighted ? "text-teal" : "text-text-primary"}`}>
+                  <span
+                    className={`text-sm font-bold font-display ${tier.highlighted ? "text-teal" : "text-text-primary"}`}
+                  >
                     {tier.name}
                   </span>
                   {tier.badge && (
@@ -152,7 +154,9 @@ export default function PricingTable() {
                       <span className="text-4xl font-black font-display text-text-primary">
                         ${tier.price}
                       </span>
-                      <span className="text-text-muted text-sm font-mono">/mo</span>
+                      <span className="text-text-muted text-sm font-mono">
+                        /mo
+                      </span>
                     </div>
                   ) : (
                     <div className="text-4xl font-black font-display text-text-primary">
@@ -190,7 +194,10 @@ export default function PricingTable() {
               <div className="p-7 flex-1">
                 <ul className="space-y-3">
                   {tier.features.map((f) => (
-                    <li key={f.text} className="flex items-center gap-3 text-sm">
+                    <li
+                      key={f.text}
+                      className="flex items-center gap-3 text-sm"
+                    >
                       {f.available ? (
                         <div className="shrink-0 w-4 h-4 rounded-full bg-teal/10 border border-teal/25 flex items-center justify-center">
                           <Check className="w-2.5 h-2.5 text-teal" />
@@ -200,7 +207,13 @@ export default function PricingTable() {
                           <Minus className="w-2.5 h-2.5 text-text-muted" />
                         </div>
                       )}
-                      <span className={f.available ? "text-text-secondary" : "text-text-muted/60"}>
+                      <span
+                        className={
+                          f.available
+                            ? "text-text-secondary"
+                            : "text-text-muted/60"
+                        }
+                      >
                         {f.text}
                       </span>
                     </li>
@@ -218,7 +231,10 @@ export default function PricingTable() {
                       : "bg-bg-elevated border border-border-2 text-text-primary hover:border-teal/50 hover:text-teal hover:shadow-lg hover:shadow-teal/10"
                   }`}
                 >
-                  <Link href={tier.ctaHref} className="flex items-center justify-center gap-2">
+                  <Link
+                    href={tier.ctaHref}
+                    className="flex items-center justify-center gap-2"
+                  >
                     {tier.cta}
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Link>
@@ -235,7 +251,10 @@ export default function PricingTable() {
           </p>
           <p className="text-xs text-text-muted font-mono">
             Pay with USDC via any Solana wallet —{" "}
-            <Link href="/pricing" className="text-teal hover:text-teal/80 transition-colors">
+            <Link
+              href="/pricing"
+              className="text-teal hover:text-teal/80 transition-colors"
+            >
               view full pricing details →
             </Link>
           </p>

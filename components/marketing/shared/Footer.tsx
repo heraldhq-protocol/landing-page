@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image"
 
 const LINKS = {
   Product: [
@@ -39,9 +40,7 @@ export default function Footer() {
           <div className="col-span-2">
             {/* Logo */}
             <div className="flex items-center gap-2.5 mb-5">
-              <div className="w-8 h-8 bg-teal rounded-lg flex items-center justify-center">
-                <span className="text-sm font-black text-bg-base">H</span>
-              </div>
+              <Image width={28} height={28} src={'/logo_icon.svg'} alt="Herald Logo" priority/>
               <span className="text-lg font-bold font-display text-text-primary">Herald</span>
             </div>
 

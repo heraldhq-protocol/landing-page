@@ -33,7 +33,7 @@ export default function HeroSection() {
   return (
     <section
       ref={container}
-      className="relative pt-24 pb-20 md:pt-36 md:pb-32 overflow-hidden flex flex-col items-center text-center"
+      className="relative pt-28 pb-16 sm:pt-36 sm:pb-20 lg:pt-48 lg:pb-32 overflow-hidden flex flex-col items-center text-center"
     >
       {/* Background glow - duotone centered */}
       <div className="absolute top-[10%] left-[20%] w-[60%] h-[60%] -z-10 bg-teal/15 blur-[120px] rounded-full mix-blend-screen pointer-events-none" />
@@ -58,7 +58,7 @@ export default function HeroSection() {
         </div>
 
         {/* Headline */}
-        <h1 className="hero-title font-display text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] mb-6 text-balance">
+        <h1 className="hero-title font-display text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] mb-6 text-balance">
           <span className="text-text-primary">The notification</span>{" "}
           <span className="text-text-primary">layer for DeFi.</span>{" "}
           <span className="text-teal text-glow">Privacy-first.</span>

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronRight } from "lucide-react";
+import Image from "next/image";
 
 export default function NavBar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -50,9 +51,10 @@ export default function NavBar() {
             <div className="relative w-7 h-7">
               {/* Glow behind logo */}
               <div className="absolute inset-0 bg-teal blur-md opacity-0 group-hover:opacity-40 transition-opacity duration-500 rounded-lg" />
-              <div className="relative w-7 h-7 bg-teal rounded-lg flex items-center justify-center transition-transform duration-200 group-hover:scale-105">
+              {/* <div className="relative w-7 h-7 bg-teal rounded-lg flex items-center justify-center transition-transform duration-200 group-hover:scale-105">
                 <span className="text-xs font-black text-bg-base tracking-tighter">H</span>
-              </div>
+              </div> */}
+              <Image width={28} height={28} src={'/logo_icon.svg'} alt="Herald Logo" priority/>
             </div>
             <span className="text-base font-bold tracking-tight text-text-primary font-display">
               Herald

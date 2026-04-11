@@ -63,7 +63,7 @@ const accentMap: Record<string, {
 
 export default function FeatureGrid() {
   return (
-    <section className="py-24 md:py-32 bg-bg-base relative overflow-hidden">
+    <section className="py-16 sm:py-24 lg:py-32 bg-bg-base relative overflow-hidden">
       <div className="container mx-auto px-6">
 
         {/* ── Header ─────────────────────────────────────────────────── */}
@@ -71,7 +71,7 @@ export default function FeatureGrid() {
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-text-muted mb-4">
             Infrastructure
           </p>
-          <h2 className="text-4xl md:text-5xl font-extrabold font-display text-text-primary leading-tight mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-display text-text-primary leading-tight mb-6 text-balance">
             Everything you need to <span className="text-teal">scale trust</span>
           </h2>
           <p className="text-text-secondary text-lg leading-relaxed">

@@ -55,7 +55,7 @@ export default function HowItWorks() {
   );
 
   return (
-    <section ref={container} className="py-24 md:py-40 relative">
+    <section ref={container} className="py-16 sm:py-24 lg:py-32 relative">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-8 items-start">
           
@@ -64,7 +64,7 @@ export default function HowItWorks() {
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-teal mb-4">
               How it works
             </p>
-            <h2 className="text-4xl md:text-5xl font-extrabold font-display text-text-primary leading-tight mb-5">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-display text-text-primary leading-tight mb-5 text-balance">
               Transparent by design.{" "}
               <br className="hidden lg:block"/>
               <span className="text-teal">Private by default.</span>

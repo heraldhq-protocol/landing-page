@@ -48,24 +48,24 @@ const result = await herald.notify({
 #   "recipient_registered": true
 # }`,
   },
-  rust: {
-    label: "Rust SDK",
-    lang: "rust",
-    code: `use herald_sdk::{Herald, NotifyRequest, Category};
+//   rust: {
+//     label: "Rust SDK",
+//     lang: "rust",
+//     code: `use herald_sdk::{Herald, NotifyRequest, Category};
 
-let herald = Herald::new(env!("HERALD_API_KEY"));
+// let herald = Herald::new(env!("HERALD_API_KEY"));
 
-let result = herald.notify(NotifyRequest {
-    wallet: "7xR4mKp2nQ...".to_string(),
-    subject: "Liquidation Warning".to_string(),
-    body: "Health factor: 1.05 on Drift.".to_string(),
-    category: Category::Defi,
-    receipt: true,
-    idempotency_key: Some(format!("liq_{}", user_id)),
-}).await?;
+// let result = herald.notify(NotifyRequest {
+//     wallet: "7xR4mKp2nQ...".to_string(),
+//     subject: "Liquidation Warning".to_string(),
+//     body: "Health factor: 1.05 on Drift.".to_string(),
+//     category: Category::Defi,
+//     receipt: true,
+//     idempotency_key: Some(format!("liq_{}", user_id)),
+// }).await?;
 
-println!("Queued: {}", result.notification_id);`,
-  },
+// println!("Queued: {}", result.notification_id);`,
+//   },
 };
 
 type Tab = keyof typeof CODE_SAMPLES;
@@ -81,8 +81,14 @@ function highlight(code: string, lang: string): string {
   return code
     .replace(/(\/\/.*)/g, '<span class="text-text-muted/60 italic">$1</span>')
     .replace(/('.*?'|`.*?`)/g, '<span class="text-amber">$1</span>')
-    .replace(/\b(await|const|import|from|true|false|async|let|use|pub|fn|struct|enum|impl)\b/g, '<span class="text-purple">$1</span>')
-    .replace(/\b(herald|Herald|notify|NotifyRequest|Category)\b/g, '<span class="text-teal">$1</span>');
+    .replace(
+      /\b(await|const|import|from|true|false|async|let|use|pub|fn|struct|enum|impl)\b/g,
+      '<span class="text-purple">$1</span>',
+    )
+    .replace(
+      /\b(herald|Herald|notify|NotifyRequest|Category)\b/g,
+      '<span class="text-teal">$1</span>',
+    );
 }
 
 export default function CodePreview() {
@@ -98,26 +104,28 @@ export default function CodePreview() {
   const current = CODE_SAMPLES[tab];
 
   return (
-    <section className="py-28 relative overflow-hidden border-t border-border/30">
+    <section className="py-16 sm:py-24 lg:py-32 relative overflow-hidden border-t border-border/30">
       {/* Background */}
       <div className="absolute inset-0 bg-linear-to-b from-bg-base via-bg-surface/20 to-bg-base pointer-events-none" />
 
       <div className="container mx-auto px-6 relative">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-
           {/* ── Left — copy ─────────────────────────────────────────── */}
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-text-muted mb-4">
               Developer experience
             </p>
-            <h2 className="text-4xl md:text-5xl font-extrabold font-display text-text-primary leading-tight mb-5">
-              Integrate in{" "}
-              <span className="text-teal">minutes,</span>
-              <br />not days.
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-display text-text-primary leading-tight mb-5">
+              Integrate in <span className="text-teal">minutes,</span>
+              <br />
+              not days.
             </h2>
             <p className="text-text-secondary text-lg leading-relaxed mb-8 max-w-md">
-              Our SDK handles the complex encryption, on-chain identity resolution, and ZK receipt writing.{" "}
-              <span className="text-text-primary font-medium">You just call notify().</span>
+              Our SDK handles the complex encryption, on-chain identity
+              resolution, and ZK receipt writing.{" "}
+              <span className="text-text-primary font-medium">
+                You just call notify().
+              </span>
             </p>
 
             {/* Quick points */}
@@ -127,7 +135,10 @@ export default function CodePreview() {
                 "Automatic retry with exponential backoff",
                 "Full TypeScript types auto-generated from OpenAPI",
               ].map((item) => (
-                <div key={item} className="flex items-center gap-3 text-sm text-text-secondary">
+                <div
+                  key={item}
+                  className="flex items-center gap-3 text-sm text-text-secondary"
+                >
                   <div className="w-1 h-1 rounded-full bg-teal shrink-0" />
                   {item}
                 </div>
@@ -139,7 +150,10 @@ export default function CodePreview() {
                 asChild
                 className="bg-teal text-bg-base hover:bg-teal/90 font-bold rounded-xl px-6 h-11 shadow-[0_0_20px_rgba(0,200,150,0.2)] hover:shadow-[0_0_30px_rgba(0,200,150,0.35)] transition-shadow duration-300 group"
               >
-                <Link href="/docs/quickstart" className="flex items-center gap-2">
+                <Link
+                  href="/docs/quickstart"
+                  className="flex items-center gap-2"
+                >
                   View quickstart
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
@@ -160,7 +174,6 @@ export default function CodePreview() {
             <div className="absolute -inset-1 bg-linear-to-r from-teal/15 to-purple/15 rounded-2xl blur-xl opacity-0 xl:group-hover:opacity-100 transition-opacity duration-700" />
 
             <div className="relative bg-[#020810] border border-border rounded-2xl overflow-hidden shadow-2xl">
-
               {/* Window chrome */}
               <div className="flex items-center justify-between px-4 py-3 border-b border-border/60 bg-bg-surface/50">
                 <div className="flex gap-1.5">
@@ -192,9 +205,15 @@ export default function CodePreview() {
                   className="flex items-center gap-1.5 text-xs text-text-muted hover:text-teal transition-colors px-2 py-1 rounded-md hover:bg-teal/10"
                 >
                   {copied ? (
-                    <><Check className="w-3.5 h-3.5 text-teal" /><span className="text-teal">Copied</span></>
+                    <>
+                      <Check className="w-3.5 h-3.5 text-teal" />
+                      <span className="text-teal">Copied</span>
+                    </>
                   ) : (
-                    <><Copy className="w-3.5 h-3.5" /><span>Copy</span></>
+                    <>
+                      <Copy className="w-3.5 h-3.5" />
+                      <span>Copy</span>
+                    </>
                   )}
                 </button>
               </div>

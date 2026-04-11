@@ -18,7 +18,7 @@ const USER_POINTS = [
 
 export default function DualValueProp() {
   return (
-    <section className="py-28 relative overflow-hidden border-t border-border/30">
+    <section className="py-16 sm:py-24 lg:py-32 relative overflow-hidden border-t border-border/30">
       {/* Ambient background */}
       <div className="absolute inset-0 bg-linear-to-br from-bg-base via-bg-surface/20 to-bg-base pointer-events-none" />
 
@@ -29,7 +29,7 @@ export default function DualValueProp() {
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-text-muted mb-4">
             Two audiences. One infrastructure.
           </p>
-          <h2 className="text-4xl md:text-5xl font-extrabold font-display text-text-primary text-balance">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-display text-text-primary text-balance">
             Built for protocols.{" "}
             <span className="text-teal">Trusted by users.</span>
           </h2>
@@ -39,7 +39,7 @@ export default function DualValueProp() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
           {/* ── Protocol card ────────────────────────────────────────── */}
-          <div className="group relative p-10 rounded-3xl bg-bg-surface border border-border overflow-hidden hover:border-purple/50 hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple/15 transition-all duration-500">
+          <div className="group relative p-6 sm:p-8 xl:p-10 rounded-3xl bg-bg-surface border border-border overflow-hidden hover:border-purple/50 hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple/15 transition-all duration-500">
             {/* Purple ambient glow */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-purple/8 blur-3xl rounded-full pointer-events-none group-hover:opacity-150 transition-opacity duration-700" />
 
@@ -54,7 +54,7 @@ export default function DualValueProp() {
             </div>
 
             {/* Headline */}
-            <h3 className="text-3xl md:text-4xl font-extrabold font-display text-text-primary mb-3 leading-tight text-balance">
+            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold font-display text-text-primary mb-3 leading-tight text-balance">
               Send.{" "}
               <span className="text-purple">Don't store.</span>
             </h3>
@@ -103,7 +103,7 @@ export default function DualValueProp() {
           </div>
 
           {/* ── User card ─────────────────────────────────────────────── */}
-          <div className="group relative p-10 rounded-3xl bg-bg-elevated border border-border overflow-hidden hover:border-teal/50 hover:-translate-y-2 hover:shadow-2xl hover:shadow-teal/15 transition-all duration-500">
+          <div className="group relative p-6 sm:p-8 xl:p-10 rounded-3xl bg-bg-elevated border border-border overflow-hidden hover:border-teal/50 hover:-translate-y-2 hover:shadow-2xl hover:shadow-teal/15 transition-all duration-500">
             {/* Teal ambient glow */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-teal/6 blur-3xl rounded-full pointer-events-none group-hover:opacity-150 transition-opacity duration-700" />
 
@@ -118,7 +118,7 @@ export default function DualValueProp() {
             </div>
 
             {/* Headline */}
-            <h3 className="text-3xl md:text-4xl font-extrabold font-display text-text-primary mb-3 leading-tight">
+            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold font-display text-text-primary mb-3 leading-tight">
               Your wallet.{" "}
               <span className="text-teal">Your inbox.</span>
             </h3>
