@@ -37,123 +37,113 @@ export default function HowItWorks() {
 
   useGSAP(
     () => {
-      gsap.from(".step-item", {
-        opacity: 0,
-        y: 40,
-        stagger: 0.2,
-        duration: 0.8,
-        ease: "back.out(1.2)",
-        scrollTrigger: {
-          trigger: container.current,
-          start: "top 72%",
-          toggleActions: "play none none reverse",
-        },
-      });
-
-      gsap.from(".connector-line", {
-        scaleX: 0,
-        transformOrigin: "left center",
-        stagger: 0.2,
-        duration: 0.6,
-        ease: "back.out(1.2)",
-        scrollTrigger: {
-          trigger: container.current,
-          start: "top 65%",
-          toggleActions: "play none none reverse",
-        },
+      gsap.utils.toArray<HTMLElement>(".scroll-step").forEach((step) => {
+        gsap.from(step, {
+          opacity: 0,
+          y: 60,
+          duration: 1,
+          ease: "back.out(1.2)",
+          scrollTrigger: {
+            trigger: step,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
+        });
       });
     },
     { scope: container },
   );
 
   return (
-    <section ref={container} className="py-28 relative overflow-hidden">
-      {/* Section background */}
-      <div className="absolute inset-0 bg-linear-to-b from-bg-base via-bg-surface/30 to-bg-base pointer-events-none" />
-
-      <div className="container mx-auto px-6 relative">
-        {/* ── Header ─────────────────────────────────────────────────── */}
-        <div className="max-w-xl mb-20">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-teal mb-4">
-            How it works
-          </p>
-          <h2 className="text-4xl md:text-5xl font-extrabold font-display text-text-primary leading-tight mb-5">
-            Transparent by design.{" "}
-            <span className="text-teal">Private by default.</span>
-          </h2>
-          <p className="text-text-secondary text-lg leading-relaxed">
-            Three steps. No email stored anywhere. Every delivery provably
-            on-chain.
-          </p>
-        </div>
-
-        {/* ── Steps grid ─────────────────────────────────────────────── */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
-          {/* Connector lines (desktop only) */}
-          <div className="hidden md:block absolute top-10 left-[33%] right-[33%] h-px">
-            <div className="connector-line w-full h-px bg-linear-to-r from-border-2 via-teal/40 to-border-2" />
-          </div>
-          <div className="hidden md:block absolute top-10 left-[66%] right-0 h-px pr-12">
-            <div className="connector-line w-full h-px bg-linear-to-r from-border-2 via-teal/40 to-transparent" />
-          </div>
-
-          {STEPS.map((step, i) => {
-            const Icon = step.icon;
-            return (
-              <div key={i} className="step-item">
-                <div
-                  className="group relative h-full p-8 rounded-2xl bg-bg-surface border border-border hover:border-teal/50 hover:-translate-y-1 hover:shadow-xl hover:shadow-teal/10 transition-all duration-300"
-                >
-                {/* Step number — large background character */}
-                <div className="absolute top-4 right-6 font-mono text-6xl font-black text-border/60 select-none leading-none">
-                  {step.number}
-                </div>
-
-                {/* Icon */}
-                <div className="relative mb-8">
-                  <div className="w-11 h-11 rounded-xl bg-teal/10 border border-teal/20 flex items-center justify-center group-hover:bg-teal/15 group-hover:border-teal/40 transition-all duration-300">
-                    <Icon className="w-5 h-5 text-teal" />
-                  </div>
-                  {/* Glow on hover */}
-                  <div className="absolute inset-0 bg-teal/20 blur-xl opacity-0 group-hover:opacity-60 transition-opacity duration-500 rounded-full -z-10" />
-                </div>
-
-                {/* Tag */}
-                <div className="inline-flex items-center gap-1.5 mb-4 px-2.5 py-1 rounded-full border border-teal/20 bg-teal/5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-teal" />
-                  <span className="text-xs font-semibold text-teal font-mono">
-                    {step.tag}
-                  </span>
-                </div>
-
-                <h3 className="text-xl font-bold text-text-primary mb-3 font-display">
-                  {step.title}
-                </h3>
-                <p className="text-text-secondary text-sm leading-relaxed">
-                  {step.desc}
-                </p>
-              </div>
+    <section ref={container} className="py-24 md:py-40 relative">
+      <div className="container mx-auto px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-8 items-start">
+          
+          {/* ── Left Column: Sticky Header ──────────────────────────── */}
+          <div className="lg:col-span-5 lg:sticky lg:top-32 lg:h-[calc(100vh-16rem)] flex flex-col justify-center">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-teal mb-4">
+              How it works
+            </p>
+            <h2 className="text-4xl md:text-5xl font-extrabold font-display text-text-primary leading-tight mb-5">
+              Transparent by design.{" "}
+              <br className="hidden lg:block"/>
+              <span className="text-teal">Private by default.</span>
+            </h2>
+            <p className="text-text-secondary text-lg leading-relaxed max-w-sm mb-10">
+              Three steps. No email stored anywhere. Every delivery provably on-chain.
+            </p>
+            
+            <div className="hidden lg:flex items-center gap-6">
+              <a
+                href="/how-it-works"
+                className="flex items-center gap-2 text-sm font-semibold text-teal hover:text-teal/80 transition-colors group"
+              >
+                Deep dive into the privacy model
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </a>
             </div>
-            );
-          })}
-        </div>
+          </div>
 
-        {/* ── CTA row ────────────────────────────────────────────────── */}
-        <div className="mt-14 flex items-center gap-6">
-          <a
-            href="/how-it-works"
-            className="flex items-center gap-2 text-sm font-semibold text-teal hover:text-teal/80 transition-colors group"
-          >
-            Deep dive into the privacy model
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </a>
-          <span className="text-border-2">·</span>
-          <a
-            href="/docs/privacy-model"
-            className="text-sm text-text-muted hover:text-text-secondary transition-colors"
-          >
-            Read the encryption spec
-          </a>
+          {/* ── Right Column: Scrolling Blocks ──────────────────────── */}
+          <div className="lg:col-span-7 lg:pl-16 relative">
+            {/* Soft vertical connector line */}
+            <div className="absolute left-[39px] lg:left-[103px] top-10 bottom-10 w-px bg-linear-to-b from-teal/30 via-teal/10 to-transparent hidden sm:block" />
+
+            <div className="flex flex-col gap-24 md:gap-40 pb-20">
+              {STEPS.map((step, i) => {
+                const Icon = step.icon;
+                return (
+                  <div key={i} className="scroll-step relative flex gap-6 md:gap-14 sm:pl-0">
+                    
+                    {/* Index column */}
+                    <div className="hidden sm:flex flex-col items-center shrink-0 w-20">
+                      <div className="w-20 h-20 rounded-full bg-bg-surface border border-border flex items-center justify-center shadow-xl shadow-teal/5 z-10 relative">
+                        <span className="font-mono text-xl font-black text-text-primary">
+                          {step.number}
+                        </span>
+                        {/* Glow */}
+                        <div className="absolute inset-0 bg-teal/10 rounded-full blur-md -z-10" />
+                      </div>
+                    </div>
+
+                    {/* Content Block (No Card Borders) */}
+                    <div className="flex-1 pt-2">
+                       <div className="inline-flex items-center gap-2 mb-6">
+                         <div className="w-10 h-10 rounded-xl bg-teal/10 flex items-center justify-center">
+                           <Icon className="w-4 h-4 text-teal" />
+                         </div>
+                         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-teal/20 bg-teal/5">
+                           <span className="w-1.5 h-1.5 rounded-full bg-teal" />
+                           <span className="text-xs font-semibold text-teal font-mono tracking-wide">
+                             {step.tag}
+                           </span>
+                         </div>
+                       </div>
+                       
+                       <h3 className="text-2xl md:text-3xl font-extrabold text-text-primary mb-4 font-display leading-tight">
+                         {step.title}
+                       </h3>
+                       <p className="text-text-secondary md:text-lg leading-relaxed max-w-lg">
+                         {step.desc}
+                       </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Mobile CTA */}
+          <div className="lg:hidden mt-10">
+              <a
+                href="/how-it-works"
+                className="flex items-center gap-2 text-sm font-semibold text-teal group"
+              >
+                Deep dive into the privacy model
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </a>
+          </div>
+
         </div>
       </div>
     </section>

@@ -41,82 +41,71 @@ const FEATURES = [
 
 const accentMap: Record<string, {
   icon: string;
-  border: string;
   iconBg: string;
   glow: string;
-  shadow: string;
 }> = {
   teal: {
     icon: "text-teal",
-    border: "hover:border-teal/50",
-    iconBg: "bg-teal/10 border-teal/20",
+    iconBg: "bg-teal/10",
     glow: "bg-teal/20",
-    shadow: "hover:shadow-teal/10",
   },
   purple: {
     icon: "text-purple",
-    border: "hover:border-purple/50",
-    iconBg: "bg-purple/10 border-purple/20",
+    iconBg: "bg-purple/10",
     glow: "bg-purple/20",
-    shadow: "hover:shadow-purple/10",
   },
   amber: {
     icon: "text-amber",
-    border: "hover:border-amber/50",
-    iconBg: "bg-amber/10 border-amber/20",
+    iconBg: "bg-amber/10",
     glow: "bg-amber/20",
-    shadow: "hover:shadow-amber/10",
   },
 };
 
 export default function FeatureGrid() {
   return (
-    <section className="py-28 bg-bg-base relative">
+    <section className="py-24 md:py-32 bg-bg-base relative overflow-hidden">
       <div className="container mx-auto px-6">
 
         {/* ── Header ─────────────────────────────────────────────────── */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-text-muted mb-4">
-              Infrastructure
-            </p>
-            <h2 className="text-4xl md:text-5xl font-extrabold font-display text-text-primary leading-tight">
-              Everything you need to{" "}
-              <span className="text-teal">scale trust</span>
-            </h2>
-          </div>
-          <p className="text-text-secondary max-w-xs text-sm leading-relaxed md:text-right">
+        <div className="max-w-xl mx-auto text-center mb-24">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-text-muted mb-4">
+            Infrastructure
+          </p>
+          <h2 className="text-4xl md:text-5xl font-extrabold font-display text-text-primary leading-tight mb-6">
+            Everything you need to <span className="text-teal">scale trust</span>
+          </h2>
+          <p className="text-text-secondary text-lg leading-relaxed">
             Robust, privacy-preserving notification infrastructure built for the next billion DeFi users.
           </p>
         </div>
 
-        {/* ── Grid — 1 col mobile, 2 col tablet, 3 col desktop ───────── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* ── Borderless Floating Grid ───────────────────────────────── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-24">
           {FEATURES.map((f, i) => {
             const Icon = f.icon;
             const a = accentMap[f.accent];
             return (
               <div
                 key={i}
-                className={`group relative p-8 rounded-2xl bg-bg-surface border border-border flex flex-col items-start ${a.border} transition-all duration-300 overflow-hidden hover:-translate-y-1.5 hover:shadow-2xl ${a.shadow}`}
+                className="group relative flex flex-col items-center text-center px-4"
               >
-                {/* Hover glow — top right corner */}
+                {/* Generous hover aura replacing solid backgrounds */}
                 <div
-                  className={`absolute top-0 right-0 w-40 h-40 ${a.glow} blur-3xl opacity-0 group-hover:opacity-50 transition-opacity duration-300 pointer-events-none rounded-full`}
+                  className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 ${a.glow} blur-[80px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none rounded-full`}
                 />
 
-                {/* Icon container */}
+                {/* Minimalist Icon */}
                 <div
-                  className={`relative w-11 h-11 rounded-xl border ${a.iconBg} flex items-center justify-center mb-6`}
+                  className={`relative w-14 h-14 rounded-2xl ${a.iconBg} flex items-center justify-center mb-8 border border-white/5 shadow-2xl transition-transform duration-500 group-hover:-translate-y-2 group-hover:scale-110`}
                 >
-                  <Icon className={`w-5 h-5 ${a.icon}`} />
+                  <Icon className={`w-6 h-6 ${a.icon}`} />
                 </div>
 
-                {/* Text */}
-                <h3 className="text-lg font-bold text-text-primary mb-2.5 font-display">
+                {/* Unconstrained Text */}
+                <h3 className="text-xl font-bold text-text-primary mb-4 font-display transition-colors duration-300">
                   {f.title}
                 </h3>
-                <p className="text-text-secondary text-sm leading-relaxed">
+                <p className="text-text-secondary leading-relaxed md:text-sm lg:text-base">
                   {f.desc}
                 </p>
               </div>
