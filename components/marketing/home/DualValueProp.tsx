@@ -1,47 +1,169 @@
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
+import { Check, ArrowRight, Code2, Shield } from "lucide-react";
+
+const PROTOCOL_POINTS = [
+  "One API call — wallet address + message",
+  "Zero PII in your database. Ever.",
+  "GDPR compliant by architecture, not by policy",
+  "ZK receipts — immutable on-chain delivery proof",
+];
+
+const USER_POINTS = [
+  "Connect any Solana wallet — Phantom, Backpack, Ledger",
+  "Your email is encrypted before it leaves your browser",
+  "Protocols never learn your contact info",
+  "Delete your identity anytime, on-chain",
+];
 
 export default function DualValueProp() {
   return (
-    <section className="py-24 border-t border-border/30">
-      <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          
-          {/* Column A: Protocols */}
-          <div className="p-8 md:p-12 rounded-3xl bg-card border border-border/50 hover:glow-dot transition-all">
-            <span className="text-xs font-bold uppercase tracking-widest text-herald-purple mb-4 block">For Protocols</span>
-            <h3 className="text-3xl font-bold mb-6 text-text-primary">Send. Don't Store.</h3>
-            <ul className="space-y-4 mb-10">
-              {["One API call integration", "Zero PII stored in your DB", "Built-in GDPR compliance"].map((item) => (
-                <li key={item} className="flex items-center gap-3 text-text-secondary">
-                  <Check className="text-teal w-5 h-5" /> {item}
+    <section className="py-28 relative overflow-hidden border-t border-border/30">
+      {/* Ambient background */}
+      <div className="absolute inset-0 bg-linear-to-br from-bg-base via-bg-surface/20 to-bg-base pointer-events-none" />
+
+      <div className="container mx-auto px-6 relative">
+
+        {/* ── Section label ─────────────────────────────────────────── */}
+        <div className="text-center mb-16">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-text-muted mb-4">
+            Two audiences. One infrastructure.
+          </p>
+          <h2 className="text-4xl md:text-5xl font-extrabold font-display text-text-primary">
+            Built for protocols.{" "}
+            <span className="text-teal">Trusted by users.</span>
+          </h2>
+        </div>
+
+        {/* ── Dual card grid ────────────────────────────────────────── */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+          {/* ── Protocol card ────────────────────────────────────────── */}
+          <div className="group relative p-10 rounded-3xl bg-bg-surface border border-border overflow-hidden hover:border-purple/40 transition-all duration-500">
+            {/* Purple ambient glow */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-purple/8 blur-3xl rounded-full pointer-events-none group-hover:opacity-150 transition-opacity duration-700" />
+
+            {/* Top label */}
+            <div className="flex items-center gap-2 mb-8">
+              <div className="w-8 h-8 rounded-lg bg-purple/10 border border-purple/20 flex items-center justify-center">
+                <Code2 className="w-4 h-4 text-purple" />
+              </div>
+              <span className="text-xs font-bold uppercase tracking-[0.18em] text-purple">
+                For Protocols
+              </span>
+            </div>
+
+            {/* Headline */}
+            <h3 className="text-3xl md:text-4xl font-extrabold font-display text-text-primary mb-3 leading-tight">
+              Send.{" "}
+              <span className="text-purple">Don't store.</span>
+            </h3>
+            <p className="text-text-secondary mb-8 text-base leading-relaxed max-w-sm">
+              Alert your users without ever touching their contact data. Herald handles routing, delivery, and compliance.
+            </p>
+
+            {/* Feature list */}
+            <ul className="space-y-3 mb-10">
+              {PROTOCOL_POINTS.map((item) => (
+                <li key={item} className="flex items-start gap-3 text-sm text-text-secondary">
+                  <div className="mt-0.5 shrink-0 w-4 h-4 rounded-full bg-purple/15 border border-purple/30 flex items-center justify-center">
+                    <Check className="w-2.5 h-2.5 text-purple" />
+                  </div>
+                  {item}
                 </li>
               ))}
             </ul>
-            <Button className="w-full py-6 text-lg bg-herald-purple hover:bg-herald-purple/90 text-white rounded-xl">
-              Integrate as Protocol →
+
+            {/* CTA */}
+            <Button
+              asChild
+              className="bg-purple hover:bg-purple/90 text-white rounded-xl px-7 h-11 font-bold shadow-[0_0_24px_rgba(124,58,237,0.25)] hover:shadow-[0_0_36px_rgba(124,58,237,0.4)] transition-shadow duration-300 group/btn"
+            >
+              <Link href="https://app.herald.xyz" className="flex items-center gap-2">
+                Start integrating
+                <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+              </Link>
             </Button>
+
+            {/* Code snippet preview */}
+            <div className="mt-8 p-4 rounded-xl bg-bg-elevated border border-border font-mono text-xs text-text-muted leading-relaxed overflow-x-auto">
+              <span className="text-purple/70">await</span>{" "}
+              <span className="text-teal">herald</span>
+              <span className="text-text-secondary">.notify({"{"}</span>
+              <br />
+              <span className="ml-4 text-text-muted">wallet: </span>
+              <span className="text-amber">'7xR4...nQ'</span>
+              <span className="text-text-secondary">,</span>
+              <br />
+              <span className="ml-4 text-text-muted">subject: </span>
+              <span className="text-amber">'Liquidation Warning'</span>
+              <br />
+              <span className="text-text-secondary">{"}"});</span>
+            </div>
           </div>
 
-          {/* Column B: Users */}
-          <div className="p-8 md:p-12 rounded-3xl bg-navy-2 border border-border/50 relative overflow-hidden">
-             {/* Subtle Teal Glow for the User side to match brand identity */}
-            <div className="absolute top-0 right-0 w-32 h-32 bg-teal/10 blur-3xl -z-10" />
-            
-            <span className="text-xs font-bold uppercase tracking-widest text-teal mb-4 block">For Users</span>
-            <h3 className="text-3xl font-bold mb-6 text-text-primary">Your Wallet. Your Inbox.</h3>
-            <ul className="space-y-4 mb-10">
-              {["Connect any Solana wallet", "End-to-end encryption", "Own your own notification data"].map((item) => (
-                <li key={item} className="flex items-center gap-3 text-text-secondary">
-                  <Check className="text-teal w-5 h-5" /> {item}
+          {/* ── User card ─────────────────────────────────────────────── */}
+          <div className="group relative p-10 rounded-3xl bg-bg-elevated border border-border overflow-hidden hover:border-teal/40 transition-all duration-500">
+            {/* Teal ambient glow */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-teal/6 blur-3xl rounded-full pointer-events-none group-hover:opacity-150 transition-opacity duration-700" />
+
+            {/* Top label */}
+            <div className="flex items-center gap-2 mb-8">
+              <div className="w-8 h-8 rounded-lg bg-teal/10 border border-teal/20 flex items-center justify-center">
+                <Shield className="w-4 h-4 text-teal" />
+              </div>
+              <span className="text-xs font-bold uppercase tracking-[0.18em] text-teal">
+                For Users
+              </span>
+            </div>
+
+            {/* Headline */}
+            <h3 className="text-3xl md:text-4xl font-extrabold font-display text-text-primary mb-3 leading-tight">
+              Your wallet.{" "}
+              <span className="text-teal">Your inbox.</span>
+            </h3>
+            <p className="text-text-secondary mb-8 text-base leading-relaxed max-w-sm">
+              Register once. Receive DeFi alerts from any Herald-integrated protocol — without sharing your email with anyone.
+            </p>
+
+            {/* Feature list */}
+            <ul className="space-y-3 mb-10">
+              {USER_POINTS.map((item) => (
+                <li key={item} className="flex items-start gap-3 text-sm text-text-secondary">
+                  <div className="mt-0.5 shrink-0 w-4 h-4 rounded-full bg-teal/10 border border-teal/25 flex items-center justify-center">
+                    <Check className="w-2.5 h-2.5 text-teal" />
+                  </div>
+                  {item}
                 </li>
               ))}
             </ul>
-            <Button variant="outline" className="w-full py-6 text-lg border-teal/50 text-teal hover:bg-teal/5 rounded-xl">
-              Register Your Wallet →
-            </Button>
-          </div>
 
+            {/* CTA */}
+            <Button
+              asChild
+              variant="outline"
+              className="border-teal/40 text-teal hover:bg-teal/8 hover:border-teal/70 rounded-xl px-7 h-11 font-bold transition-all duration-300 group/btn"
+            >
+              <Link href="https://notify.herald.xyz/register" className="flex items-center gap-2">
+                Register for free
+                <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+
+            {/* Privacy stat row */}
+            <div className="mt-8 grid grid-cols-3 gap-3">
+              {[
+                { val: "0", label: "PII stored" },
+                { val: "90s", label: "to register" },
+                { val: "∞", label: "protocols" },
+              ].map((stat) => (
+                <div key={stat.label} className="p-3 rounded-xl bg-bg-surface border border-border text-center">
+                  <div className="font-mono text-lg font-bold text-teal leading-tight">{stat.val}</div>
+                  <div className="text-[10px] text-text-muted mt-0.5">{stat.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>

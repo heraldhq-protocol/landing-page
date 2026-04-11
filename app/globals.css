@@ -1,40 +1,41 @@
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Geist+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-
-/* Fonts import as described in plan */
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--bg-base);
   --color-foreground: var(--text-primary);
-  
-  --font-sans: 'DM Sans', var(--font-sans);
-  --font-mono: 'Geist Mono', var(--font-geist-mono);
-  --font-heading: 'Syne', var(--font-sans);
-  --font-display: 'Syne', var(--font-sans);
-  
+
+  /* Fonts — variables come from next/font in layout.tsx */
+  --font-sans: var(--font-body), system-ui, sans-serif;
+  --font-mono: var(--font-mono), monospace;
+  --font-display: var(--font-display), system-ui, sans-serif;
+
+  /* Herald background scale */
   --color-bg-base: var(--bg-base);
   --color-bg-surface: var(--bg-surface);
   --color-bg-elevated: var(--bg-elevated);
   --color-bg-border: var(--bg-border);
   --color-bg-border-hi: var(--bg-border-hi);
 
+  /* Herald brand */
   --color-teal: var(--teal);
   --color-teal-dim: var(--teal-dim);
-  
+
+  /* Herald text */
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-muted: var(--text-muted);
 
+  /* Herald semantic */
   --color-purple: var(--purple);
   --color-amber: var(--amber);
   --color-red: var(--red);
   --color-green: var(--green);
 
-  /* aliases derived from components */
+  /* Aliases for component usage */
   --color-navy: var(--bg-base);
   --color-navy-2: var(--bg-surface);
   --color-herald-purple: var(--purple);
@@ -45,15 +46,6 @@
   --color-border-alt: var(--bg-border-hi);
 
   /* Shadcn mapping */
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  
   --color-card-foreground: var(--text-primary);
   --color-popover: var(--bg-surface);
   --color-popover-foreground: var(--text-primary);
@@ -69,6 +61,16 @@
   --color-destructive-foreground: var(--text-primary);
   --color-ring: var(--teal);
 
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+
+  /* Border radius scale */
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -77,42 +79,61 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
+  /* Animations */
   --animate-marquee: marquee 30s linear infinite;
+  --animate-fade-in: fadeIn 0.4s ease-out forwards;
+  --animate-slide-up: slideUp 0.5s ease-out forwards;
+  --animate-glow-pulse: glowPulse 3s ease-in-out infinite;
 }
 
 @keyframes marquee {
-  0% { transform: translateX(0%); }
+  0%   { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.15; }
+  50%       { opacity: 0.3; }
+}
+
 :root {
-  /* Herald Design System Backgrounds */
-  --bg-base:       #040C18;
-  --bg-surface:    #0A1628;
-  --bg-elevated:   #0D1F35;
-  --bg-border:     #0E2A3D;
-  --bg-border-hi:  #1A3A52;
+  /* Herald Design System — Backgrounds */
+  --bg-base:      #040C18;
+  --bg-surface:   #0A1628;
+  --bg-elevated:  #0D1F35;
+  --bg-border:    #0E2A3D;
+  --bg-border-hi: #1A3A52;
 
-  /* Herald Design System Brand */
-  --teal:          #00C896;
-  --teal-dim:      #007A5C;
-  --teal-glow:     rgba(0, 200, 150, 0.15);
-  --teal-bg:       rgba(0, 200, 150, 0.08);
+  /* Herald Design System — Brand */
+  --teal:     #00C896;
+  --teal-dim: #007A5C;
+  --teal-glow: rgba(0, 200, 150, 0.15);
+  --teal-bg:   rgba(0, 200, 150, 0.08);
 
-  /* Herald Design System Text */
-  --text-primary:  #F0F6FF;
-  --text-secondary:#94A3B8;
-  --text-muted:    #4A607A;
+  /* Herald Design System — Text */
+  --text-primary:   #F0F6FF;
+  --text-secondary: #94A3B8;
+  --text-muted:     #4A607A;
 
-  /* Herald Design System Semantic */
-  --purple:        #7C3AED;
-  --amber:         #F59E0B;
-  --red:           #EF4444;
-  --green:         #22C55E;
+  /* Herald Design System — Semantic */
+  --purple: #7C3AED;
+  --amber:  #F59E0B;
+  --red:    #EF4444;
+  --green:  #22C55E;
 
   --radius: 0.625rem;
 
-  /* Mapping base tailwind/shadcn root variables directly into Herald's design system */
+  /* Shadcn base mappings */
   --background: var(--bg-base);
   --foreground: var(--text-primary);
   --input: oklch(0.922 0 0);
@@ -132,7 +153,6 @@
 }
 
 .dark {
-  /* Site is dark by default */
   --background: var(--bg-base);
   --foreground: var(--text-primary);
   --input: oklch(1 0 0 / 15%);
@@ -157,18 +177,31 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-body), system-ui, sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display), system-ui, sans-serif;
+  }
+  code, pre, kbd, samp {
+    font-family: var(--font-mono), monospace;
   }
 }
 
 @layer utilities {
+  /* Radial teal glow from top — used on hero section */
   .bg-app-glow {
-    background: radial-gradient(circle at 50% 0%, var(--teal-glow) 0%, transparent 60%);
+    background: radial-gradient(
+      ellipse 80% 40% at 50% 0%,
+      var(--teal-glow) 0%,
+      transparent 70%
+    );
   }
 
+  /* Subtle teal glow behind cards on hover */
   .glow-dot {
     position: relative;
   }
-  
+
   .glow-dot::after {
     content: '';
     position: absolute;
@@ -183,8 +216,36 @@
     z-index: -1;
     border-radius: inherit;
   }
-  
+
   .hover\:glow-dot:hover::after {
     opacity: 0.15;
+  }
+
+  /* Teal text glow — for accent headings */
+  .text-glow {
+    text-shadow: 0 0 40px rgba(0, 200, 150, 0.4);
+  }
+
+  /* Grid texture overlay — adds depth to dark backgrounds */
+  .bg-grid {
+    background-image:
+      linear-gradient(var(--bg-border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--bg-border) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* Noise grain texture */
+  .bg-noise {
+    position: relative;
+  }
+
+  .bg-noise::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    border-radius: inherit;
   }
 }

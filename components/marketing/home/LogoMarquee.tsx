@@ -13,31 +13,35 @@ const PARTNERS = [
 
 export default function LogoMarquee() {
   return (
-    <section className="py-12 border-y border-border/50 bg-navy/30 backdrop-blur-sm relative overflow-hidden">
-      <div className="container mx-auto px-6 mb-8 text-center">
-        <p className="text-sm font-medium uppercase tracking-widest text-text-muted">
+    <section className="relative py-14 border-y border-border/40 overflow-hidden">
+      {/* Subtle background */}
+      <div className="absolute inset-0 bg-bg-surface/40" />
+
+      {/* Label */}
+      <div className="relative container mx-auto px-6 mb-10 text-center">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-text-muted">
           Trusted by teams building on Solana
         </p>
       </div>
 
-      {/* Faded edges overlay */}
-      <div className="absolute inset-y-0 left-0 w-32 bg-linear-to-r from-navy to-transparent z-10" />
-      <div className="absolute inset-y-0 right-0 w-32 bg-linear-to-l from-navy to-transparent z-10" />
+      {/* Edge fades */}
+      <div className="absolute inset-y-0 left-0 w-24 bg-linear-to-r from-bg-base to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 right-0 w-24 bg-linear-to-l from-bg-base to-transparent z-10 pointer-events-none" />
 
-      <div className="flex overflow-hidden group">
-        {/* We double the list to create the seamless infinite loop */}
-        <div className="flex animate-marquee whitespace-nowrap gap-16 items-center py-4">
+      {/* Marquee track */}
+      <div className="relative flex overflow-hidden">
+        <div className="flex animate-marquee items-center gap-20 whitespace-nowrap">
           {[...PARTNERS, ...PARTNERS].map((partner, index) => (
-            <div 
-              key={`${partner.name}-${index}`} 
-              className="flex items-center justify-center grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+            <div
+              key={`${partner.name}-${index}`}
+              className="flex items-center justify-center grayscale opacity-30 hover:grayscale-0 hover:opacity-80 transition-all duration-500 shrink-0"
             >
               <Image
                 src={partner.logo}
                 alt={partner.name}
-                width={140}
-                height={40}
-                className="h-8 w-auto object-contain"
+                width={120}
+                height={36}
+                className="h-7 w-auto object-contain"
               />
             </div>
           ))}
