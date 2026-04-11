@@ -155,9 +155,9 @@ export default function CodePreview() {
           </div>
 
           {/* ── Right — code block ──────────────────────────────────── */}
-          <div className="relative group">
+          <div className="relative group min-w-0 w-full max-w-[calc(100vw-3rem)] md:max-w-none">
             {/* Glow */}
-            <div className="absolute -inset-1 bg-linear-to-r from-teal/15 to-purple/15 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+            <div className="absolute -inset-1 bg-linear-to-r from-teal/15 to-purple/15 rounded-2xl blur-xl opacity-0 xl:group-hover:opacity-100 transition-opacity duration-700" />
 
             <div className="relative bg-[#020810] border border-border rounded-2xl overflow-hidden shadow-2xl">
 
@@ -170,7 +170,7 @@ export default function CodePreview() {
                 </div>
 
                 {/* Tabs */}
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide flex-nowrap shrink-0 max-w-[60%] sm:max-w-none">
                   {(Object.keys(CODE_SAMPLES) as Tab[]).map((key) => (
                     <button
                       key={key}
@@ -200,8 +200,8 @@ export default function CodePreview() {
               </div>
 
               {/* Code */}
-              <div className="p-6 overflow-x-auto">
-                <pre className="text-sm font-mono leading-relaxed">
+              <div className="p-4 sm:p-6 overflow-x-auto max-w-full">
+                <pre className="text-[11px] sm:text-sm font-mono leading-relaxed inline-block min-w-full">
                   <code
                     dangerouslySetInnerHTML={{
                       __html: highlight(current.code, current.lang),

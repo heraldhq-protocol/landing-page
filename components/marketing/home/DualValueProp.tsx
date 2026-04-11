@@ -29,7 +29,7 @@ export default function DualValueProp() {
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-text-muted mb-4">
             Two audiences. One infrastructure.
           </p>
-          <h2 className="text-4xl md:text-5xl font-extrabold font-display text-text-primary">
+          <h2 className="text-4xl md:text-5xl font-extrabold font-display text-text-primary text-balance">
             Built for protocols.{" "}
             <span className="text-teal">Trusted by users.</span>
           </h2>
@@ -54,7 +54,7 @@ export default function DualValueProp() {
             </div>
 
             {/* Headline */}
-            <h3 className="text-3xl md:text-4xl font-extrabold font-display text-text-primary mb-3 leading-tight">
+            <h3 className="text-3xl md:text-4xl font-extrabold font-display text-text-primary mb-3 leading-tight text-balance">
               Send.{" "}
               <span className="text-purple">Don't store.</span>
             </h3>
