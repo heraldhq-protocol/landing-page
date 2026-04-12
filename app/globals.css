@@ -113,7 +113,7 @@
 }
 
 :root {
-  /* Herald Design System — Backgrounds */
+  /* Herald Design System — Global Baseline (Dark Mode Default) */
   --bg-base:      #040C18;
   --bg-surface:   #0A1628;
   --bg-elevated:  #0D1F35;
@@ -126,7 +126,7 @@
   --teal-glow: rgba(0, 200, 150, 0.15);
   --teal-bg:   rgba(0, 200, 150, 0.08);
 
-  /* Herald Design System — Text */
+  /* Herald Design System — Text (Dark) */
   --text-primary:   #F0F6FF;
   --text-secondary: #94A3B8;
   --text-muted:     #4A607A;
@@ -139,43 +139,7 @@
 
   --radius: 0.625rem;
 
-  /* Shadcn base mappings */
-  --background: var(--bg-base);
-  --foreground: var(--text-primary);
-  --input: oklch(0.922 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-
-  /* Fumadocs — Light Theme Fix */
-  --fd-background: #ffffff;
-  --fd-foreground: #040c18;
-  --fd-muted: #64748b;
-  --fd-accent: #f1f5f9;
-  --fd-accent-foreground: #00c896;
-  --fd-primary: #00c896;
-  --fd-primary-foreground: #ffffff;
-  --fd-border: #e2e8f0;
-
-  /* Force Fumadocs internal theme variables to brand tokens */
-  --color-fd-background: #ffffff;
-  --color-fd-foreground: #040c18;
-  --color-fd-primary: #00c896;
-  --color-fd-border: #e2e8f0;
-}
-
-
-.dark {
+  /* Shadcn mappings */
   --background: var(--bg-base);
   --foreground: var(--text-primary);
   --input: oklch(1 0 0 / 15%);
@@ -184,33 +148,86 @@
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar: var(--bg-surface);
+  --sidebar-foreground: var(--text-primary);
+  --sidebar-primary: var(--teal);
+  --sidebar-primary-foreground: var(--bg-base);
+  --sidebar-accent: var(--bg-elevated);
+  --sidebar-accent-foreground: var(--text-primary);
+  --sidebar-border: var(--bg-border);
+  --sidebar-ring: var(--bg-border-hi);
 
-  /* Fumadocs — Dark Theme Fix */
+  /* Fumadocs — Universal Dark Mapping */
   --fd-background: var(--bg-base);
   --fd-foreground: var(--text-primary);
   --fd-muted: var(--text-secondary);
   --fd-accent: var(--bg-border-hi);
-  --fd-accent-foreground: var(--teal);
   --fd-primary: var(--teal);
   --fd-primary-foreground: var(--bg-base);
   --fd-border: var(--bg-border);
 
   /* Force Fumadocs internal theme variables to Herald tokens */
-  --color-fd-background: var(--bg-base);
-  --color-fd-foreground: var(--text-primary);
-  --color-fd-primary: var(--teal);
-  --color-fd-border: var(--bg-border);
-  --color-fd-muted: var(--text-secondary);
-  --color-fd-muted-foreground: var(--text-muted);
+  --color-fd-background: var(--bg-base) !important;
+  --color-fd-foreground: var(--text-primary) !important;
+  --color-fd-primary: var(--teal) !important;
+  --color-fd-border: var(--bg-border) !important;
+  --color-fd-muted: var(--text-secondary) !important;
+  --color-fd-muted-foreground: var(--text-muted) !important;
 }
+
+.dark {
+  /* Herald Design System — Backgrounds (Force Dark Mode) */
+  --bg-base:      #040C18;
+  --bg-surface:   #0A1628;
+  --bg-elevated:  #0D1F35;
+  --bg-border:    #0E2A3D;
+  --bg-border-hi: #1A3A52;
+
+  /* Herald Design System — Text (Dark) */
+  --text-primary:   #F0F6FF;
+  --text-secondary: #94A3B8;
+  --text-muted:     #4A607A;
+
+  --background: var(--bg-base);
+  --foreground: var(--text-primary);
+
+  /* Fumadocs — Dark Theme Fix */
+  --fd-background: #040C18;
+  --fd-foreground: #F0F6FF;
+  --fd-muted: #94A3B8;
+  --fd-accent: #1A3A52;
+  --fd-accent-foreground: #00C896;
+  --fd-primary: #00C896;
+  --fd-primary-foreground: #040C18;
+  --fd-border: #0E2A3D;
+
+  --color-fd-background: #040C18 !important;
+  --color-fd-foreground: #F0F6FF !important;
+  --color-fd-primary: #00C896 !important;
+  --color-fd-border: #0E2A3D !important;
+
+  /* Explicitly lock brand variables to ensure marketing pages stay dark */
+  --bg-base: #040C18 !important;
+  --background: #040C18 !important;
+  --text-primary: #F0F6FF !important;
+  --foreground: #F0F6FF !important;
+}
+
+/* Global Dark Mode Lock — Hard removal of any theme-switch UI */
+[aria-label="Toggle Theme"],
+.fd-theme-toggle {
+  display: none !important;
+}
+
+
+/* Global Overrides for Documentation Content Wrappers */
+.prose {
+  --tw-prose-body: var(--fd-foreground);
+  --tw-prose-headings: var(--fd-foreground);
+  --tw-prose-links: var(--fd-primary);
+  --tw-prose-bold: var(--fd-foreground);
+}
+
 
 
 @layer base {

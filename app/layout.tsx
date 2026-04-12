@@ -58,7 +58,7 @@ export default function RootLayout({
       <body
         className={`${syne.variable} ${dmSans.variable} ${geistMono.variable} antialiased`}
       >
-        <RootProvider theme={{ defaultTheme: "dark" }}>
+        <RootProvider theme={{ forcedTheme: "dark" }}>
           {children}
         </RootProvider>
       </body>

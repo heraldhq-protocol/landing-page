@@ -17,7 +17,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                 height={24} 
                 className="rounded-sm"
               />
-              <span className="font-display font-bold tracking-tight text-lg">Herald Docs</span>
+              <span className="font-display font-bold tracking-tight text-lg text-fd-foreground">Herald Docs</span>
             </div>
           )
         }}
