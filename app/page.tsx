@@ -5,6 +5,7 @@ import DualValueProp from "@/components/marketing/home/DualValueProp";
 import FeatureGrid from "@/components/marketing/home/FeatureGrid";
 import CodePreview from "@/components/marketing/home/CodePreview";
 import PricingTable from "@/components/marketing/pricing/PricingTable";
+import FinalCTA from "@/components/marketing/home/FinalCTA";
 import NavBar from "@/components/marketing/shared/NavBar";
 import Footer from "@/components/marketing/shared/Footer";
 
@@ -27,6 +28,7 @@ export default function HomePage() {
       <FeatureGrid />
       <CodePreview />
       <PricingTable />
+      <FinalCTA />
       <Footer />
     </div>
   );
