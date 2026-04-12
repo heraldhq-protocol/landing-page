@@ -1,0 +1,90 @@
+---
+title: Quickstart
+description: Send your first privacy-preserving notification in < 5 minutes.
+---
+
+# Quickstart
+
+Integrate Herald into your Solana protocol to reach users without ever touching their private data.
+
+In this guide, we'll walk through installing the SDK, initializing the client, and sending a notification to a wallet address.
+
+### 1. Install the SDK
+
+Add the Herald SDK to your project using your preferred package manager:
+
+```bash
+# npm
+npm install @herald-protocol/sdk
+
+# pnpm
+pnpm add @herald-protocol/sdk
+
+# yarn
+yarn add @herald-protocol/sdk
+```
+
+---
+
+### 2. Get Your API Key
+
+To send notifications via our gateway, you need an API key.
+
+1. Go to the [Herald Dashboard](https://app.useherald.xyz).
+2. Create a new Provider (e.g., "My DeFi Protocol").
+3. Copy your `hrld_live_...` or `hrld_test_...` key.
+
+---
+
+### 3. Initialize the Client
+
+Initialize the `Herald` client in your backend or edge function.
+
+```typescript
+import { Herald } from "@herald-protocol/sdk";
+
+const herald = new Herald({
+  apiKey: process.env.HERALD_API_KEY, // Use your hrld_live_... key
+  environment: "production", // or 'sandbox' for testing
+});
+```
+
+---
+
+### 4. Send Your First Notification
+
+Unlike traditional systems, Herald doesn't need an email address. Just provide the user's **Solana Wallet Address**.
+
+```typescript
+const result = await herald.notify({
+  wallet: "7xR4mKp2nQ...", // The recipient's Solana address
+  subject: "DeFi Alert: Liquidation Warning",
+  body: "Your SOL-USDC position is at risk. HF: 1.05.",
+  category: "defi",
+  idempotencyKey: "tx_uuid_123", // Optional: prevent double-sending
+});
+
+console.log("Notification queued:", result.notificationId);
+```
+
+---
+
+### 5. Check Delivery Status
+
+Since delivery is asynchronous (identities are resolved on-chain), you can poll for status or listen for webhooks.
+
+```typescript
+const status = await herald.getStatus(result.notificationId);
+
+if (status.delivered) {
+  console.log(`Delivered via ${status.channel} at ${status.deliveredAt}`);
+}
+```
+
+## Next Steps
+
+Now that you've sent your first notification, dive deeper into:
+
+- [**SDK Reference**](/docs/sdk/typescript) — Explore batching and advanced config.
+- [**Identity Model**](/docs/overview/architecture) — How we resolve wallets to encrypted emails.
+- [**Billing**](/docs/sdk/billing) — Managing your messaging quota and tiers.

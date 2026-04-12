@@ -10,8 +10,8 @@ const LINKS = {
   ],
   Resources: [
     { name: "Documentation", href: "/docs" },
-    { name: "Quickstart", href: "/docs/quickstart" },
-    { name: "SDK Reference", href: "/docs/sdk" },
+    { name: "Quickstart", href: "/docs/getting-started/quickstart" },
+    { name: "SDK Reference", href: "/docs/sdk/typescript" },
     { name: "Blog", href: "/blog" },
   ],
   Company: [
@@ -40,7 +40,7 @@ export default function Footer() {
           <div className="col-span-2">
             {/* Logo */}
             <div className="flex items-center gap-2.5 mb-5">
-              <Image width={28} height={28} src={'/logo_icon.svg'} alt="Herald Logo" priority/>
+              <Image width={28} height={28} src={'https://ucshdejvxzanuxlxrano.supabase.co/storage/v1/object/public/herald-public-asset/herald-logo.svg'} alt="Herald Logo" priority/>
               <span className="text-lg font-bold font-display text-text-primary">Herald</span>
             </div>
 

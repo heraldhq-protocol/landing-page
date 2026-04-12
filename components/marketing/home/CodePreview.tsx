@@ -151,7 +151,7 @@ export default function CodePreview() {
                 className="bg-teal text-bg-base hover:bg-teal/90 font-bold rounded-xl px-6 h-11 shadow-[0_0_20px_rgba(0,200,150,0.2)] hover:shadow-[0_0_30px_rgba(0,200,150,0.35)] transition-shadow duration-300 group"
               >
                 <Link
-                  href="/docs/quickstart"
+                  href="/docs/getting-started/quickstart"
                   className="flex items-center gap-2"
                 >
                   View quickstart
@@ -159,7 +159,7 @@ export default function CodePreview() {
                 </Link>
               </Button>
               <Link
-                href="/docs/sdk"
+                href="/docs/sdk/typescript"
                 className="text-sm text-text-muted hover:text-teal transition-colors flex items-center gap-1.5 group"
               >
                 SDK reference

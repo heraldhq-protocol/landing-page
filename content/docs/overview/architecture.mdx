@@ -1,0 +1,50 @@
+---
+title: Architecture
+description: A deep dive into how Herald handles notifications without compromising privacy.
+---
+
+# Architecture
+
+Herald is a decentralized notification layer that bridges the gap between on-chain identities (wallets) and off-chain delivery channels (email, SMS, Telegram).
+
+## The Core Problem
+
+Traditional notification services require you to store a mapping of `Wallet -> Email` in a central database. This makes you a target for hackers and forces users to trust you with their PII (Personally Identifiable Information).
+
+**Herald eliminates this trust requirement.**
+
+## System Components
+
+### 1. The On-Chain Registry (Solana)
+The source of truth. Users register their preferences and contact information on Solana.
+- **Encrypted Data**: Only the user's public key can authorize updates.
+- **Privacy**: Contact info is encrypted using a shared secret derived from the user's wallet and the Herald Authority key.
+- **Opt-ins**: Users select which categories (DeFi, Governance, Marketing) they want to receive.
+
+### 2. The Notification Gateway
+A high-performance API that protocols use to trigger messages.
+- **Stateless**: The Gateway does not store user emails.
+- **Resolution**: When a notification is sent to a wallet, the Gateway looks up the corresponding PDA (Program Derived Address) on Solana.
+
+### 3. The Secure Enclave (TEE)
+The "Heart" of Herald. Decryption of contact information happens **exclusively** inside an AWS Nitro Enclave.
+- **Isolation**: The host machine (Gateway) never sees the plaintext email.
+- **Memory Safety**: Decrypted strings are destroyed immediately after delivery.
+- **Proof of Delivery**: The Enclave generates a signature that is used to write a ZK-receipt back to Solana.
+
+---
+
+## The Lifecycle of a Notification
+
+1. **Trigger**: A protocol calls `POST /v1/notify` with a wallet address.
+2. **Lookup**: Herald fetches the encrypted Identity account from Solana.
+3. **Decryption**: The Gateway sends the encrypted payload to the **Secure Enclave**.
+4. **Delivery**: The Enclave decrypts the email and instructs the Mail Provider (SES/Resend) to send the message.
+5. **Receipt**: Once sent, Herald writes a compressed receipt to the **Light Protocol** state on Solana, proving delivery occurred without revealing the recipient.
+
+---
+
+## Performance & Scaling
+- **Latency**: End-to-end delivery typically occurs in < 1.5 seconds.
+- **Throughput**: Supports batching up to 100 notifications per API call.
+- **Reliability**: Uses BullMQ for reliable job processing with automatic retries and dead-letter queues.

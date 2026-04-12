@@ -1,0 +1,43 @@
+---
+title: Integration Patterns
+description: Recommended architectures for integrating Herald into your app.
+---
+
+# Integration Patterns
+
+Depending on your protocol's architecture, there are several ways to implement Herald.
+
+## 1. Backend Trigger (Recommended)
+This is the most common pattern. Your backend service monitors on-chain events or user actions and calls the Herald SDK to send notifications.
+- **Pros**: Secure API keys, easy rate limiting, handles retries gracefully.
+- **Cons**: Requires backend infrastructure.
+
+## 2. Serverless / Edge Functions
+Perfect for light-weight protocols. Use Next.js API routes or Vercel Functions to trigger notifications.
+- **Pros**: Zero maintenance, scales automatically.
+- **Cons**: Cold starts might slightly delay delivery.
+
+## 3. Webhook Bridge
+If you use off-chain infrastructure like Telegram bots, you can send notifications directly to Herald from your existing alert system.
+- **Pros**: Minimal code changes.
+- **Cons**: Less granular control over user preferences.
+
+## 4. On-Chain Event Listener
+Herald can be configured to listen for specific Solana program events and automatically notify users when they occur.
+- **Pros**: Truly decentralized notifications.
+- **Cons**: Higher latency and configuration complexity.
+
+---
+
+## Example: Liquidator Alert
+```typescript
+// Your liquidation bot
+if (healthFactor < 1.0) {
+  await herald.notify({
+    wallet: targetUser,
+    subject: "Liquidation Incoming",
+    body: "Health factor critical.",
+    category: "defi"
+  });
+}
+```

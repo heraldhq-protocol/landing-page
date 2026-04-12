@@ -1,0 +1,33 @@
+---
+title: Design Principles
+description: The core constraints and beliefs that guide Herald development.
+---
+
+# Design Principles
+
+Herald is built on a set of non-negotiable principles that ensure we never sacrifice user privacy for developer convenience.
+
+## 1. Zero-PII by Default
+**Statement**: Herald must never store plaintext Personally Identifiable Information (PII) in a persistent state.
+- **Rationale**: Any database of `Wallet -> Email` mappings is a honeypot for attackers.
+- **Implementation**: We use salted SHA-256 hashes for identity matching and Nitro Enclaves for real-time decryption.
+
+## 2. Cryptographic Identity
+**Statement**: All participants are identified by public keys, not server-assigned IDs.
+- **Rationale**: Server-assigned IDs create vendor lock-in and complicate federation. 
+- **Implementation**: All messages are signed with Ed25519. Users manage their own delivery preferences via the Solana Registry.
+
+## 3. Offline-First Delivery
+**Statement**: High-latency or intermittent connectivity must not result in lost notifications.
+- **Rationale**: Blockchain users often interact with protocols via hardware wallets or mobile devices with varying network status.
+- **Implementation**: BullMQ with exponential backoff and persistent retries ensures messages eventually reach the recipient.
+
+## 4. Verifiable Receipts
+**Statement**: Protocols should not have to "trust" that Herald delivered a message.
+- **Rationale**: In a decentralized ecosystem, proofs > promises.
+- **Implementation**: We generate ZK-proofs of delivery (via Light Protocol) for every notification, allowing protocols to verify performance on-chain.
+
+## 5. User Sovereignty
+**Statement**: Users must have the final say in who can contact them.
+- **Rationale**: The wallet is a private space; users should choose which protocols can enter.
+- **Implementation**: Global and per-category opt-ins are enforced at the smart contract level. Protocols cannot "spam" users who have not registered.

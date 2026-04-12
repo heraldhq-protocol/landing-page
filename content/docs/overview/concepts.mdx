@@ -1,0 +1,34 @@
+---
+title: Core Concepts
+description: The fundamental building blocks of the Herald Protocol.
+---
+
+# Core Concepts
+
+Understanding Herald requires familiarity with a few key concepts that differentiate it from traditional notification systems.
+
+## 1. Zero-PII (Personally Identifiable Information)
+In Herald, we never store plaintext emails, phone numbers, or social handles. Every piece of contact information is encrypted before it ever touches our servers.
+- **On-Chain**: Stored as encrypted blobs.
+- **Off-Chain**: Only decrypted inside a Secure Enclave (TEE).
+
+## 2. Notification Providers
+A Provider is any protocol, DAO, or application that wants to send notifications to their users. 
+- Each Provider is identified by a unique `API Key`.
+- Providers pay for notifications via their **Billing Balance**.
+
+## 3. Categories & Opt-ins
+Herald uses a category-based subscription model. Users don't just "enable notifications"; they choose which types of messages they want to receive.
+- `defi`: Liquidation alerts, trade confirmations.
+- `governance`: Proposal updates, voting reminders.
+- `marketing`: Ecosystem news, product launches.
+
+## 4. On-Chain Identity Registry
+The Registry is the source of truth for user preferences. It maps a `Wallet Address` to an `Identity PDA`.
+- Users sign a transaction once to register.
+- Once registered, they can receive notifications from ANY integrated protocol without further action.
+
+---
+
+## 5. Secure Enclave (TEE)
+The Decryption Service runs inside an **AWS Nitro Enclave**. This ensures that even the system administrators of Herald cannot access user email addresses. The Enclave is isolated from the main network and and destroyed immediately after the message is handed off to the delivery provider (SES/Telegram).

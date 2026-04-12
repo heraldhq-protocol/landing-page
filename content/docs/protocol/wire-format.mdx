@@ -1,0 +1,48 @@
+---
+title: Wire Format
+description: The binary layout of Herald protocol messages.
+---
+
+# Wire Format
+
+Herald uses a compact binary format for on-chain storage and secure enclave communication. This ensures minimal gas costs on Solana and peak performance during decryption.
+
+## Message Frame Structure
+
+All payloads are serialized using Little Endian byte ordering.
+
+| Offset | Size | Field | Description |
+|--------|------|-------|-------------|
+| `0x00` | 4 | Magic | `0x48455241` ("HERA") |
+| `0x04` | 1 | Version | Protocol version (currently `0x01`) |
+| `0x05` | 1 | Flags | Bitfield: `encrypted(1)`, `compressed(2)` |
+| `0x06` | 2 | Header Len | Size of metadata block |
+| `0x08` | 4 | Payload Len | Size of actual data |
+| `0x0C` | 32 | Channel ID | Blake3 hash of channel name |
+| `0x2C` | 8 | Timestamp | Unix nanoseconds (unsigned) |
+| `0x34` | 64 | Signature | Ed25519 signature of header + payload |
+| `0x74` | var | Payload | CBOR-encoded message content |
+
+---
+
+## Cryptography
+
+### Identity Hashing
+Wallets are never stored as plaintext in the registry. Instead, we use a salted SHA-256 hash.
+```typescript
+const hash = sha256(wallet_address + salt);
+```
+
+### Encryption (NaCl)
+Contact information is encrypted using **libsodium (NaCl)** `crypto_box_easy`.
+- **Curve**: X25519
+- **Nonce**: 24-byte random nonce, stored alongside the payload.
+- **Key Derivation**: The shared secret is derived from the user's private key and the Herald Authority's public key.
+
+---
+
+## Validation Rules
+
+1. **Signature Verification**: The Ed25519 signature `MUST` cover all bytes from `0x00` up to `0x34 + payload_length`.
+2. **Timestamp Window**: The `timestamp` `MUST` be within 5 minutes of the current Solana slot time to prevent replay attacks.
+3. **Payload Limit**: The current maximum payload size is **64KB**.

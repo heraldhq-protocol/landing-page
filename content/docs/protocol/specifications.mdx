@@ -1,0 +1,37 @@
+---
+title: Specifications
+description: The technical specifications of the Herald Protocol.
+---
+
+# Specifications
+
+The Herald Protocol is defined by a set of cryptographic and architectural specifications that ensure privacy, interoperability, and performance.
+
+## 1. Identity Specification
+- **Address Format**: Solana Pubkey (32 bytes).
+- **Identity PDA**: `[b"identity", owner_pubkey]` using the Herald Program ID.
+- **Account Layout**:
+  - `owner`: Pubkey (32 bytes)
+  - `encrypted_contact`: Bytes (Variable, max 256)
+  - `contact_hash`: Bytes (32 bytes, SHA-256)
+  - `nonce`: Bytes (24 bytes)
+  - `opt_ins`: U64 Bitfield
+
+## 2. Notification Specification
+- **Payload Format**: CBOR (Concise Binary Object Representation).
+- **Encryption Algorithm**: X25519 (NaCl `crypto_box`).
+- **Signature Algorithm**: Ed25519.
+- **Headers**:
+  - `Category`: U8
+  - `Timestamp`: U64 (Unix seconds)
+  - `IdempotencyKey`: UUID (16 bytes)
+
+## 3. Delivery Specification
+- **Max Payload Size**: 64KB.
+- **Retry Policy**: Exponential backoff (max 5 retries over 24 hours).
+- **Grace Period**: 5 minutes for timestamp validation.
+
+---
+
+## 4. Compliance & Standards
+Herald adheres to the **W3C DID (Decentralized Identifier)** and **VC (Verifiable Credentials)** models where applicable, although optimized for the high-performance constraints of the Solana network.

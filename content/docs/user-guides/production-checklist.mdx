@@ -1,0 +1,38 @@
+---
+title: Production Checklist
+description: Essential steps to ensure your Herald integration is robust and secure.
+---
+
+# Production Checklist
+
+Before launching your Herald integration to production, review this checklist to ensure stability and cost-efficiency.
+
+## 1. Environment Configuration
+
+- [ ] **API Keys**: Ensure you are using `hrld_live_...` keys for production and keep them in a secure secret manager (e.g., AWS Secrets Manager, Doppler).
+- [ ] **Environment Variable**: Set `environment: 'production'` in the SDK configuration.
+- [ ] **RPC Endpoints**: Use a dedicated Solana RPC provider (Helius, QuickNode) rather than public endpoints to avoid rate limits during high volume.
+
+## 2. Notification Strategy
+
+- [ ] **Idempotency**: Use `idempotencyKey` for every `notify` call to prevent duplicate notifications during network retries.
+- [ ] **Categories**: Assign correct categories (`defi`, `governance`, `marketing`) so users can opt-in/out accurately.
+- [ ] **Batching**: If sending > 5 notifications simultaneously, use the `notify/batch` endpoint or the SDK's batching capabilities.
+
+## 3. Feedback & Monitoring
+
+- [ ] **Webhooks**: Register a production webhook endpoint to receive delivery status updates and bounce notifications.
+- [ ] **Error Handling**: Implement logic to handle `INSUFFICIENT_QUOTA` and `RATE_LIMIT_EXCEEDED` errors gracefully (e.g., alert your team or retry after a delay).
+- [ ] **Analytics**: Regularly check `GET /v1/usage` to ensure you aren't approaching your monthly messaging limit.
+
+## 4. User Experience
+
+- [ ] **Identity Check**: Use `client.isRegistered(wallet)` to show a "Settings" or "Enable Notifications" button only when appropriate.
+- [ ] **Onboarding**: Provide a link to the [Herald User Portal](https://app.useherald.xyz) for users who haven't registered their wallet yet.
+- [ ] **Test Transaction**: Send a test notification to your own team's wallet in production to verify the full loop.
+
+---
+
+## Need Help?
+
+If you're an Enterprise partner, please contact your dedicated support channel on Slack or Discord. For open-source contributors, please open a GitHub Issue.

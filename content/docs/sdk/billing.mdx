@@ -1,0 +1,48 @@
+---
+title: Billing & Quotas
+description: Managing subscriptions and overage billing for your Protocol.
+---
+
+# Billing & Quotas
+
+Herald uses a flexible billing model that combines fixed subscription tiers with pay-as-you-go overage payments.
+
+## Subscription Tiers
+
+| Tier          | Monthly Volume | Price   | Features                         |
+| :------------ | :------------- | :------ | :------------------------------- |
+| **Developer** | 1,000          | Free    | Email only, Shared Gateway       |
+| **Growth**    | 50,000         | $99/mo  | Telegram + Email, Priority Queue |
+| **Scale**     | 250,000        | $249/mo | All Channels, Custom Webhooks    |
+
+## Overage Billing
+
+If you exceed your monthly quota, Herald will automatically transition to overage billing.
+
+- **Rate**: $0.005 per additional notification.
+- **Invoicing**: Invoices are generated at the end of the month via our [Helio Billing Integration](https://helio.xyz).
+
+## Managing Billing via SDK
+
+You can check your remaining balance and manage your subscription directly using the `HelioBilling` module.
+
+```typescript
+import { HelioBilling } from "@herald-protocol/sdk";
+
+const billing = new HelioBilling({ apiKey: "..." });
+
+// Get current tier and usage
+const usage = await billing.getUsage();
+console.log(`${usage.sent} / ${usage.limit} used`);
+
+// Start checkout for more credits
+const { url } = await billing.createCheckoutSession({
+  tier: "growth",
+});
+```
+
+---
+
+## Auto-Renewal
+
+Subscriptions are automatically renewed every 30 days. You can cancel or downgrade your subscription at any time via the [Developer Dashboard](https://app.useherald.xyz/billing).

@@ -1,0 +1,96 @@
+---
+title: REST API Reference
+description: Direct HTTP integration for the Herald Notification Gateway.
+---
+
+# REST API Reference
+
+The Herald Notification Gateway provides a RESTful API for protocols that prefer direct HTTP calls over the SDK.
+
+## Authentication
+
+All requests (except `/health`) must include a Bearer token in the `Authorization` header.
+
+```bash
+Authorization: Bearer hrld_live_your_key_here
+```
+
+## Endpoints
+
+### 1. Send Notification
+`POST /v1/notify`
+
+Queues a notification for a specific wallet address.
+
+**Request Body:**
+```json
+{
+  "wallet": "7xR4mKp2nQ...",
+  "subject": "Hello World",
+  "body": "Your notification content here.",
+  "category": "defi",
+  "idempotencyKey": "unique-uuid"
+}
+```
+
+**Response (202 Accepted):**
+```json
+{
+  "notificationId": "ulid_01H..."
+}
+```
+
+---
+
+### 2. Batch Notification
+`POST /v1/notify/batch`
+
+Send up to 100 notifications in a single request.
+
+**Request Body:**
+```json
+{
+  "notifications": [
+    { "wallet": "0x1...", "subject": "Update 1", "body": "..." },
+    { "wallet": "0x2...", "subject": "Update 2", "body": "..." }
+  ]
+}
+```
+
+**Response (202 Accepted):**
+```json
+{
+  "batchId": "ulid_batch_...",
+  "count": 2
+}
+```
+
+---
+
+### 3. Get Status
+`GET /v1/notifications/:id`
+
+Retrieves the current status of a notification.
+
+**Response (200 OK):**
+```json
+{
+  "id": "ulid_01H...",
+  "status": "delivered",
+  "channel": "email",
+  "deliveredAt": "2024-04-12T20:00:00Z",
+  "receiptTx": "solana_signature_..."
+}
+```
+
+---
+
+## Rate Limits
+
+| Tier | Requests/sec | Monthly Limit |
+| :--- | :--- | :--- |
+| **Developer** | 2 | 1,000 |
+| **Growth** | 20 | 50,000 |
+| **Scale** | 100 | 250,000 |
+
+*Rates are enforced based on the API key provided. Check your usage via `GET /v1/usage`.*

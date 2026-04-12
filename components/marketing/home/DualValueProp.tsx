@@ -23,7 +23,6 @@ export default function DualValueProp() {
       <div className="absolute inset-0 bg-linear-to-br from-bg-base via-bg-surface/20 to-bg-base pointer-events-none" />
 
       <div className="container mx-auto px-6 relative">
-
         {/* ── Section label ─────────────────────────────────────────── */}
         <div className="text-center mb-16">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-text-muted mb-4">
@@ -37,7 +36,6 @@ export default function DualValueProp() {
 
         {/* ── Dual card grid ────────────────────────────────────────── */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
           {/* ── Protocol card ────────────────────────────────────────── */}
           <div className="group relative p-6 sm:p-8 xl:p-10 rounded-3xl bg-bg-surface border border-border overflow-hidden hover:border-purple/50 hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple/15 transition-all duration-500">
             {/* Purple ambient glow */}
@@ -55,17 +53,20 @@ export default function DualValueProp() {
 
             {/* Headline */}
             <h3 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold font-display text-text-primary mb-3 leading-tight text-balance">
-              Send.{" "}
-              <span className="text-purple">Don't store.</span>
+              Send. <span className="text-purple">Don't store.</span>
             </h3>
             <p className="text-text-secondary mb-8 text-base leading-relaxed max-w-sm">
-              Alert your users without ever touching their contact data. Herald handles routing, delivery, and compliance.
+              Alert your users without ever touching their contact data. Herald
+              handles routing, delivery, and compliance.
             </p>
 
             {/* Feature list */}
             <ul className="space-y-3 mb-10">
               {PROTOCOL_POINTS.map((item) => (
-                <li key={item} className="flex items-start gap-3 text-sm text-text-secondary">
+                <li
+                  key={item}
+                  className="flex items-start gap-3 text-sm text-text-secondary"
+                >
                   <div className="mt-0.5 shrink-0 w-4 h-4 rounded-full bg-purple/15 border border-purple/30 flex items-center justify-center">
                     <Check className="w-2.5 h-2.5 text-purple" />
                   </div>
@@ -79,7 +80,10 @@ export default function DualValueProp() {
               asChild
               className="bg-purple hover:bg-purple/90 text-white rounded-xl px-7 h-11 font-bold shadow-[0_0_24px_rgba(124,58,237,0.25)] hover:-translate-y-1 hover:shadow-[0_0_36px_rgba(124,58,237,0.4)] transition-all duration-300 group/btn"
             >
-              <Link href="https://app.herald.xyz" className="flex items-center gap-2">
+              <Link
+                href="https://app.useherald.xyz"
+                className="flex items-center gap-2"
+              >
                 Start integrating
                 <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
               </Link>
@@ -119,17 +123,20 @@ export default function DualValueProp() {
 
             {/* Headline */}
             <h3 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold font-display text-text-primary mb-3 leading-tight">
-              Your wallet.{" "}
-              <span className="text-teal">Your inbox.</span>
+              Your wallet. <span className="text-teal">Your inbox.</span>
             </h3>
             <p className="text-text-secondary mb-8 text-base leading-relaxed max-w-sm">
-              Register once. Receive DeFi alerts from any Herald-integrated protocol — without sharing your email with anyone.
+              Register once. Receive DeFi alerts from any Herald-integrated
+              protocol — without sharing your email with anyone.
             </p>
 
             {/* Feature list */}
             <ul className="space-y-3 mb-10">
               {USER_POINTS.map((item) => (
-                <li key={item} className="flex items-start gap-3 text-sm text-text-secondary">
+                <li
+                  key={item}
+                  className="flex items-start gap-3 text-sm text-text-secondary"
+                >
                   <div className="mt-0.5 shrink-0 w-4 h-4 rounded-full bg-teal/10 border border-teal/25 flex items-center justify-center">
                     <Check className="w-2.5 h-2.5 text-teal" />
                   </div>
@@ -144,7 +151,10 @@ export default function DualValueProp() {
               variant="outline"
               className="border-teal/40 text-teal hover:bg-teal/8 hover:border-teal/70 rounded-xl px-7 h-11 font-bold hover:-translate-y-1 hover:shadow-lg hover:shadow-teal/10 transition-all duration-300 group/btn"
             >
-              <Link href="https://notify.herald.xyz/register" className="flex items-center gap-2">
+              <Link
+                href="https://notify.useherald.xyz/register"
+                className="flex items-center gap-2"
+              >
                 Register for free
                 <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
               </Link>
@@ -157,9 +167,16 @@ export default function DualValueProp() {
                 { val: "90s", label: "to register" },
                 { val: "∞", label: "protocols" },
               ].map((stat) => (
-                <div key={stat.label} className="p-3 rounded-xl bg-bg-surface border border-border text-center">
-                  <div className="font-mono text-lg font-bold text-teal leading-tight">{stat.val}</div>
-                  <div className="text-[10px] text-text-muted mt-0.5">{stat.label}</div>
+                <div
+                  key={stat.label}
+                  className="p-3 rounded-xl bg-bg-surface border border-border text-center"
+                >
+                  <div className="font-mono text-lg font-bold text-teal leading-tight">
+                    {stat.val}
+                  </div>
+                  <div className="text-[10px] text-text-muted mt-0.5">
+                    {stat.label}
+                  </div>
                 </div>
               ))}
             </div>

@@ -51,10 +51,13 @@ export default function NavBar() {
             <div className="relative w-7 h-7">
               {/* Glow behind logo */}
               <div className="absolute inset-0 bg-teal blur-md opacity-0 group-hover:opacity-40 transition-opacity duration-500 rounded-lg" />
-              {/* <div className="relative w-7 h-7 bg-teal rounded-lg flex items-center justify-center transition-transform duration-200 group-hover:scale-105">
-                <span className="text-xs font-black text-bg-base tracking-tighter">H</span>
-              </div> */}
-              <Image width={28} height={28} src={'/logo_icon.svg'} alt="Herald Logo" priority/>
+              <Image
+                width={28}
+                height={28}
+                src={'https://ucshdejvxzanuxlxrano.supabase.co/storage/v1/object/public/herald-public-asset/herald-logo.svg'}
+                alt="Herald Logo"
+                priority
+              />
             </div>
             <span className="text-base font-bold tracking-tight text-text-primary font-display">
               Herald
@@ -87,7 +90,9 @@ export default function NavBar() {
               asChild
               className="bg-teal text-bg-base hover:bg-teal/90 font-bold rounded-full px-5 h-8 text-xs shadow-[0_0_20px_rgba(0,200,150,0.2)] hover:shadow-[0_0_30px_rgba(0,200,150,0.35)] hover:-translate-y-0.5 transition-all duration-300"
             >
-              <Link href="https://notify.herald.xyz/register">Register →</Link>
+              <Link href="https://notify.useherald.xyz/register">
+                Register →
+              </Link>
             </Button>
           </div>
 
@@ -97,7 +102,11 @@ export default function NavBar() {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
           >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mobileMenuOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
           </button>
         </nav>
       </header>

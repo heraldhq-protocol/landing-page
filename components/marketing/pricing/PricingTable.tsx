@@ -12,7 +12,7 @@ const TIERS = [
     badge: null,
     highlighted: false,
     cta: "Start for free",
-    ctaHref: "https://app.herald.xyz/register",
+    ctaHref: "https://app.useherald.xyz/register",
     features: [
       { text: "1,000 sends / month", available: true },
       { text: "Email delivery", available: true },
@@ -34,7 +34,7 @@ const TIERS = [
     badge: "Most popular",
     highlighted: true,
     cta: "Get started",
-    ctaHref: "https://app.herald.xyz/register?tier=growth",
+    ctaHref: "https://app.useherald.xyz/register?tier=growth",
     features: [
       { text: "50,000 sends / month", available: true },
       { text: "Email, Telegram & SMS", available: true },
@@ -56,7 +56,7 @@ const TIERS = [
     badge: null,
     highlighted: false,
     cta: "Get started",
-    ctaHref: "https://app.herald.xyz/register?tier=scale",
+    ctaHref: "https://app.useherald.xyz/register?tier=scale",
     features: [
       { text: "250,000 sends / month", available: true },
       { text: "Email, Telegram & SMS", available: true },

@@ -11,7 +11,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           title: (
             <div className="flex items-center gap-2.5">
               <Image 
-                src="/logo_icon.svg" 
+                src="https://ucshdejvxzanuxlxrano.supabase.co/storage/v1/object/public/herald-public-asset/herald-logo.svg" 
                 alt="Herald Logo" 
                 width={24} 
                 height={24} 

@@ -1,0 +1,50 @@
+---
+title: Introduction
+description: Privacy-preserving notification delivery for Solana protocols.
+---
+
+# Welcome to Herald
+
+Herald is the first notification layer built for Solana that puts user privacy first.
+
+Most protocols today face a dilemma: to send notifications (email, SMS, Telegram), they must collect and store their users' private contact information. This creates a massive security liability and breaks the trust of decentralized users.
+
+**Herald solves this by separating identity from delivery.**
+
+## How it Works
+
+1. **User Registers**: Users link their wallet to an encrypted email address once on the Herald Registry.
+2. **Protocol Connects**: Protocols send notifications via the Herald SDK using only the user's wallet address.
+3. **Secure Delivery**: Herald resolves the identity, decrypts the contact info in a Secure Enclave (TEE), and delivers the message.
+
+## Choose Your Path
+
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+  <div className="border rounded-lg p-4">
+    ### 🛠️ SDK User
+    Build apps quickly using our TypeScript SDK. No crypto-math required.
+    
+    [Get Started with SDK](/docs/sdk/typescript)
+  </div>
+  <div className="border rounded-lg p-4">
+    ### ⚙️ Protocol Dev
+    Understand the wire format and build custom implementations.
+
+    [View Protocol Specs](/docs/protocol/specifications)
+
+  </div>
+  <div className="border rounded-lg p-4">
+    ### 🛡️ System Architect
+    Deep dive into our Zero-PII security model and TEE architecture.
+
+    [Security Deep Dive](/docs/overview/architecture)
+
+  </div>
+</div>
+
+## Key Benefits
+
+- **Zero Liability**: Never touch or store a user's plaintext email.
+- **On-Chain Proofs**: Get verifiable ZK delivery receipts for every notification.
+- **Universal Reach**: One registration works across all Herald-integrated protocols.
+- **Spam Control**: Users maintain full control over their notification preferences via the [User Portal](https://app.useherald.xyz).

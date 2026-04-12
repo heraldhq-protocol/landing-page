@@ -1,0 +1,29 @@
+---
+title: Security Guarantees
+description: The mathematical and architectural promises Herald makes to its users.
+---
+
+# Security Guarantees
+
+Herald is designed to handle sensitive contact information in a zero-trust environment. Here are the cryptographic and architectural guarantees we provide.
+
+## 1. Confidentiality of Contact Info
+**Guarantee**: Neither Herald operators nor Protocols can ever view a user's plaintext email or phone number.
+- **Proof**: Decryption keys are stored in AWS KMS and are only accessible by the Nitro Enclave PCRs (Platform Configuration Registers). The Enclave code is open-source and auditable.
+
+## 2. Authenticity of Notifications
+**Guarantee**: Every notification delivered by Herald is verified to have originated from an authorized Protocol provider.
+- **Proof**: Protocols must sign their notification requests with an Ed25519 key that matches their on-chain registration.
+
+## 3. User Governance
+**Guarantee**: Users have absolute control over which protocols can contact them.
+- **Proof**: Opt-in checks are performed against the on-chain Registry state before the Enclave ever attempts decryption. If a user has not opted in, the Enclave will reject the message.
+
+## 4. Immutable Delivery Proofs
+**Guarantee**: Every successfully delivered notification has a corresponding on-chain proof.
+- **Proof**: Herald writes a compressed delivery receipt to the Light Protocol state on Solana. This receipt contains a cryptographic commitment to the notification ID and delivery timestamp.
+
+---
+
+## The "Bus Factor" Policy
+In the event that Herald (the company) ceases to exist, the users' encrypted contact info remains on-chain. While the centralized Gateway would stop functioning, the decentralized registry can be used by any alternative gateway implementation that has access to the public keys of the users.

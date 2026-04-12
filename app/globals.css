@@ -152,16 +152,16 @@
   --sidebar-foreground: var(--text-primary);
   --sidebar-primary: var(--teal);
   --sidebar-primary-foreground: var(--bg-base);
-  --sidebar-accent: var(--bg-elevated);
-  --sidebar-accent-foreground: var(--text-primary);
+  --sidebar-accent: var(--teal-bg);
+  --sidebar-accent-foreground: var(--teal);
   --sidebar-border: var(--bg-border);
-  --sidebar-ring: var(--bg-border-hi);
+  --sidebar-ring: var(--teal-dim);
 
   /* Fumadocs — Universal Dark Mapping */
   --fd-background: var(--bg-base);
   --fd-foreground: var(--text-primary);
   --fd-muted: var(--text-secondary);
-  --fd-accent: var(--bg-border-hi);
+  --fd-accent: var(--teal-bg);
   --fd-primary: var(--teal);
   --fd-primary-foreground: var(--bg-base);
   --fd-border: var(--bg-border);
@@ -195,7 +195,7 @@
   --fd-background: #040C18;
   --fd-foreground: #F0F6FF;
   --fd-muted: #94A3B8;
-  --fd-accent: #1A3A52;
+  --fd-accent: rgba(0, 200, 150, 0.12);
   --fd-accent-foreground: #00C896;
   --fd-primary: #00C896;
   --fd-primary-foreground: #040C18;
@@ -205,6 +205,8 @@
   --color-fd-foreground: #F0F6FF !important;
   --color-fd-primary: #00C896 !important;
   --color-fd-border: #0E2A3D !important;
+  --color-fd-muted: #94A3B8 !important;
+  --color-fd-accent: rgba(0, 200, 150, 0.12) !important;
 
   /* Explicitly lock brand variables to ensure marketing pages stay dark */
   --bg-base: #040C18 !important;
@@ -226,6 +228,22 @@
   --tw-prose-headings: var(--fd-foreground);
   --tw-prose-links: var(--fd-primary);
   --tw-prose-bold: var(--fd-foreground);
+}
+
+/* Inline Code Refinement */
+.prose :not(pre) > code {
+  background-color: var(--teal-bg);
+  color: var(--teal);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.375rem;
+  border: 1px solid rgba(0, 200, 150, 0.2);
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.prose :not(pre) > code::before,
+.prose :not(pre) > code::after {
+  content: "";
 }
 
 

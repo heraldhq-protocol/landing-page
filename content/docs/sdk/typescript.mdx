@@ -1,0 +1,86 @@
+---
+title: TypeScript SDK
+description: The official @herald-protocol/sdk for interacting with the Herald Registry.
+---
+
+# TypeScript SDK
+
+The `@herald-protocol/sdk` is the easiest way to integrate privacy-preserving notifications into your app. It provides high-level abstractions for registration, identity lookups, and sending notifications.
+
+## Installation
+
+```bash
+npm install @herald-protocol/sdk
+```
+
+## The Three Clients
+
+The SDK is organized into three specialized clients to ensure security and minimize bundle size.
+
+### 1. `UserClient`
+**Use for**: Frontend applications where the user signs with their own wallet.
+- Register identities.
+- Update notification preferences.
+- Manage opt-in categories.
+
+```typescript
+import { UserClient } from '@herald-protocol/sdk';
+
+const client = new UserClient({ cluster: 'mainnet-beta' });
+
+// Register a user (requires wallet signature)
+await client.registerIdentity({
+  owner: userPublicKey,
+  encryptedEmail: ...,
+  emailHash: ...,
+  nonce: ...,
+  optIns: { optInAll: true }
+});
+```
+
+### 2. `ReadClient`
+**Use for**: Quick, signing-free lookups. Safe for both browsers and backends.
+- Check if a wallet is registered.
+- Fetch user preferences.
+- Validate protocol status.
+
+```typescript
+const readClient = new ReadClient({ cluster: 'mainnet-beta' });
+const isRegistered = await readClient.isRegistered(walletAddress);
+```
+
+### 3. `Herald` (Gateway Client)
+**Use for**: Protocols sending notifications via our API.
+- Send messages to wallets.
+- Check messaging quotas.
+- Verify delivery status.
+
+```typescript
+import { Herald } from '@herald-protocol/sdk';
+
+const herald = new Herald({ apiKey: 'hrld_live_...' });
+await herald.notify({ wallet: '...', subject: '...' });
+```
+
+---
+
+## Error Handling
+
+The SDK uses semantic error codes to help you debug quickly.
+
+```typescript
+import { isHeraldErrorCode } from '@herald-protocol/sdk';
+
+try {
+  await herald.notify(...)
+} catch (e) {
+  if (isHeraldErrorCode(e, 'INSUFFICIENT_QUOTA')) {
+    console.error("Please top up your messaging credits.");
+  }
+}
+```
+
+## Sub-modules
+
+- **`@herald-protocol/sdk/billing`**: Manage subscriptions and Helio payments.
+- **`@herald-protocol/sdk/channels`**: Advanced configuration for Telegram and SMS.
