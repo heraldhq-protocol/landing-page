@@ -76,7 +76,7 @@ export default function OverageCalculator() {
               <div className="space-y-6">
                 <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest">Estimated Overage</p>
                 <div className="flex items-baseline gap-3">
-                    <span className="text-4xl md:text-6xl font-black font-display text-text-primary tracking-tighter">${cost.toFixed(2)}</span>
+                    <span className="text-3xl md:text-4xl font-black font-display text-text-primary tracking-tighter">${cost.toFixed(2)}</span>
                     <span className="text-xs font-mono text-text-muted uppercase tracking-widest font-bold">USDC</span>
                 </div>
                 <div className="p-5 border-l-2 border-teal bg-teal/3 text-sm text-text-secondary leading-relaxed italic rounded-r-lg">

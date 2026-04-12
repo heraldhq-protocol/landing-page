@@ -16,10 +16,10 @@ export default function FinalCTA() {
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Button size="lg" className="bg-teal text-navy hover:bg-teal/90 font-bold px-8 py-6 h-auto text-lg rounded-xl transition-all hover:scale-105 duration-300">
+          <Button className="bg-teal text-navy hover:bg-teal/90 font-bold px-8 py-5 h-auto text-lg rounded-xl transition-all hover:scale-105 duration-300">
             Start building →
           </Button>
-          <Button variant="outline" size="lg" className="border-border-2 text-text-primary hover:border-teal/40 px-8 py-6 h-auto text-lg rounded-xl bg-card/50 backdrop-blur-sm transition-all hover:scale-105 duration-300">
+          <Button variant="outline" className="border-border-2 text-text-primary hover:border-teal/40 px-8 py-5 h-auto text-lg rounded-xl bg-card/50 backdrop-blur-sm transition-all hover:scale-105 duration-300">
             Register your wallet →
           </Button>
         </div>
