@@ -95,7 +95,7 @@ const TIERS = [
 
 export default function PricingTable() {
   return (
-    <section className="py-28 relative overflow-hidden border-t border-border/30">
+    <section className="pt-10 pb-28 relative overflow-hidden border-t border-border/30">
       {/* Background */}
       <div className="absolute inset-0 bg-linear-to-b from-bg-base via-bg-surface/15 to-bg-base pointer-events-none" />
 

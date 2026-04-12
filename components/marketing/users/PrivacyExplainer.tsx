@@ -7,7 +7,7 @@ export default function PrivacyExplainer() {
       
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-24 max-w-3xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-extrabold font-display leading-tight">
+          <h2 className="text-3xl md:text-5xl font-extrabold font-display leading-tight">
             The Protocol <span className="text-text-muted">never</span> learns your email.
           </h2>
           <p className="text-xl text-text-secondary mt-6">

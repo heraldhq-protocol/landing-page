@@ -26,7 +26,7 @@ export default function RegistrationGuide() {
     <section className="py-32 border-t border-border/30 bg-navy/20 relative overflow-hidden">
       <div className="container mx-auto px-6">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-5xl font-extrabold font-display text-center mb-24">
+          <h2 className="text-2xl md:text-5xl font-extrabold font-display text-center mb-24">
             Setup in <span className="text-teal">three</span> steps.
           </h2>
           
