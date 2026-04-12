@@ -2,6 +2,12 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@import "fumadocs-ui/css/neutral.css";
+@import "fumadocs-ui/css/preset.css";
+
+@source "../node_modules/fumadocs-ui/dist/**/*.js";
+
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -150,7 +156,24 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Fumadocs — Light Theme Fix */
+  --fd-background: #ffffff;
+  --fd-foreground: #040c18;
+  --fd-muted: #64748b;
+  --fd-accent: #f1f5f9;
+  --fd-accent-foreground: #00c896;
+  --fd-primary: #00c896;
+  --fd-primary-foreground: #ffffff;
+  --fd-border: #e2e8f0;
+
+  /* Force Fumadocs internal theme variables to brand tokens */
+  --color-fd-background: #ffffff;
+  --color-fd-foreground: #040c18;
+  --color-fd-primary: #00c896;
+  --color-fd-border: #e2e8f0;
 }
+
 
 .dark {
   --background: var(--bg-base);
@@ -169,7 +192,26 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* Fumadocs — Dark Theme Fix */
+  --fd-background: var(--bg-base);
+  --fd-foreground: var(--text-primary);
+  --fd-muted: var(--text-secondary);
+  --fd-accent: var(--bg-border-hi);
+  --fd-accent-foreground: var(--teal);
+  --fd-primary: var(--teal);
+  --fd-primary-foreground: var(--bg-base);
+  --fd-border: var(--bg-border);
+
+  /* Force Fumadocs internal theme variables to Herald tokens */
+  --color-fd-background: var(--bg-base);
+  --color-fd-foreground: var(--text-primary);
+  --color-fd-primary: var(--teal);
+  --color-fd-border: var(--bg-border);
+  --color-fd-muted: var(--text-secondary);
+  --color-fd-muted-foreground: var(--text-muted);
 }
+
 
 @layer base {
   * {

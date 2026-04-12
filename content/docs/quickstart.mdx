@@ -1,0 +1,58 @@
+---
+title: Quickstart
+description: Send your first notification in less than 5 minutes.
+---
+
+Welcome to the Herald developer documentation. In this guide, we'll show you how to integrate Herald's privacy-preserving notification layer into your Solana protocol.
+
+### 1. Install the SDK
+
+First, install the Herald SDK in your project:
+
+```bash
+npm install @herald-protocol/sdk
+```
+
+### 2. Initialize the Client
+
+You'll need your API key from the [Herald Dashboard](https://app.herald.xyz).
+
+```typescript
+import { Herald } from "@herald-protocol/sdk";
+
+const herald = new Herald({
+  apiKey: process.env.HERALD_API_KEY,
+});
+```
+
+### 3. Send a Notification
+
+Herald only requires the user's wallet address. There's no need to store or handle email addresses in your own database.
+
+```typescript
+await herald.notify({
+  wallet: '7xR4mKp2nQ...', // User's Solana wallet address
+  subject: 'DeFi Alert: Liquidation Warning',
+  body: 'Your position on Drift is approaching liquidation (HF: 1.05).',
+  category: 'defi',
+});
+```
+
+### 4. Verify Delivery
+
+You can track the delivery status of your notification using the `notificationId` returned by the notify call.
+
+```typescript
+const { notificationId } = result;
+const status = await herald.getStatus(notificationId);
+
+console.log(`Delivered: ${status.delivered}`);
+```
+
+---
+
+### What's Next?
+
+- Learn about our [Privacy Model](/docs/privacy-model)
+- Explore the [Full API Reference](/docs/api)
+- See how to set up [Telegram Notifications](/docs/channels/telegram)

@@ -1,3 +1,4 @@
+import { RootProvider } from "fumadocs-ui/provider/next";
 import type { Metadata } from "next";
 import { Syne, DM_Sans, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -53,11 +54,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body
         className={`${syne.variable} ${dmSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <RootProvider theme={{ defaultTheme: "dark" }}>
+          {children}
+        </RootProvider>
       </body>
     </html>
   );

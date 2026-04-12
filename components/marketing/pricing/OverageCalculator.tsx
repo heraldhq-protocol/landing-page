@@ -52,7 +52,7 @@ export default function OverageCalculator() {
 
                 <div>
                   <label className="block text-[10px] font-bold text-text-muted uppercase tracking-widest mb-4">
-                    Overage Volume
+                    Email Volume
                   </label>
                   <input 
                     type="range" 
