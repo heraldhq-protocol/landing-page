@@ -1,0 +1,896 @@
+---
+title: Terms of Service
+description: The legal agreement governing your use of Herald Protocol.
+updatedAt: 2026-04-01
+version: "1.0"
+---
+
+# Terms of Service
+
+**Effective Date:** 1 April 2026  
+**Last Updated:** 1 April 2026  
+**Version:** 1.0
+
+These Terms of Service ("Terms") govern your access to and use of the Herald Protocol notification infrastructure and related services ("Services") operated by Herald Protocol ("Herald", "we", "us", "our"), available at useherald.xyz, notify.useherald.xyz, app.useherald.xyz, and api.useherald.xyz.
+
+**By accessing or using the Services in any capacity, you agree to be bound by these Terms. If you do not agree, do not use the Services.**
+
+These Terms apply to:
+- **Protocol Users** — companies, developers, and teams who integrate Herald's API to deliver notifications ("Protocol Teams")
+- **Wallet Holders** — individuals who register a Solana wallet with Herald to receive notifications
+- **Website Visitors** — anyone accessing useherald.xyz
+
+Where these Terms refer to "you", they refer to the applicable category above depending on how you interact with the Services. Some provisions apply only to Protocol Teams; others only to Wallet Holders. Where a provision is not labelled, it applies to all users.
+
+---
+
+## Table of Contents
+
+1. [Definitions](#1-definitions)
+2. [Eligibility and Account Registration](#2-eligibility-and-account-registration)
+3. [Protocol Team Terms](#3-protocol-team-terms)
+4. [Wallet Holder Terms](#4-wallet-holder-terms)
+5. [Acceptable Use Policy](#5-acceptable-use-policy)
+6. [Notification Content Standards](#6-notification-content-standards)
+7. [Protocol Verification](#7-protocol-verification)
+8. [Subscription, Billing, and Payment (USDC)](#8-subscription-billing-and-payment-usdc)
+9. [Pay-As-You-Go Overage](#9-pay-as-you-go-overage)
+10. [API Keys and Access Credentials](#10-api-keys-and-access-credentials)
+11. [Intellectual Property](#11-intellectual-property)
+12. [Data, Privacy, and Encryption](#12-data-privacy-and-encryption)
+13. [On-Chain Data and Blockchain Risks](#13-on-chain-data-and-blockchain-risks)
+14. [Service Level and Availability](#14-service-level-and-availability)
+15. [Disclaimer of Warranties](#15-disclaimer-of-warranties)
+16. [Limitation of Liability](#16-limitation-of-liability)
+17. [Indemnification](#17-indemnification)
+18. [Term, Suspension, and Termination](#18-term-suspension-and-termination)
+19. [Dispute Resolution](#19-dispute-resolution)
+20. [Governing Law](#20-governing-law)
+21. [Regulatory Compliance and Sanctions](#21-regulatory-compliance-and-sanctions)
+22. [Force Majeure](#22-force-majeure)
+23. [General Provisions](#23-general-provisions)
+24. [Contact Information](#24-contact-information)
+
+---
+
+## 1. Definitions
+
+**"API"** means Herald's notification delivery application programming interface available at api.useherald.xyz.
+
+**"API Key"** means the authentication credential (in `hrld_live_*` or `hrld_test_*` format) issued to Protocol Teams for accessing the API.
+
+**"Blockchain"** means the Solana proof-of-history/proof-of-stake blockchain network.
+
+**"Confidential Information"** means any non-public technical, business, or financial information disclosed by one party to another in connection with the Services.
+
+**"Content"** means any text, data, subject lines, message bodies, or other material that Protocol Teams transmit through the Herald API.
+
+**"Dashboard"** means the web interface available at app.useherald.xyz for Protocol Teams to manage their account, API keys, analytics, and billing.
+
+**"Developer Tier"** means the free subscription tier with a 1,000 send/month limit.
+
+**"Herald Privacy Registry"** or **"on-chain registry"** means the Anchor smart contract program deployed on Solana at program ID `2pxjAf8tLCakKVDuN4vY51B5TeaEQk4koPuk9NZvWqdf`.
+
+**"Identity Account"** or **"PDA"** means a Program Derived Address on the Solana blockchain where a Wallet Holder's encrypted identity is stored.
+
+**"Notification"** means a single message delivered (or attempted to be delivered) through Herald's infrastructure to a registered Wallet Holder.
+
+**"Overage"** means Notifications sent beyond the monthly limit of a Protocol Team's subscription tier.
+
+**"Portal"** means the web interface available at notify.useherald.xyz for Wallet Holders to register and manage their notification preferences.
+
+**"Protocol Team"** means a company, individual developer, decentralised protocol, or other entity that accesses the Herald API.
+
+**"Sandbox Environment"** means Herald's test mode where API Keys prefixed `hrld_test_` deliver notifications to a configured test endpoint rather than real Wallet Holders.
+
+**"USDC"** means the USD Coin stablecoin token on the Solana blockchain (mint: `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`).
+
+**"Wallet Holder"** means an individual who has registered their Solana wallet address with the Herald Privacy Registry.
+
+**"ZK Receipt"** means a zero-knowledge compressed delivery proof written to Solana via Light Protocol, evidencing that a Notification was processed by Herald's systems.
+
+---
+
+## 2. Eligibility and Account Registration
+
+### 2.1 Age and Capacity
+
+You must be at least 18 years of age (or the age of legal majority in your jurisdiction, if higher) to use the Services. By accepting these Terms, you represent and warrant that you meet this requirement.
+
+If you are accepting these Terms on behalf of a company, organisation, or other legal entity, you represent that you have authority to bind that entity to these Terms. "You" as used in these Terms will then refer to that entity.
+
+### 2.2 Geographic Restrictions
+
+The Services are available globally except that they may not be used by persons or entities:
+- Located in, or organised under the laws of, any jurisdiction subject to comprehensive sanctions administered by OFAC (US Treasury), the United Nations Security Council, the European Union, or the UK Office of Financial Sanctions Implementation (OFSI)
+- Designated as Specially Designated Nationals (SDNs) or blocked persons by OFAC
+- Otherwise prohibited by applicable sanctions law from using our services
+
+See Section 21 for our full sanctions and regulatory compliance policy.
+
+### 2.3 Protocol Team Registration
+
+To access the API, Protocol Teams must:
+
+1. Register at app.useherald.xyz by connecting a Solana wallet and providing a valid administrative email address
+2. Pass Herald's manual verification review (see Section 7)
+3. Agree to these Terms and our Privacy Policy
+4. Maintain accurate account information
+
+Registration creates a binding contract between the Protocol Team and Herald.
+
+### 2.4 Wallet Holder Registration
+
+Wallet Holders register at notify.useherald.xyz by:
+
+1. Connecting a Solana wallet (Phantom, Solflare, Backpack, or compatible wallet)
+2. Encrypting contact information in their browser
+3. Signing a Solana transaction to write their encrypted Identity Account PDA
+
+Wallet Holder registration is free and governed by these Terms. By registering, Wallet Holders agree to receive Notifications from Protocol Teams that use Herald.
+
+---
+
+## 3. Protocol Team Terms
+
+### 3.1 Permitted Use
+
+Protocol Teams may use the Herald API to:
+- Send informational notifications to Wallet Holders who have registered with Herald
+- Test integrations using the Sandbox Environment
+- Retrieve notification delivery status and analytics
+- Manage webhook endpoints for delivery confirmations
+
+### 3.2 Your Responsibilities as a Protocol Team
+
+**You are responsible for all Content you send through Herald.** Herald is a delivery infrastructure — we do not review, edit, or endorse your Content. You must ensure that:
+
+(a) You have a legitimate purpose for each Notification you send  
+(b) The Notification is relevant to the Wallet Holder's relationship with your protocol  
+(c) Content complies with all applicable laws, including anti-spam laws (CAN-SPAM, CASL, GDPR recital 47)  
+(d) Content does not violate Section 6 (Notification Content Standards)  
+(e) You are accurately identified as the sender in all Notifications  
+
+### 3.3 You Are a Data Controller
+
+As a Protocol Team sending notifications, you are an independent **data controller** with respect to:
+- Your decision to notify a particular wallet address
+- The subject matter and content of your notifications
+- Any downstream use you make of delivery analytics
+
+Herald acts as your **data processor** solely for the purpose of delivering notifications on your behalf. Our obligations as data processor are set out in the Data Processing Addendum available at useherald.xyz/legal/dpa.
+
+### 3.4 No PII from Herald
+
+Herald will not provide you with any Wallet Holder's email address, Telegram ID, phone number, or other personal contact information. These details are encrypted at source and are technically inaccessible to Protocol Teams. Any attempt to extract contact information from Herald's systems constitutes a material breach of these Terms and may constitute a criminal offence.
+
+### 3.5 Protocol Team Warranties
+
+You represent and warrant that:
+
+(a) Your protocol operates a legitimate, disclosed product or service  
+(b) You will not send unsolicited bulk messages, spam, or phishing content  
+(c) You will not impersonate another protocol or mislead Wallet Holders about the sender  
+(d) You have disclosed to your users that notifications may be delivered via Herald  
+(e) You will comply with all applicable laws, including financial services regulations applicable to your protocol  
+(f) You are not subject to any sanctions or export control restrictions that would prohibit use of our Services  
+
+---
+
+## 4. Wallet Holder Terms
+
+### 4.1 Your Herald Registration
+
+Your Herald Identity Account PDA is owned by your wallet — not by Herald. By registering, you:
+
+- Grant Herald's notification delivery system the right to decrypt and use your contact information solely for the purpose of delivering Notifications you have opted to receive
+- Acknowledge that your encrypted identity record is stored on a public blockchain (Solana)
+- Acknowledge that Herald cannot guarantee delivery in all circumstances (see Section 14)
+
+### 4.2 Your Consent to Receive Notifications
+
+By registering with Herald, you consent to receive Notifications from Protocol Teams that use Herald, subject to your opt-in category preferences. You may adjust your preferences or deregister at any time.
+
+This consent is specific to Herald's delivery infrastructure. Protocol Teams must independently comply with applicable laws regarding their right to contact you.
+
+### 4.3 Unsubscribing
+
+You may unsubscribe from specific categories or all Herald Notifications at any time by:
+
+- Visiting notify.useherald.xyz/preferences
+- Clicking unsubscribe links in any email notification
+- Clicking the "Mute" button in any Telegram notification
+- Sending your wallet's signed instruction to set `opt_in_all = false` on your PDA
+
+Herald will process opt-out instructions within 24 hours. Category-level opt-outs are effective immediately on-chain.
+
+### 4.4 Deletion
+
+You may permanently delete your Herald registration at any time at notify.useherald.xyz/settings. Deletion:
+- Zeros your Identity Account PDA on Solana
+- Removes your data from Herald's databases within 30 days
+- Is **irreversible** — re-registration requires a new on-chain transaction
+- Does not delete immutable ZK delivery receipts previously written (see Section 13)
+
+### 4.5 Wallet Security
+
+Your Herald identity is cryptographically tied to your Solana wallet. You are solely responsible for the security of your wallet private keys. Herald cannot recover a Herald registration if you lose access to the associated wallet. Herald is not responsible for any loss arising from compromise of your wallet.
+
+---
+
+## 5. Acceptable Use Policy
+
+The following are strictly prohibited:
+
+### 5.1 Content Restrictions
+- Phishing, social engineering, or fraudulent impersonation of any person, company, or protocol
+- Requesting wallet connection, seed phrases, private keys, or sensitive credentials via Notification content
+- Spam — sending Notifications without a legitimate, specific purpose related to the recipient's use of your protocol
+- Harassment, threats, or abusive content
+- Content that promotes, facilitates, or glorifies violence, terrorism, or extremism
+- Child sexual abuse material or any content involving the sexualisation of minors
+- Defamatory content
+- Content that infringes third-party intellectual property rights
+
+### 5.2 Technical Misuse
+- Reverse engineering, decompiling, or attempting to extract Herald's source code, algorithms, or architectural secrets
+- Attempting to decrypt other users' Identity Account PDAs
+- Circumventing rate limits, quotas, or authentication mechanisms
+- Using Herald's infrastructure to test competitor services or to conduct load testing against third-party systems
+- Sharing API Keys with third parties not authorised under your Protocol Team account
+- Creating multiple free accounts to circumvent the Developer Tier send limit
+- Automating account creation to bypass verification requirements
+
+### 5.3 Regulatory Violations
+- Using Herald to deliver communications that violate applicable anti-spam laws (CAN-SPAM Act (USA), CASL (Canada), GDPR Article 13 (EU/UK), Nigerian Spam Act)
+- Sending financial promotions without appropriate authorisation in regulated jurisdictions
+- Violating any sanctions regulations (see Section 21)
+
+### 5.4 Consequences
+
+Violation of this Acceptable Use Policy may result in:
+- Immediate suspension or termination of your account (Protocol Teams or Wallet Holders)
+- Reporting to law enforcement or regulatory authorities
+- Pursuit of civil remedies for damages
+- Permanent ban from Herald's Services
+
+---
+
+## 6. Notification Content Standards
+
+Protocol Teams must ensure that all Notifications:
+
+### 6.1 Accuracy and Transparency
+- Accurately identify the sending protocol by its real name
+- Are factually accurate and not misleading
+- Do not make false claims about financial outcomes, investment returns, or security status
+- Clearly state the nature and purpose of the communication
+
+### 6.2 Relevance and Proportionality
+- Are relevant to the Wallet Holder's activity or position with your protocol
+- Are proportionate in frequency to the urgency and relevance of the information
+- Are sent only to wallets that have a genuine relationship with your protocol
+
+### 6.3 Financial Communications
+For Notifications that constitute financial promotions or investment-related communications:
+- You are solely responsible for compliance with applicable financial promotion regulations (FCA (UK), SEC (USA), CFTC (USA), ESMA (EU), and equivalents)
+- Herald does not review or pre-approve financial communication content
+- Herald's delivery of a Notification does not constitute endorsement of its content
+
+### 6.4 Content Moderation
+
+Herald reserves the right (but not the obligation) to review Notification content and take action where content appears to violate these Terms. Herald may:
+- Suspend delivery of specific Notifications pending review
+- Suspend or terminate a Protocol Team's account for repeated violations
+- Report serious violations to relevant authorities
+
+Protocol Teams may appeal content decisions by contacting trust@useherald.xyz within 14 days of the action.
+
+---
+
+## 7. Protocol Verification
+
+### 7.1 Verification Requirement
+
+All Protocol Teams must pass Herald's verification review before receiving production API access. The Sandbox Environment is available immediately upon registration; production access (`hrld_live_*` keys) requires verification approval.
+
+### 7.2 Verification Process
+
+Herald's review assesses:
+- Whether the protocol is a real, operating product or service
+- Whether the protocol has a legitimate user base that would benefit from notifications
+- Whether the administrative contact is associated with the protocol's verified domain
+- Whether the intended use case complies with these Terms
+- Whether the protocol appears on any sanctions or fraud watchlists
+
+We reserve the right to request additional information during verification, including:
+- Protocol website and documentation
+- Smart contract address(es) on Solana
+- Team identity information (for high-risk categories)
+
+### 7.3 Verification Outcome
+
+Verification typically completes within 24–48 hours. We may:
+- **Approve** — grant production API access
+- **Approve with conditions** — grant access subject to specific content restrictions
+- **Decline** — deny production access with a reason provided
+- **Request more information** — extend the review period
+
+Declined protocols may reapply after 30 days if the grounds for decline have been addressed.
+
+### 7.4 Ongoing Compliance
+
+Verification is not a one-time event. Herald may re-verify Protocol Teams if:
+- Their use patterns change significantly
+- User complaints are received
+- The protocol's category, ownership, or purpose changes
+- A regulatory concern arises
+
+---
+
+## 8. Subscription, Billing, and Payment (USDC)
+
+### 8.1 Subscription Tiers
+
+Herald offers the following subscription tiers for Protocol Teams:
+
+| Tier | Price | Monthly Sends |
+|---|---|---|
+| Developer | Free | 1,000 |
+| Growth | $99 USDC/month | 50,000 |
+| Scale | $299 USDC/month | 250,000 |
+| Enterprise | $999 USDC/month | 1,000,000 |
+
+Pricing is denominated in USD and paid in USDC (or USDT, subject to availability) on the Solana blockchain. Herald reserves the right to adjust pricing with 60 days' notice to existing subscribers. New pricing does not apply to existing subscriptions until renewal.
+
+### 8.2 Payment Method
+
+Payment is processed through Helio (Phase 1) via recurring USDC subscription, or directly through the Herald Anchor program `pay_subscription` instruction (Phase 2). We do not accept credit cards, fiat bank transfers, SOL, or other cryptocurrencies for subscriptions.
+
+**By subscribing, you authorise Herald to initiate recurring USDC charges through your chosen payment method at each billing cycle.**
+
+### 8.3 Billing Cycle
+
+Subscriptions are monthly, starting from the date of first payment. The billing period runs for 30 days. At the end of each period:
+- Subscription is automatically renewed unless cancelled
+- Unused sends from the previous period do not roll over
+- New send quota is replenished
+
+### 8.4 Failed Payments
+
+If a scheduled subscription payment fails:
+- We will retry payment once after 48 hours
+- If the retry fails, the account is downgraded to Developer Tier
+- API Keys continue to function at Developer Tier limits during a 7-day grace period
+- Production access is suspended after the 7-day grace period if payment is not received
+- Outstanding balances do not accumulate — subscription is simply not renewed
+
+### 8.5 Upgrades and Downgrades
+
+**Upgrades** take effect immediately. You pay the difference for the remaining days in the current billing period (prorated).
+
+**Downgrades** take effect at the start of the next billing period. You retain your current tier until then.
+
+### 8.6 Cancellation
+
+You may cancel your subscription at any time via the Dashboard (Settings → Billing → Cancel Subscription). Cancellation:
+- Takes effect at the end of the current billing period
+- Does not generate a refund for the current period
+- Moves the account to Developer Tier at end of period
+- Your account data, API keys, and notification history are retained for 90 days after cancellation
+
+### 8.7 Refunds
+
+Subscription fees are **non-refundable** except:
+- Where Herald fails to provide the Services for 30 or more consecutive days due to Herald's fault
+- Where required by applicable consumer protection law in your jurisdiction
+- At Herald's sole discretion in exceptional circumstances
+
+Herald does not offer pro-rated refunds for cancellations mid-period.
+
+### 8.8 Taxes
+
+Prices listed are exclusive of any applicable taxes. You are responsible for all taxes, duties, VAT, GST, or similar charges applicable in your jurisdiction. Herald does not collect or remit VAT on behalf of users, and does not currently issue VAT-compliant invoices. We recommend obtaining independent tax advice for your specific situation.
+
+### 8.9 Disputed Transactions
+
+To dispute a USDC payment, contact billing@useherald.xyz within 30 days of the transaction. We will investigate and respond within 14 days. USDC transactions on Solana are irreversible — in cases where Herald determines a payment was made in error, refunds will be issued as new USDC transactions (not reversals).
+
+---
+
+## 9. Pay-As-You-Go Overage
+
+### 9.1 Overage Opt-In
+
+Pay-as-you-go overage billing allows Protocol Teams to continue sending Notifications after their monthly quota is exhausted, at the applicable per-notification rate. **Overage billing is disabled by default and must be explicitly enabled** in the Dashboard (Billing → Overage Settings).
+
+### 9.2 Overage Rates
+
+Overage is charged per Notification at the following rates:
+
+| Tier | Email Overage Rate |
+|---|---|
+| Developer | $0.0005 per notification |
+| Growth | $0.0004 per notification |
+| Scale | $0.0003 per notification |
+| Enterprise | $0.0002 per notification |
+
+Rates are subject to change with 30 days' notice.
+
+### 9.3 Overage Cap
+
+Protocol Teams may configure a maximum monthly overage spend (default: $500 USDC). Once the cap is reached, the API returns HTTP 429 and no further Notifications are delivered until the next billing period or the cap is increased.
+
+### 9.4 Overage Invoicing
+
+At the end of each billing period, Herald generates an overage invoice for the accumulated charges. Invoices below $1.00 USDC are carried forward to the next period. Invoices are due within 7 days. Payment is requested via a Helio one-time payment link sent to the protocol admin email.
+
+### 9.5 Non-Payment of Overage
+
+If an overage invoice is not paid within 14 days:
+- Overage billing is automatically disabled for the protocol
+- The protocol retains access to base subscription quota
+- Outstanding overage charges are not waived but are held on account
+- Herald may suspend production access for persistent non-payment
+
+---
+
+## 10. API Keys and Access Credentials
+
+### 10.1 Responsibility for Keys
+
+You are responsible for:
+- Keeping all API Keys confidential and secure
+- Not sharing API Keys with unauthorised personnel
+- Rotating keys promptly if they are compromised or suspected to be compromised
+- All actions taken using your API Keys, whether authorised or not
+
+### 10.2 Sandbox vs Production Keys
+
+**Sandbox keys** (`hrld_test_*`): Deliver to configured test endpoints only. Never counted against quota. For testing and development only.
+
+**Production keys** (`hrld_live_*`): Deliver to real Wallet Holders. Counted against quota. Require verified protocol account.
+
+Do not use production keys in development or staging environments. Do not commit API Keys to version control systems (GitHub, GitLab, etc.) — this is a security violation and may result in immediate key revocation.
+
+### 10.3 Key Compromise
+
+If you believe a production API Key has been compromised, revoke it immediately in the Dashboard. A compromised key that sends spam or phishing content before revocation may result in account suspension, and you remain responsible for Content sent via your keys.
+
+### 10.4 Rate Limits
+
+API usage is subject to rate limits by tier (requests per second and burst limits). Detailed rate limits are published in the documentation at docs.useherald.xyz. Rate limits are enforced to protect the reliability of the service for all Protocol Teams. Attempts to circumvent rate limits are a violation of these Terms.
+
+---
+
+## 11. Intellectual Property
+
+### 11.1 Herald's IP
+
+Herald retains all rights, title, and interest in:
+- The Herald name, logo, and brand (including the ◈ symbol)
+- The Herald notification infrastructure, including the Anchor program, NestJS services, and TypeScript SDK
+- The useherald.xyz website and all its content
+- Herald's documentation, technical writing, and marketing materials
+- Herald's compilation and arrangement of delivery analytics
+
+These Terms do not grant you any intellectual property rights in Herald's IP except for the limited licence to use the Services described herein.
+
+### 11.2 Open Source Components
+
+Herald's SDK encryption module (`@herald-protocol/sdk/encryption`) is licensed under the MIT License and is available at github.com/herald-protocol/sdk. Your use of the open-source components is governed by the applicable open-source licence, not these Terms.
+
+The Herald Privacy Registry Anchor program is available for inspection at the above GitHub repository. Deployment and modification of the program on any network other than as operated by Herald requires compliance with the applicable licence terms.
+
+### 11.3 Licence to Use the Services
+
+Subject to these Terms, Herald grants you a limited, non-exclusive, non-transferable, revocable licence to:
+- Access and use the API and Dashboard for your permitted purposes
+- Use the SDK and documentation to build integrations
+- Reference Herald's brand in your documentation solely to indicate that your protocol uses Herald for notifications (subject to our brand guidelines at useherald.xyz/brand)
+
+### 11.4 Protocol Team Content
+
+You retain all rights to Content you transmit through Herald. By submitting Content, you grant Herald a limited, worldwide, non-exclusive, royalty-free licence to process and transmit the Content solely for the purpose of delivering it to the intended recipient. This licence terminates when the Content is delivered or the delivery attempt concludes.
+
+Herald does not claim ownership of your Content and does not use it for any purpose other than delivery.
+
+### 11.5 Feedback
+
+If you provide Herald with feedback, suggestions, or ideas about the Services, you grant Herald a perpetual, irrevocable, royalty-free licence to use, modify, and implement that feedback without restriction and without any obligation to compensate you.
+
+---
+
+## 12. Data, Privacy, and Encryption
+
+### 12.1 Privacy Policy
+
+Your use of the Services is also governed by Herald's Privacy Policy at useherald.xyz/privacy, which is incorporated by reference into these Terms.
+
+### 12.2 Herald as Data Processor
+
+For Protocol Teams, Herald processes personal data (wallet address routing, delivery status) as a **data processor** acting on your instructions. As data controller, you are responsible for:
+- Having a lawful basis to send notifications to wallet addresses
+- Providing required transparency to your users about notification practices
+- Ensuring your use of Herald complies with data protection laws applicable to you
+
+Herald's Data Processing Addendum (DPA) is available at useherald.xyz/legal/dpa and is incorporated by reference for Protocol Teams subject to GDPR, CCPA, NDPR, or equivalent regulation.
+
+### 12.3 Privacy Architecture Disclaimer
+
+Herald's privacy architecture is designed so that plaintext contact information is never stored. However:
+- Herald provides this as an **architectural design property**, not an unconditional guarantee
+- Unforeseen software bugs, hardware vulnerabilities, or novel attack vectors could theoretically compromise this property
+- We maintain extensive technical controls (Nitro Enclave, KMS, zero logging of PII) to make this risk minimal but cannot eliminate it entirely
+- **The on-chain encrypted record may be visible to public blockchain explorers** in encrypted form; see Section 13
+
+### 12.4 Your Encryption Responsibilities
+
+Wallet Holders perform encryption locally in their browser. Herald is not responsible for:
+- Security of the device used to register
+- Security of the Solana wallet private key
+- Loss of access to the wallet used for registration
+
+---
+
+## 13. On-Chain Data and Blockchain Risks
+
+### 13.1 Nature of Blockchain Storage
+
+The Herald Privacy Registry operates on the Solana blockchain. By using the Services, you acknowledge and accept:
+
+**Immutability:** Blockchain transactions cannot be reversed, deleted, or modified. When you write or update your Identity Account PDA, that transaction is permanently recorded on the Solana ledger, even if the PDA's current state is later zeroed.
+
+**Public Visibility:** Your PDA data (in encrypted form) is publicly visible on the Solana blockchain and may be indexed by blockchain explorers, archive nodes, and data analysis services. Herald does not control what third parties do with publicly visible blockchain data.
+
+**Solana Network Risk:** Herald relies on the Solana blockchain for critical functions. Network outages, congestion, validator issues, or protocol upgrades may affect Herald's ability to read Identity Account PDAs or write ZK receipts. Herald is not responsible for delays or failures arising from Solana network conditions.
+
+**Smart Contract Risk:** The Herald Privacy Registry is a smart contract (Anchor program). Despite our testing and audit processes, smart contracts may contain undiscovered bugs. Herald disclaims liability for losses arising from smart contract vulnerabilities that are not attributable to gross negligence or willful misconduct by Herald.
+
+**Program Upgrades:** Herald may upgrade the on-chain program. Herald will provide 7 days' notice of non-emergency upgrades via the Dashboard and useherald.xyz. Emergency security upgrades may be deployed with shorter notice.
+
+### 13.2 ZK Receipts
+
+ZK delivery receipts written to Solana are:
+- Immutable — they cannot be deleted
+- Public — they are readable by anyone querying Solana
+- Privacy-preserving — they contain a hash of the wallet address, not the plaintext address or any contact information
+- Not a guarantee of delivery — a receipt indicates Herald processed the notification; it does not guarantee the email reached the recipient's inbox or the Telegram message was read
+
+---
+
+## 14. Service Level and Availability
+
+### 14.1 Target Availability
+
+Herald targets the following service availability:
+
+| Tier | Target Monthly Availability |
+|---|---|
+| Developer | Best-effort (no SLA) |
+| Growth | 99.9% |
+| Scale | 99.9% |
+| Enterprise | 99.99% |
+
+Availability is measured as the percentage of minutes per calendar month during which the API accepts and processes requests, excluding Scheduled Maintenance.
+
+### 14.2 Scheduled Maintenance
+
+Herald will provide at least 48 hours' notice of scheduled maintenance that may affect service availability. Scheduled maintenance windows will be announced via:
+- Email to protocol admin accounts
+- Status page at status.useherald.xyz
+- Dashboard notification
+
+### 14.3 Service Credits
+
+For Protocol Teams on paid tiers, if Herald fails to meet the availability target in a calendar month:
+- **Growth/Scale:** Protocol Team receives a 10% credit of the monthly subscription fee for each percentage point below 99.9% (maximum credit: 50% of monthly fee)
+- **Enterprise:** Credits per negotiated enterprise agreement
+
+Credits are issued as USDC deductions from the next subscription payment. Credits are the sole remedy for availability failures and are not available where the failure results from events described in Section 22 (Force Majeure) or from the Protocol Team's own acts or omissions.
+
+### 14.4 Delivery Is Not Guaranteed
+
+Herald provides delivery infrastructure but does not guarantee:
+- That every Notification will reach the recipient's inbox (email deliverability is subject to recipient mail servers, spam filters, and user settings)
+- That Telegram messages will be read (users may have muted the bot)
+- That SMS messages will be received (carrier delivery varies by geography)
+- That a registered wallet address is currently controlled by the intended recipient
+
+**Herald is not liable for any loss arising from non-delivery, delayed delivery, or misdelivery of Notifications**, including but not limited to losses from DeFi liquidations, missed governance votes, or financial decisions made in reliance on notifications.
+
+---
+
+## 15. Disclaimer of Warranties
+
+**THE SERVICES ARE PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.**
+
+**TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, HERALD EXPRESSLY DISCLAIMS:**
+
+- All implied warranties of merchantability, fitness for a particular purpose, title, and non-infringement
+- Any warranty that the Services will be uninterrupted, error-free, or secure
+- Any warranty regarding the accuracy, reliability, timeliness, or completeness of any information provided through the Services
+- Any warranty that defects will be corrected
+- Any warranty arising from course of dealing, course of performance, or trade usage
+
+**HERALD DOES NOT WARRANT THAT:**
+- Any warranty that any notification will be delivered to its intended recipient
+- Any warranty regarding the performance of third-party networks or service providers (including AWS, Telegram, or SMS carriers)
+- Any warranty that the Solana blockchain will operate without interruption
+
+Some jurisdictions do not allow the exclusion of implied warranties or limitations on applicable statutory rights of a consumer, so the above exclusions may not apply to you in full. In such jurisdictions, the above exclusions apply only to the maximum extent permitted by applicable law.
+
+---
+
+## 16. Limitation of Liability
+
+### 16.1 Exclusion of Consequential Damages
+
+**TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, HERALD AND ITS AFFILIATES, OFFICERS, EMPLOYEES, AGENTS, AND LICENSORS SHALL NOT BE LIABLE FOR:**
+
+- Loss of profits, revenue, goodwill, or data
+- Indirect, incidental, special, consequential, or punitive damages
+- Damages arising from DeFi liquidations, missed governance votes, or financial decisions made in reliance on notification delivery
+- Damages arising from unauthorised access to or use of Herald's servers or personal data stored therein
+- Damages arising from interruption or cessation of transmission to or from the Services
+- Damages arising from bugs, viruses, Trojan horses, or similar harmful code
+
+**This exclusion applies regardless of the theory of liability (tort, contract, strict liability, or otherwise) and regardless of whether Herald has been advised of the possibility of such damages.**
+
+### 16.2 Cap on Liability
+
+**Herald's total aggregate liability to any Protocol Team or Wallet Holder for any claims under these Terms, however arising, shall not exceed the greater of:**
+
+**(a) USD $100; or**
+
+**(b) The total amount paid by the Protocol Team to Herald in the 12 months immediately preceding the event giving rise to the claim.**
+
+For Wallet Holders (who pay nothing), Herald's maximum aggregate liability is USD $100.
+
+### 16.3 Essential Basis
+
+The limitations in Sections 15 and 16 reflect a reasonable allocation of risk between you and Herald and are an essential element of the basis of the bargain between us. Herald would not be able to provide the Services at these prices without these limitations.
+
+### 16.4 Jurisdictional Variations
+
+Some jurisdictions (including EU member states under Directive 85/374/EEC and its implementing laws, and some Australian states) impose non-excludable statutory liabilities. Nothing in these Terms is intended to exclude or limit any liability that cannot be excluded or limited by applicable law.
+
+---
+
+## 17. Indemnification
+
+### 17.1 Protocol Team Indemnification
+
+Protocol Teams agree to defend, indemnify, and hold harmless Herald and its affiliates, officers, directors, employees, and agents from and against any claims, liabilities, damages, losses, and expenses (including reasonable legal fees) arising out of or in connection with:
+
+(a) Your use of the Services in violation of these Terms  
+(b) Content you transmit through the Herald API, including claims of spam, phishing, fraud, defamation, or IP infringement  
+(c) Your violation of any applicable law or regulation, including anti-spam laws, data protection laws, or financial regulations  
+(d) Any claim by a Wallet Holder arising from notifications you sent  
+(e) Your breach of any representation or warranty in these Terms  
+(f) Your negligence, willful misconduct, or fraud  
+
+### 17.2 Herald's Indemnification Obligations
+
+Herald agrees to defend, indemnify, and hold harmless Protocol Teams from third-party claims alleging that the Herald API, as provided by Herald and used in accordance with these Terms, infringes a valid third-party patent, copyright, or trade secret, subject to the Protocol Team: (a) promptly notifying Herald of the claim; (b) granting Herald sole control of the defence; and (c) providing reasonable cooperation. Herald's indemnification obligation does not apply to claims arising from modifications to the API made by the Protocol Team or use of the API in combination with other services.
+
+### 17.3 Wallet Holder Indemnification
+
+Wallet Holders agree to hold harmless Herald from claims arising from their own breach of these Terms, including misuse of the Portal or submission of false registration information.
+
+---
+
+## 18. Term, Suspension, and Termination
+
+### 18.1 Term
+
+These Terms commence when you first access the Services and continue until terminated by either party.
+
+### 18.2 Herald's Right to Suspend
+
+Herald may immediately suspend your access to the Services (including disabling API Keys) without prior notice if:
+
+(a) You violate the Acceptable Use Policy (Section 5)  
+(b) You violate the Notification Content Standards (Section 6)  
+(c) We have reasonable grounds to believe your account is being used fraudulently or to harm Wallet Holders  
+(d) We receive a legally valid order from a law enforcement or regulatory authority  
+(e) Continued provision of the Services poses a security or legal risk to Herald or third parties  
+(f) Your account is subject to a payment dispute or chargeback  
+
+We will notify you of the suspension as soon as reasonably practicable and provide an opportunity to respond, except where prohibited by law or where the urgency makes notice impracticable.
+
+### 18.3 Herald's Right to Terminate
+
+Herald may terminate your access to the Services:
+
+(a) Immediately for material violation of these Terms following suspension  
+(b) With 30 days' notice for any reason (convenience termination)  
+(c) Immediately upon written notice if you become insolvent, enter administration, or are subject to analogous proceedings  
+
+### 18.4 Your Right to Terminate
+
+You may terminate these Terms at any time by:
+- Cancelling your subscription (Protocol Teams)
+- Deleting your Herald registration (Wallet Holders)
+- Ceasing all use of the Services
+
+### 18.5 Effect of Termination
+
+Upon termination:
+- Your access to production API Keys is revoked
+- Your account data is retained for 90 days then deleted (except billing records retained 7 years)
+- Outstanding subscription fees for the current period are non-refundable
+- Outstanding overage invoices remain due and payable
+- Provisions of these Terms that by their nature should survive (Sections 11, 13, 15, 16, 17, 19, 20) continue in effect
+
+---
+
+## 19. Dispute Resolution
+
+### 19.1 Informal Resolution First
+
+Before initiating formal dispute proceedings, you agree to contact us at legal@useherald.xyz and attempt to resolve the dispute informally for at least 30 days.
+
+### 19.2 Binding Arbitration (Protocol Teams)
+
+For Protocol Teams, disputes that cannot be resolved informally shall be submitted to binding arbitration under the rules of a mutually agreed arbitral institution. Arbitration shall be conducted in English, in a location to be agreed. The arbitral award shall be final and binding.
+
+**Class Action Waiver:** You waive any right to bring or participate in a class action, class arbitration, or representative proceeding against Herald.
+
+### 19.3 Court Proceedings (Wallet Holders)
+
+Wallet Holders who are consumers may bring disputes before the courts of their country of habitual residence, notwithstanding Section 20.
+
+### 19.4 Injunctive Relief
+
+Nothing in these Terms prevents either party from seeking urgent injunctive or other equitable relief from a court of competent jurisdiction to prevent irreparable harm.
+
+---
+
+## 20. Governing Law
+
+These Terms are governed by and construed in accordance with the **laws of the Federal Republic of Nigeria**, without reference to conflict of law principles.
+
+However:
+- For users in the **European Economic Area**, mandatory consumer protection laws of your country of residence apply and cannot be overridden by these Terms
+- For users in the **United Kingdom**, UK consumer protection law applies where mandatory
+- For users in **California**, the applicable provisions of California law apply where mandatory
+- For **enterprise Protocol Teams** with a negotiated enterprise agreement, the governing law in that agreement prevails
+
+---
+
+## 21. Regulatory Compliance and Sanctions
+
+### 21.1 Sanctions Compliance
+
+Herald operates in compliance with applicable sanctions laws administered by:
+- The US Office of Foreign Assets Control (OFAC)
+- The United Nations Security Council
+- The European Union
+- The UK Office of Financial Sanctions Implementation (OFSI)
+
+You represent and warrant that you are not:
+- Ordinarily resident in, or located in, any comprehensively sanctioned jurisdiction (currently: North Korea, Iran, Syria, Russia (certain sectors), Belarus (certain sectors), Cuba, and others as listed by OFAC)
+- A designated Specially Designated National, blocked person, or otherwise restricted person
+- Owned or controlled, directly or indirectly, by any sanctioned person or entity
+- Using the Services in connection with any sanctioned activity
+
+We reserve the right to immediately terminate accounts we have reasonable grounds to believe are in violation of sanctions laws.
+
+### 21.2 Financial Services Regulations
+
+Herald is a **notification delivery infrastructure provider** and is not a financial services provider, investment adviser, broker-dealer, or money transmitter. We do not provide financial advice. Content transmitted through Herald is solely the responsibility of the sending Protocol Team.
+
+Protocol Teams who use Herald to send financial promotions, investment solicitations, or regulated communications are solely responsible for compliance with applicable financial services regulations in each jurisdiction where they operate.
+
+### 21.3 USDC Payments
+
+Herald accepts payment in USDC, a US dollar-backed stablecoin. Protocol Teams are responsible for compliance with any virtual asset service provider (VASP), money services business (MSB), or equivalent regulations applicable to their use of USDC in their jurisdiction.
+
+Herald itself uses USDC only for subscription and billing purposes and does not provide cryptocurrency exchange, custody, or transmission services.
+
+### 21.4 Anti-Money Laundering
+
+Herald cooperates with applicable anti-money laundering (AML) obligations. We may request additional information from Protocol Teams if required by applicable AML regulations and may report suspicious activity to relevant authorities without notification to the user.
+
+---
+
+## 22. Force Majeure
+
+Herald shall not be liable for any failure or delay in performing its obligations under these Terms to the extent caused by circumstances beyond its reasonable control, including but not limited to:
+
+- Acts of God, natural disasters, pandemic, or epidemic
+- Acts of government, regulatory action, or legal requirement
+- Solana network outages or consensus failures
+- Third-party service provider failures (including AWS, Telegram, or SMS providers) that are not attributable to Herald's failure to maintain appropriate service agreements
+- Cyberattacks, distributed denial of service attacks, or malware affecting Herald's infrastructure
+- Internet or telecommunications infrastructure failures
+- War, civil unrest, terrorism, or sanctions impositions
+
+Herald will use commercially reasonable efforts to resume performance as soon as practicable and will notify affected Protocol Teams of the force majeure event and its expected duration within a reasonable time.
+
+If a force majeure event continues for more than 30 days, either party may terminate the affected subscription with a pro-rated refund for the unused portion.
+
+---
+
+## 23. General Provisions
+
+### 23.1 Entire Agreement
+
+These Terms, together with the Privacy Policy (useherald.xyz/privacy) and Data Processing Addendum (useherald.xyz/legal/dpa), constitute the entire agreement between you and Herald regarding the Services and supersede all prior agreements, representations, and understandings.
+
+### 23.2 Amendments
+
+Herald may modify these Terms at any time. For **material changes** (changes that affect your rights or obligations), we will:
+- Provide at least 30 days' notice via email to protocol admin accounts and notice on the Dashboard
+- Give you the opportunity to terminate your subscription before the changes take effect
+
+For **non-material changes** (clarifications, corrections, new features), we will update the "Last Updated" date.
+
+Your continued use of the Services after the effective date of amended Terms constitutes acceptance. If you do not agree to the amended Terms, you may terminate your account before the effective date.
+
+### 23.3 Severability
+
+If any provision of these Terms is found to be invalid, illegal, or unenforceable, that provision will be modified to the minimum extent necessary to make it enforceable, or severed if modification is not possible, without affecting the remaining provisions.
+
+### 23.4 Waiver
+
+No failure or delay by Herald in exercising any right under these Terms constitutes a waiver of that right. No waiver of any breach constitutes a waiver of any subsequent breach.
+
+### 23.5 Assignment
+
+Herald may assign these Terms or its rights and obligations hereunder in connection with a merger, acquisition, or sale of substantially all of its assets, provided that the assignee assumes all of Herald's obligations. You may not assign your rights or obligations under these Terms without Herald's prior written consent.
+
+### 23.6 No Third-Party Beneficiaries
+
+These Terms are for the benefit of Herald and you only and do not create any third-party beneficiary rights.
+
+### 23.7 Relationship of Parties
+
+Nothing in these Terms creates a partnership, joint venture, employment, franchise, or agency relationship between Herald and you. Neither party has authority to bind the other in any respect.
+
+### 23.8 Export Controls
+
+The Services, including cryptographic software components, may be subject to export control laws. You agree to comply with all applicable export and re-export regulations, including the US Export Administration Regulations (EAR) and sanctions regulations. You represent that you are not located in a country subject to US embargo and are not on the US Denied Persons List.
+
+### 23.9 Notices
+
+Notices to Herald should be sent to legal@useherald.xyz. Notices to Protocol Teams will be sent to the administrative email on file. Notices to Wallet Holders will be sent via the Notification channels they have registered, or to any email address provided during account creation.
+
+### 23.10 Headings
+
+Section headings are for convenience only and do not affect the interpretation of these Terms.
+
+---
+
+## 24. Contact Information
+
+**General Enquiries:**  
+hello@useherald.xyz
+
+**Legal and Terms Enquiries:**  
+legal@useherald.xyz
+
+**Privacy and Data Protection:**  
+privacy@useherald.xyz
+
+**Security Disclosures:**  
+security@useherald.xyz
+
+**Billing Disputes:**  
+billing@useherald.xyz
+
+**Protocol Trust and Safety:**  
+trust@useherald.xyz
+
+---
+
+*These Terms of Service were prepared to reflect the specific legal, technical, and business characteristics of Herald Protocol's notification infrastructure service. They are not generic boilerplate. If you have questions about how these Terms apply to your specific integration or use case, contact legal@useherald.xyz.*
+
+*Herald recommends that Protocol Teams obtain independent legal advice regarding their own obligations as data controllers and their compliance with financial services, anti-spam, and consumer protection regulations applicable to their specific operations.*
+
+---
+
+**Previous Versions:** Available at useherald.xyz/legal/terms-history
+
+**Effective Date:** 1 April 2026 | **Version:** 1.0

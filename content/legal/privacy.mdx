@@ -1,0 +1,553 @@
+---
+title: Privacy Policy
+description: How Herald Protocol collects, uses, and protects your data.
+updatedAt: 2026-04-01
+version: "1.0"
+---
+
+# Privacy Policy
+
+**Effective Date:** 1 April 2026  
+**Last Updated:** 1 April 2026  
+**Version:** 1.0
+
+**Herald Protocol** ("Herald", "we", "us", or "our") operates the notification infrastructure available at **useherald.xyz**, **notify.useherald.xyz**, **app.useherald.xyz**, and **api.useherald.xyz** (collectively, the "Services").
+
+This Privacy Policy explains how we collect, use, store, and protect information when you use our Services. It applies to:
+
+- **Wallet Holders** — individuals who register a Solana wallet with Herald to receive notifications
+- **Protocol Teams** — developers and companies who integrate Herald's API to send notifications
+- **Website Visitors** — anyone who visits useherald.xyz
+
+> **The short version:** Herald was built from the ground up so that we never learn your contact information. We cannot read your email address. We cannot see your phone number. We cannot identify which wallet maps to which person. This is not a policy choice — it is an architectural guarantee. The sections below explain exactly how this works and what limited data we do process.
+
+---
+
+## Table of Contents
+
+1. [Who We Are](#1-who-we-are)
+2. [Herald's Privacy Architecture — How It Actually Works](#2-heralds-privacy-architecture)
+3. [Information We Collect and Why](#3-information-we-collect-and-why)
+4. [Information We Never Collect](#4-information-we-never-collect)
+5. [How We Use Information](#5-how-we-use-information)
+6. [Legal Bases for Processing (GDPR)](#6-legal-bases-for-processing-gdpr)
+7. [Data Storage and On-Chain Data](#7-data-storage-and-on-chain-data)
+8. [Third-Party Service Providers](#8-third-party-service-providers)
+9. [International Data Transfers](#9-international-data-transfers)
+10. [Data Retention](#10-data-retention)
+11. [Your Rights](#11-your-rights)
+12. [Children's Privacy](#12-childrens-privacy)
+13. [Blockchain Data and Immutability](#13-blockchain-data-and-immutability)
+14. [Security](#14-security)
+15. [Cookies and Tracking](#15-cookies-and-tracking)
+16. [California Residents (CCPA/CPRA)](#16-california-residents-ccpacpra)
+17. [Nigerian Residents (NDPR)](#17-nigerian-residents-ndpr)
+18. [UK and EEA Residents (UK GDPR / EU GDPR)](#18-uk-and-eea-residents-uk-gdpr--eu-gdpr)
+19. [Changes to This Policy](#19-changes-to-this-policy)
+20. [Contact Us](#20-contact-us)
+
+---
+
+## 1. Who We Are
+
+Herald Protocol operates as a notification infrastructure provider. Our registered correspondence address and data controller contact is:
+
+**Herald Protocol**  
+Email: privacy@useherald.xyz  
+Website: https://useherald.xyz
+
+For GDPR purposes, Herald Protocol is the **data controller** in respect of data collected through the website and dashboard, and acts as a **data processor** on behalf of Protocol Teams when processing notification delivery on their behalf.
+
+---
+
+## 2. Herald's Privacy Architecture
+
+Understanding how Herald works technically is essential to understanding our privacy commitments. This section describes the architecture so you can verify our claims independently.
+
+### 2.1 How Wallet Holder Registration Works
+
+When you register your wallet with Herald at notify.useherald.xyz:
+
+1. **Your browser generates encryption keys.** Using your Solana wallet's public key, your browser performs a cryptographic key conversion (Ed25519 to X25519) entirely locally.
+
+2. **Your contact information is encrypted before it leaves your device.** Your email address, Telegram ID, or phone number is encrypted using NaCl box encryption directly in your browser. The plaintext never leaves your device.
+
+3. **Only the encrypted blob is transmitted and stored.** Herald's servers receive and store only ciphertext — a sequence of bytes that is mathematically impossible to reverse without your wallet's private key.
+
+4. **The encrypted data is written to Solana.** Your encrypted identity record is stored in a Program Derived Address (PDA) on the Solana blockchain, owned by your wallet, under the Herald Privacy Registry program (Program ID: `2pxjAf8tLCakKVDuN4vY51B5TeaEQk4koPuk9NZvWqdf`).
+
+5. **Herald's servers contain no mapping of your wallet to your contact information in readable form.**
+
+### 2.2 How Notification Delivery Works
+
+When a DeFi protocol sends you a notification:
+
+1. **The protocol provides only your wallet address.** The protocol never handles your contact information at any stage.
+
+2. **Herald fetches your encrypted record from Solana.** We retrieve the encrypted blob from the blockchain.
+
+3. **Decryption occurs in an AWS Nitro Enclave.** Your contact information is decrypted only inside an isolated virtual machine (Trusted Execution Environment) that has no persistent storage, no network access except to AWS Key Management Service (KMS), and whose code is cryptographically attested. Only the exact approved version of our code can request decryption keys from KMS.
+
+4. **Your contact information exists in memory for approximately 200 milliseconds.** We call the email, Telegram, or SMS delivery service, then the memory is immediately released. No log file, no database write, no cache entry is ever made of your plaintext contact information.
+
+5. **A delivery receipt is written to Solana.** An immutable compressed proof of delivery is recorded on-chain using Light Protocol. This receipt contains: the protocol's public key, a SHA-256 hash of your wallet address (not your email), the notification ID, timestamp, and category. Your email address does not appear anywhere in the receipt.
+
+### 2.3 What This Means in Practice
+
+- **Herald cannot respond to a subpoena for your email address** — we genuinely do not have it in readable form.
+- **A breach of Herald's servers would not expose your contact information** — there is nothing to steal.
+- **Protocol teams cannot extract user contact information from Herald** — the API never returns it.
+- **The open-source encryption module is available at** github.com/heraldhq-protocol/herald-sdk-ts for independent verification.
+
+---
+
+## 3. Information We Collect and Why
+
+### 3.1 Information Collected from Wallet Holders
+
+| Data | Format Stored | Purpose | Legal Basis |
+|---|---|---|---|
+| Solana wallet public key | Plaintext | Identity for PDA derivation | Contract performance |
+| SHA-256 hash of wallet address | Hash (irreversible) | Delivery receipt privacy | Legitimate interest |
+| Encrypted contact blobs | NaCl ciphertext | Notification delivery | Contract performance |
+| Channel opt-in flags | Boolean flags | Respect notification preferences | Contract performance |
+| Notification category preferences | Boolean flags | Deliver only wanted notifications | Contract performance |
+| Registration timestamp | Unix timestamp | Audit and support | Legitimate interest |
+
+We do **not** store your wallet address in combination with any personally identifiable information in our databases. The wallet address you use to register is a pseudonymous identifier — it does not inherently identify you as a natural person.
+
+### 3.2 Information Collected from Protocol Teams
+
+| Data | Purpose | Legal Basis |
+|---|---|---|
+| Protocol admin email address (encrypted at rest) | Account management, billing invoices | Contract performance |
+| Protocol name | Display in notifications, dashboard | Contract performance |
+| Protocol website URL | Verification, support | Contract performance |
+| Solana wallet address of protocol admin | Authentication | Contract performance |
+| API key usage logs (no payload content) | Security, billing, analytics | Legitimate interest |
+| Notification metadata (subject hash, status, timestamps) | Delivery tracking, analytics | Contract performance |
+| Billing records (USDC transaction signatures) | Financial compliance | Legal obligation |
+| IP address hashes (SHA-256, not raw IPs) | Security, fraud prevention | Legitimate interest |
+| Session tokens | Authenticated dashboard access | Contract performance |
+
+### 3.3 Information Collected from Website Visitors
+
+| Data | Purpose |
+|---|---|
+| Anonymised page views (Plausible Analytics) | Understanding how people use the site |
+| Referrer URL (anonymised) | Understanding traffic sources |
+
+We use **Plausible Analytics**, a privacy-first analytics provider that:
+- Does not use cookies
+- Does not fingerprint visitors
+- Does not collect personal information
+- Is GDPR-compliant without requiring a consent banner
+- Stores aggregated, anonymised data only
+
+We do not use Google Analytics, Facebook Pixel, or any advertising tracking technology on useherald.xyz.
+
+---
+
+## 4. Information We Never Collect
+
+The following data is never collected, stored, or logged by Herald, at any time, in any form:
+
+- **Email addresses in plaintext** — not in our database, not in our logs, not in transit logs
+- **Telegram user IDs in plaintext**
+- **Phone numbers in plaintext**
+- **Notification body content** — we log only a subject hash for deduplication; the message body is never stored after delivery
+- **Raw IP addresses** — we store only SHA-256(IP) for fraud detection
+- **Wallet private keys** — we never request or receive these
+- **Any biometric data**
+- **Any government-issued identification**
+- **Any payment card information** (we use USDC on Solana; no card data is ever processed by Herald)
+
+---
+
+## 5. How We Use Information
+
+### 5.1 Service Delivery
+- Routing notifications from protocols to registered wallets
+- Authenticating protocol teams to the dashboard and API
+- Tracking delivery status and generating analytics for protocols
+
+### 5.2 Security and Fraud Prevention
+- Detecting anomalous API usage patterns (rate limit violations, credential stuffing)
+- Preventing abuse of the notification infrastructure (spam, phishing)
+- Verifying protocol identity before granting production API access
+
+### 5.3 Billing and Legal Compliance
+- Generating USDC overage invoices
+- Maintaining records of subscription payments
+- Responding to legally required disclosures (see Section 13 for blockchain data limitations)
+
+### 5.4 Product Improvement
+- Analysing aggregated, anonymised delivery metrics (delivery rates, latency by category)
+- Identifying and fixing reliability issues
+
+### 5.5 Communications
+- Sending subscription confirmation and invoice emails to protocol admins
+- Sending usage warning alerts (80%, 95%, 100% quota)
+- Sending renewal reminders before subscription expiry
+- Responding to support requests
+
+We do **not** use your information for:
+- Advertising or marketing to third parties
+- Selling data to any third party (see Section 8)
+- Training machine learning models on your content
+- Building profiles of individual users' behaviour
+
+---
+
+## 6. Legal Bases for Processing (GDPR)
+
+For individuals in the UK and EEA, we rely on the following legal bases under UK GDPR / EU GDPR Article 6:
+
+| Processing Activity | Legal Basis |
+|---|---|
+| Delivering notifications | Article 6(1)(b) — Performance of contract |
+| Dashboard authentication | Article 6(1)(b) — Performance of contract |
+| Billing and invoicing | Article 6(1)(c) — Legal obligation (financial records) |
+| Security monitoring and fraud detection | Article 6(1)(f) — Legitimate interests (preventing harm to the platform and users) |
+| Anonymised analytics | Article 6(1)(f) — Legitimate interests (product improvement) |
+| Protocol verification review | Article 6(1)(f) — Legitimate interests (protecting users from spam/phishing) |
+
+For our **legitimate interests** bases, we have conducted balancing tests and determined that our processing does not override the fundamental rights of data subjects, given the minimal and pseudonymous nature of the data involved.
+
+Where we process special categories of data (we do not knowingly do so), we would rely on explicit consent under Article 9(2)(a).
+
+---
+
+## 7. Data Storage and On-Chain Data
+
+### 7.1 Off-Chain Storage (Herald's Servers)
+
+Herald operates infrastructure on **Amazon Web Services (AWS)** in the **eu-north-1 (Stockholm)** region. All data at rest in our databases is encrypted using AES-256-GCM with keys managed by AWS KMS.
+
+Protocol admin email addresses are stored encrypted at the application layer (AES-256-GCM via AWS KMS) in addition to database-level encryption.
+
+### 7.2 On-Chain Storage (Solana Blockchain)
+
+Your encrypted identity record (IdentityAccount PDA) is stored on the Solana blockchain. This is a **public blockchain** — the encrypted blob is publicly readable by anyone who queries the Solana RPC. However:
+
+- The data is encrypted with your wallet's public key
+- Without the corresponding private key and Herald's AWS KMS-controlled decryption key, the encrypted blob reveals nothing about you
+- The wallet address in the PDA is your chosen pseudonym on Solana — it does not inherently identify you
+
+**Important:** Blockchain data is immutable by nature. Herald can set the PDA to a deleted/empty state (when you exercise your right to erasure), but the historical encrypted blob may persist in Solana's ledger history at archive nodes. Herald has no technical ability to remove data from the Solana ledger. See Section 13 for more detail.
+
+### 7.3 ZK Delivery Receipts
+
+Delivery receipts written to Solana via Light Protocol contain:
+- The protocol's public key (a Solana address)
+- SHA-256 of the recipient wallet address (a hash, not the address itself)
+- A notification ID (UUID)
+- A timestamp
+- A category identifier
+
+These receipts do not contain your email address, Telegram ID, or phone number in any form.
+
+---
+
+## 8. Third-Party Service Providers
+
+Herald shares limited data with the following categories of service providers acting as our data processors:
+
+| Provider | Purpose | Data Shared | Location |
+|---|---|---|---|
+| Amazon Web Services (AWS) | Cloud hosting, KMS, SES email delivery | Encrypted blobs, notification metadata | Sweden (eu-north-1) |
+| Telegram (Telegram FZ-LLC) | Telegram message delivery | Telegram chat ID (in TEE memory, ~200ms only), message content | UAE/global |
+| AWS SNS / Twilio | SMS delivery | Phone number (in TEE memory, ~200ms only), SMS content | Sweden / USA |
+| Helio | USDC subscription payment processing | Protocol wallet address, payment amounts | Solana network |
+| Plausible Analytics | Anonymised website analytics | Anonymised page views (no PII) | EU (Lithuania) |
+| Redis Labs (Redis Enterprise) | Session and queue management | Session tokens, notification job metadata | USA |
+
+We do **not** sell personal data to any third party. We do not share personal data with advertisers. We do not allow service providers to use your data for their own purposes beyond providing services to us.
+
+We enter into Data Processing Agreements (DPAs) with all processors that handle personal data.
+
+---
+
+## 9. International Data Transfers
+
+Herald is operated from Nigeria and infrastructure is hosted primarily in Sweden (AWS eu-north-1).
+
+**For EEA/UK users:** Transfers of personal data outside the UK/EEA are protected by:
+- **Standard Contractual Clauses (SCCs)** — EU Commission-approved SCCs incorporated into our agreements with AWS and other relevant processors
+- **Adequacy decisions** where available
+- **Supplementary technical measures** — encryption at rest and in transit, AWS Nitro Enclave isolation
+
+**For Nigerian users:** Transfers comply with the Nigeria Data Protection Regulation (NDPR) Article 2.11 requirements for cross-border transfers, including ensuring recipient countries provide adequate protection or implementing appropriate safeguards.
+
+Given Herald's privacy architecture (the substantive personal data — contact information — never leaves the TEE in plaintext form, and is never stored), the practical exposure from international transfers is significantly reduced compared to conventional services.
+
+---
+
+## 10. Data Retention
+
+| Data Category | Retention Period | Basis |
+|---|---|---|
+| Wallet registration (on-chain, encrypted) | Until you delete your account | Blockchain immutability (see Section 13) |
+| Notification metadata (delivery records) | 90 days (Developer/Growth) · 365 days (Scale/Enterprise) | Product functionality |
+| Protocol account information | Duration of contract + 2 years | Legal obligation (financial records) |
+| Billing records (USDC transactions) | 7 years | Tax and financial compliance |
+| API access logs (anonymised) | 90 days | Security and fraud detection |
+| Support communications | 3 years from resolution | Legitimate interest |
+| Session tokens | 7 days (refresh) / 15 minutes (access) | Security |
+| Telegram OTP verification logs | 30 days | Fraud prevention |
+| IP address hashes | 90 days | Security |
+
+When a protocol team closes their account, we delete their personal data within 30 days, except where retention is required by law (e.g., financial records).
+
+When a wallet holder deletes their Herald registration, the on-chain PDA is closed (zeroed), the protocol's mapping is removed from our database, and all associated notification history is deleted within 30 days.
+
+---
+
+## 11. Your Rights
+
+### 11.1 Rights for All Users
+
+Regardless of your location, Herald provides:
+
+**Right to Access:** You may request a copy of the information we hold about you. For wallet holders, this is principally your on-chain encrypted record (which you can read directly from Solana) and notification delivery metadata.
+
+**Right to Delete / Erasure:** 
+- *Wallet holders:* Delete your Herald registration at notify.useherald.xyz/settings at any time. This submits an `update_identity` transaction that zeroes your on-chain record. Deletion is final. Delivery history is removed from our database within 30 days.
+- *Protocol teams:* Request account deletion via privacy@useherald.xyz. Account data removed within 30 days (billing records retained 7 years per legal requirement).
+
+**Right to Correction:** Contact privacy@useherald.xyz to correct inaccurate information.
+
+**Right to Object:** You may object to processing based on legitimate interests. Contact privacy@useherald.xyz.
+
+### 11.2 Additional Rights for EEA/UK Residents (GDPR)
+
+In addition to the above:
+
+**Right to Restriction of Processing:** You may request we restrict processing while a dispute is resolved.
+
+**Right to Data Portability:** You may request your data in machine-readable format. For wallet holders, your registration data is already portable — it lives on a public blockchain readable by any Solana RPC.
+
+**Right to Lodge a Complaint:** If you believe we have violated your rights, you may complain to your national supervisory authority:
+- **EU:** Your national Data Protection Authority (list at edpb.europa.eu)
+- **UK:** Information Commissioner's Office (ico.org.uk)
+- **Ireland (our EU representative jurisdiction):** Data Protection Commission (dataprotection.ie)
+
+**Response Time:** We will acknowledge your request within 72 hours and respond fully within 30 days (extendable to 90 days for complex requests with notice).
+
+### 11.3 Additional Rights for California Residents (CCPA/CPRA)
+
+See Section 16.
+
+### 11.4 Additional Rights for Nigerian Residents (NDPR)
+
+See Section 17.
+
+### 11.5 Exercising Your Rights
+
+Submit requests to: **privacy@useherald.xyz**
+
+For wallet holder requests, we may ask you to verify ownership of the wallet by signing a message — this is the most privacy-preserving verification method available and does not require us to collect additional personal data.
+
+---
+
+## 12. Children's Privacy
+
+Herald's Services are not directed to children under the age of 18 (or the applicable age of digital consent in your jurisdiction). We do not knowingly collect personal information from minors.
+
+If we become aware that a user is under 18, we will take steps to delete their information promptly. If you believe a child has provided personal information to Herald, contact privacy@useherald.xyz.
+
+The DeFi and cryptocurrency space involves complex financial instruments. We strongly discourage minors from using DeFi protocols and therefore from registering with Herald.
+
+---
+
+## 13. Blockchain Data and Immutability
+
+Herald uses the Solana blockchain as a data storage layer. This creates specific considerations that users should understand:
+
+**Immutability:** Once data is written to the Solana blockchain, it cannot be permanently deleted. When you delete your Herald registration, we zero out your IdentityAccount PDA — the active state shows no data — but historical snapshots of the ledger may contain the encrypted blob in archive nodes.
+
+**What this means practically:** The encrypted blob that is/was in your PDA is:
+- Encrypted with your wallet key and Herald's KMS-controlled key
+- Not decodable without both your private key and access to Herald's enclave
+- Not personally identifiable to any third party without both keys
+- Purely a sequence of bytes to anyone observing the blockchain
+
+**Our position on GDPR erasure and blockchain:** The Article 29 Working Party (now EDPB) has acknowledged that for encrypted blockchain data, erasure of the encryption keys can constitute functional erasure even where the ciphertext persists. When you delete your Herald registration, we instruct our KMS to revoke the key material used to encrypt your data. This makes the ciphertext permanently unreadable even if the bytes persist in archive nodes.
+
+**ZK receipts are immutable:** Delivery receipts on Solana cannot be deleted. They contain only a hash of your wallet address and metadata — no personal contact information — and are part of the verifiable proof infrastructure.
+
+---
+
+## 14. Security
+
+Herald implements the following security measures:
+
+**Cryptographic:**
+- NaCl box encryption for all contact information (client-side)
+- AES-256-GCM for all database fields containing any sensitive data
+- AWS KMS HSM-backed keys for authority operations
+- TLS 1.3 for all data in transit
+- HSTS with preloading on all Herald domains
+
+**Infrastructure:**
+- AWS Nitro Enclave for decryption operations (no persistent storage, attested code)
+- Zero plaintext contact information in any persistent store (databases, logs, caches)
+- VPC isolation between services
+- No direct public internet access to database or cache layers
+
+**Operational:**
+- Principle of least privilege for all internal service accounts
+- Audit logging of all administrative operations
+- HERALD_AUTHORITY keypair stored in AWS KMS (never on disk or in environment variables)
+- Security review of all protocol teams before production API access
+
+**Disclosure:** In the event of a security incident that poses a risk to your rights and freedoms, we will notify affected individuals and relevant supervisory authorities within 72 hours of becoming aware, in accordance with GDPR Article 33/34.
+
+Despite our security measures, no system is completely secure. We encourage wallet holders to maintain the security of their Solana wallet private keys, as these are the root of your Herald identity.
+
+---
+
+## 15. Cookies and Tracking
+
+### 15.1 useherald.xyz (Marketing Website)
+
+We use **no advertising or analytics cookies**. We use Plausible Analytics which operates without cookies or fingerprinting.
+
+We use one functional cookie:
+- `herald_session` — stores your dashboard session token (HttpOnly, Secure, SameSite=Strict, 7-day expiry)
+
+### 15.2 app.useherald.xyz (Dashboard)
+
+We use:
+- `herald_session` — dashboard authentication (required for service)
+- `herald_refresh` — refresh token (HttpOnly, Secure, 7-day expiry)
+
+### 15.3 notify.useherald.xyz (User Portal)
+
+We use:
+- `herald_portal` — portal session (HttpOnly, Secure, 1-hour expiry)
+
+No advertising cookies, tracking pixels, or third-party cookies are used on any Herald property. No cookie consent banner is displayed because we do not use tracking cookies.
+
+---
+
+## 16. California Residents (CCPA/CPRA)
+
+This section supplements the Privacy Policy for California residents under the California Consumer Privacy Act (CCPA) as amended by the California Privacy Rights Act (CPRA).
+
+**Categories of Personal Information Collected in the Past 12 Months:**
+
+| CCPA Category | Collected | Sold/Shared |
+|---|---|---|
+| Identifiers (wallet address, email hash) | Yes | No |
+| Commercial information (subscription tier, billing records) | Yes | No |
+| Internet or network activity (API usage logs) | Yes (anonymised) | No |
+| Geolocation data | No | — |
+| Biometric information | No | — |
+| Inferences drawn to create a profile | No | — |
+
+**Your CCPA/CPRA Rights:**
+
+- **Right to Know:** What personal information we collect, use, disclose, and sell (we do not sell)
+- **Right to Delete:** Request deletion of your personal information
+- **Right to Correct:** Request correction of inaccurate personal information
+- **Right to Opt-Out of Sale/Sharing:** We do not sell or share personal information for cross-context behavioural advertising
+- **Right to Limit Use of Sensitive Personal Information:** We do not use sensitive personal information for purposes beyond service delivery
+- **Right to Non-Discrimination:** We will not discriminate against you for exercising CCPA rights
+
+**Submitting a CCPA Request:** Email privacy@useherald.xyz with subject "CCPA Request — [Right]". We respond within 45 days (extendable to 90 days with notice).
+
+**Authorised Agent:** You may designate an authorised agent to make requests on your behalf. We will require verification of the agent's authority.
+
+Herald does not sell personal information. Herald does not share personal information with third parties for cross-context behavioural advertising.
+
+---
+
+## 17. Nigerian Residents (NDPR)
+
+This section supplements the Privacy Policy for Nigerian residents under the Nigeria Data Protection Regulation (NDPR) 2019 and the Nigeria Data Protection Act (NDPA) 2023.
+
+Herald Protocol complies with the NDPR/NDPA framework in the following ways:
+
+**Data Controller Registration:** Herald Protocol will register with the Nigeria Data Protection Commission (NDPC) as required under the NDPA 2023 upon exceeding the applicable threshold for mandatory registration.
+
+**Your Rights Under NDPR/NDPA:**
+- Right to access your personal data
+- Right to rectification of inaccurate data
+- Right to object to data processing
+- Right to erasure ("right to be forgotten")
+- Right to data portability
+- Right to withdraw consent (where consent is the legal basis)
+- Right to lodge a complaint with the NDPC
+
+**Cross-Border Transfers:** Where we transfer your data outside Nigeria (including to our AWS infrastructure in the United States), we ensure adequate protection through Standard Contractual Clauses and technical measures as described in Section 9.
+
+**Data Protection Officer:** For NDPR purposes, you may direct data protection queries to: **privacy@useherald.xyz**
+
+**Complaints:** If you believe your data protection rights have been violated, you may complain to the Nigeria Data Protection Commission (NDPC) at ndpc.gov.ng.
+
+Herald acknowledges the important role of the NDPR in establishing trust for digital services in Nigeria and the African ecosystem. Our privacy-by-design architecture was conceived in part to reflect the values of data sovereignty that underpin the NDPR.
+
+---
+
+## 18. UK and EEA Residents (UK GDPR / EU GDPR)
+
+This section supplements the Privacy Policy for individuals in the UK and European Economic Area.
+
+**Data Controller:** Herald Protocol (contact: privacy@useherald.xyz)
+
+**EU Representative:** Herald Protocol is in the process of appointing an EU representative as required by GDPR Article 27 for controllers outside the EEA. Our nominated EU representative details will be published at useherald.xyz/legal/gdpr-representative once appointed.
+
+**UK Representative:** Similarly, we are appointing a UK representative under UK GDPR Article 27.
+
+**Lawful Bases:** See Section 6.
+
+**Data Protection Officer:** Herald does not currently meet the threshold for mandatory DPO appointment under GDPR Article 37. However, all data protection queries are handled by our privacy team at privacy@useherald.xyz.
+
+**Supervisory Authority:** Our lead supervisory authority is the **Data Protection Commission (DPC) of Ireland** as our designated EU establishment for GDPR purposes. UK matters are handled by the **Information Commissioner's Office (ICO)**.
+
+**Data Protection Impact Assessment (DPIA):** Given Herald's privacy-by-design architecture and the novel use of on-chain encrypted storage, we have conducted a DPIA covering the core notification delivery processing. Key findings: the risk to data subjects is low due to the architectural guarantee that plaintext contact information is never persistently stored.
+
+---
+
+## 19. Changes to This Policy
+
+We will update this Privacy Policy when:
+- Our data practices materially change
+- We add new features that affect data processing
+- Law changes require us to update our disclosures
+- We receive material feedback from users or regulators
+
+**Material changes** (changes that affect your rights or significantly change how we use your data) will be communicated by:
+- Email to protocol admin accounts on file
+- Notice on useherald.xyz for at least 30 days before the change takes effect
+- Banner notification on app.useherald.xyz and notify.useherald.xyz
+
+**Non-material changes** (corrections, clarifications, formatting) will be made with an updated "Last Updated" date.
+
+Your continued use of Herald's Services after the effective date of a revised Privacy Policy constitutes acceptance of the revised terms.
+
+Previous versions of this Privacy Policy are available at useherald.xyz/legal/privacy-history.
+
+---
+
+## 20. Contact Us
+
+**General Privacy Enquiries:**  
+privacy@useherald.xyz
+
+**Data Subject Rights Requests:**  
+privacy@useherald.xyz  
+Subject line: "Privacy Request — [Your Right]"
+
+**Security Vulnerability Disclosure:**  
+security@useherald.xyz  
+(See useherald.xyz/security for our responsible disclosure policy)
+
+We are committed to resolving privacy concerns promptly and fairly. If we cannot resolve a dispute directly with you, we will cooperate with the relevant supervisory authority.
+
+---
+
+*This Privacy Policy was prepared to reflect Herald's actual technical architecture and the specific legal requirements applicable to a privacy-preserving, blockchain-native notification service operating globally. It is not generic boilerplate. If you have questions about how it applies to your specific situation, contact privacy@useherald.xyz.*
+
+*Herald recommends that all protocol teams integrating our API obtain independent legal advice regarding their own GDPR/privacy obligations. Herald's privacy guarantees reduce but do not eliminate the protocol's own data controller obligations.*
