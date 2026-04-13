@@ -16,8 +16,8 @@ import * as __fd_glob_8 from "../content/docs/api/rest.mdx?collection=docs"
 import { default as __fd_glob_7 } from "../content/docs/user-guides/_meta.json?collection=docs"
 import { default as __fd_glob_6 } from "../content/docs/sdk/_meta.json?collection=docs"
 import { default as __fd_glob_5 } from "../content/docs/protocol/_meta.json?collection=docs"
-import { default as __fd_glob_4 } from "../content/docs/overview/_meta.json?collection=docs"
-import { default as __fd_glob_3 } from "../content/docs/philosophy/_meta.json?collection=docs"
+import { default as __fd_glob_4 } from "../content/docs/philosophy/_meta.json?collection=docs"
+import { default as __fd_glob_3 } from "../content/docs/overview/_meta.json?collection=docs"
 import { default as __fd_glob_2 } from "../content/docs/getting-started/_meta.json?collection=docs"
 import { default as __fd_glob_1 } from "../content/docs/api/_meta.json?collection=docs"
 import { default as __fd_glob_0 } from "../content/docs/_meta.json?collection=docs"
@@ -29,4 +29,4 @@ const create = server<typeof Config, import("fumadocs-mdx/runtime/types").Intern
   }
 }>({"doc":{"passthroughs":["extractedReferences"]}});
 
-export const docs = await create.docs("docs", "content/docs", {"_meta.json": __fd_glob_0, "api/_meta.json": __fd_glob_1, "getting-started/_meta.json": __fd_glob_2, "philosophy/_meta.json": __fd_glob_3, "overview/_meta.json": __fd_glob_4, "protocol/_meta.json": __fd_glob_5, "sdk/_meta.json": __fd_glob_6, "user-guides/_meta.json": __fd_glob_7, }, {"api/rest.mdx": __fd_glob_8, "getting-started/index.mdx": __fd_glob_9, "getting-started/quickstart.mdx": __fd_glob_10, "overview/architecture.mdx": __fd_glob_11, "overview/concepts.mdx": __fd_glob_12, "philosophy/design-principles.mdx": __fd_glob_13, "philosophy/governance.mdx": __fd_glob_14, "protocol/guarantees.mdx": __fd_glob_15, "protocol/specifications.mdx": __fd_glob_16, "protocol/wire-format.mdx": __fd_glob_17, "sdk/billing.mdx": __fd_glob_18, "sdk/typescript.mdx": __fd_glob_19, "user-guides/integration-patterns.mdx": __fd_glob_20, "user-guides/production-checklist.mdx": __fd_glob_21, });
+export const docs = await create.docs("docs", "content/docs", {"_meta.json": __fd_glob_0, "api/_meta.json": __fd_glob_1, "getting-started/_meta.json": __fd_glob_2, "overview/_meta.json": __fd_glob_3, "philosophy/_meta.json": __fd_glob_4, "protocol/_meta.json": __fd_glob_5, "sdk/_meta.json": __fd_glob_6, "user-guides/_meta.json": __fd_glob_7, }, {"api/rest.mdx": __fd_glob_8, "getting-started/index.mdx": __fd_glob_9, "getting-started/quickstart.mdx": __fd_glob_10, "overview/architecture.mdx": __fd_glob_11, "overview/concepts.mdx": __fd_glob_12, "philosophy/design-principles.mdx": __fd_glob_13, "philosophy/governance.mdx": __fd_glob_14, "protocol/guarantees.mdx": __fd_glob_15, "protocol/specifications.mdx": __fd_glob_16, "protocol/wire-format.mdx": __fd_glob_17, "sdk/billing.mdx": __fd_glob_18, "sdk/typescript.mdx": __fd_glob_19, "user-guides/integration-patterns.mdx": __fd_glob_20, "user-guides/production-checklist.mdx": __fd_glob_21, });
