@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { ArrowRight, Wallet, Lock, Zap } from "lucide-react";
+import JsonLd from "@/components/seo/JsonLd";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -56,6 +57,20 @@ export default function HowItWorks() {
 
   return (
     <section ref={container} className="py-16 sm:py-24 lg:py-32 relative">
+      <JsonLd 
+        data={{
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": STEPS.map(step => ({
+            "@type": "Question",
+            "name": step.title,
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": step.desc
+            }
+          }))
+        }}
+      />
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-8 items-start">
           

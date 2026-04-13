@@ -1,6 +1,7 @@
 import { RootProvider } from "fumadocs-ui/provider/next";
 import type { Metadata } from "next";
 import { Syne, DM_Sans, Geist_Mono } from "next/font/google";
+import JsonLd from "@/components/seo/JsonLd";
 import "./globals.css";
 
 const syne = Syne({
@@ -58,6 +59,27 @@ export default function RootLayout({
       <body
         className={`${syne.variable} ${dmSans.variable} ${geistMono.variable} antialiased`}
       >
+        <JsonLd 
+          data={{
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Herald Protocol",
+            "url": "https://useherald.xyz",
+            "logo": "https://ucshdejvxzanuxlxrano.supabase.co/storage/v1/object/public/herald-public-asset/herald-logo.svg",
+            "sameAs": [
+              "https://twitter.com/useheraldmail",
+              "https://github.com/heraldhq-protocol"
+            ]
+          }}
+        />
+        <JsonLd 
+          data={{
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "Herald",
+            "url": "https://useherald.xyz"
+          }}
+        />
         <RootProvider theme={{ forcedTheme: "dark" }}>
           {children}
         </RootProvider>
