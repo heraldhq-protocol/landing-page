@@ -1,7 +1,20 @@
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import type { ReactNode } from "react";
+import type { Metadata } from 'next';
 import { source } from "@/lib/source";
 import Image from "next/image";
+
+export const metadata: Metadata = {
+  title: {
+    template: '%s | Herald Docs',
+    default: 'Herald Documentation',
+  },
+  description: 'Technical reference and integration guides for the Herald Protocol — privacy-preserving, zero-PII notifications for DeFi.',
+  openGraph: {
+    siteName: 'Herald Docs',
+    type: 'website',
+  },
+};
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (

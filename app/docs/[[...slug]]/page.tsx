@@ -48,7 +48,6 @@ export async function generateMetadata(props: {
       title: page.data.title,
       description: page.data.description,
       url: `${baseUrl}${path}`,
-      siteName: "Herald Docs",
       type: "article",
       images: [
         {
