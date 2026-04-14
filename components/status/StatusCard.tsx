@@ -39,7 +39,7 @@ export default function StatusCard({ monitor, isLive = false }: Props) {
       `}
     >
       <div 
-        className="p-6 sm:p-8 flex items-center justify-between cursor-pointer hover:bg-gray-50/50 dark:hover:bg-white/[0.02] transition-colors"
+        className="p-6 sm:p-8 flex items-center justify-between cursor-pointer hover:bg-gray-50/50 dark:hover:bg-white/2 transition-colors"
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center gap-4 sm:gap-6">

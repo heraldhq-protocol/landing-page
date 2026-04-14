@@ -4,6 +4,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   redirects: async () => [
     { source: "/docs", destination: "/docs/quickstart", permanent: false },
+    { source: "/register", destination: "https://notify.useherald.xyz/register", permanent: false },
+    { source: "/app", destination: "https://app.useherald.xyz", permanent: false },
   ],
   images: {
     remotePatterns: [

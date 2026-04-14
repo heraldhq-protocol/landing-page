@@ -136,8 +136,10 @@ export default function NavBar() {
           </div>
 
           <div className="mt-12 flex flex-col gap-4">
-            <Button className="w-full bg-teal text-bg-base font-bold h-14 rounded-2xl shadow-[0_0_30px_rgba(0,200,150,0.2)] text-lg">
-              Register your wallet →
+            <Button asChild className="w-full bg-teal text-bg-base font-bold h-14 rounded-2xl shadow-[0_0_30px_rgba(0,200,150,0.2)] text-lg">
+              <Link href="https://notify.useherald.xyz/register" onClick={() => setMobileMenuOpen(false)}>
+                Register your wallet →
+              </Link>
             </Button>
             <p className="text-center text-xs text-text-muted mt-4">
               © 2026 Herald Protocol

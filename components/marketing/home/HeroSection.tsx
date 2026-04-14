@@ -4,6 +4,7 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight } from "lucide-react";
 
@@ -77,20 +78,26 @@ export default function HeroSection() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 w-full">
           <div className="hero-cta w-full sm:w-auto">
             <Button
+              asChild
               size="lg"
               className="bg-teal text-navy hover:bg-teal/90 font-bold px-8 h-12 text-base rounded-xl w-full sm:w-auto group hover:-translate-y-1 hover:shadow-[0_0_24px_rgba(20,184,166,0.3)] transition-all duration-300"
             >
-              Integrate as a protocol
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              <Link href="/for-protocols">
+                Integrate as a protocol
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
             </Button>
           </div>
           <div className="hero-cta w-full sm:w-auto">
             <Button
+              asChild
               variant="outline"
               size="lg"
               className="border-border-2 text-text-primary hover:border-teal/40 hover:text-teal px-8 h-12 text-base rounded-xl bg-card/50 backdrop-blur-sm w-full sm:w-auto transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-teal/10"
             >
-              Register your wallet
+              <Link href="https://notify.useherald.xyz/register">
+                Register your wallet
+              </Link>
             </Button>
           </div>
         </div>
