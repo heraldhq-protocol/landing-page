@@ -74,13 +74,13 @@ type Tab = keyof typeof CODE_SAMPLES;
 function highlight(code: string, lang: string): string {
   if (lang === "bash") {
     return code
-      .replace(/(#.*)/g, '<span class="text-text-muted">$1</span>')
       .replace(/(".*?")/g, '<span class="text-amber">$1</span>')
+      .replace(/(#.*)/g, '<span class="text-text-muted">$1</span>')
       .replace(/\b(curl|POST|GET)\b/g, '<span class="text-purple">$1</span>');
   }
   return code
-    .replace(/(\/\/.*)/g, '<span class="text-text-muted/60 italic">$1</span>')
     .replace(/('.*?'|`.*?`)/g, '<span class="text-amber">$1</span>')
+    .replace(/(\/\/.*)/g, '<span class="text-text-muted/60 italic">$1</span>')
     .replace(
       /\b(await|const|import|from|true|false|async|let|use|pub|fn|struct|enum|impl)\b/g,
       '<span class="text-purple">$1</span>',
@@ -173,22 +173,22 @@ export default function CodePreview() {
             {/* Glow */}
             <div className="absolute -inset-1 bg-linear-to-r from-teal/15 to-purple/15 rounded-2xl blur-xl opacity-0 xl:group-hover:opacity-100 transition-opacity duration-700" />
 
-            <div className="relative bg-[#020810] border border-border rounded-2xl overflow-hidden shadow-2xl">
+            <div className="relative bg-[#020810] border border-border rounded-2xl overflow-hidden shadow-2xl flex flex-col min-h-[320px] sm:min-h-0">
               {/* Window chrome */}
-              <div className="flex items-center justify-between px-4 py-3 border-b border-border/60 bg-bg-surface/50">
-                <div className="flex gap-1.5">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-border/60 bg-bg-surface/50 shrink-0">
+                <div className="hidden sm:flex gap-1.5">
                   <div className="w-3 h-3 rounded-full bg-red/50" />
                   <div className="w-3 h-3 rounded-full bg-amber/50" />
                   <div className="w-3 h-3 rounded-full bg-green/50" />
                 </div>
 
                 {/* Tabs */}
-                <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide flex-nowrap shrink-0 max-w-[60%] sm:max-w-none">
+                <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide flex-nowrap shrink-0 max-w-[70%] sm:max-w-none">
                   {(Object.keys(CODE_SAMPLES) as Tab[]).map((key) => (
                     <button
                       key={key}
                       onClick={() => setTab(key)}
-                      className={`px-3 py-1 rounded-md text-xs font-mono transition-all duration-200 ${
+                      className={`px-3 py-1.5 rounded-md text-xs font-mono transition-all duration-200 whitespace-nowrap ${
                         tab === key
                           ? "bg-teal/15 text-teal border border-teal/25"
                           : "text-text-muted hover:text-text-secondary"
@@ -202,43 +202,48 @@ export default function CodePreview() {
                 {/* Copy button */}
                 <button
                   onClick={handleCopy}
-                  className="flex items-center gap-1.5 text-xs text-text-muted hover:text-teal transition-colors px-2 py-1 rounded-md hover:bg-teal/10"
+                  aria-label="Copy code"
+                  className="flex items-center gap-2 text-xs text-text-muted hover:text-teal transition-colors p-2 -mr-1 rounded-md hover:bg-teal/10 min-w-[44px] justify-center"
                 >
                   {copied ? (
                     <>
                       <Check className="w-3.5 h-3.5 text-teal" />
-                      <span className="text-teal">Copied</span>
+                      <span className="text-teal hidden xs:inline">Copied</span>
                     </>
                   ) : (
                     <>
                       <Copy className="w-3.5 h-3.5" />
-                      <span>Copy</span>
+                      <span className="hidden xs:inline">Copy</span>
                     </>
                   )}
                 </button>
               </div>
 
-              {/* Code */}
-              <div className="p-4 sm:p-6 overflow-x-auto max-w-full">
-                <pre className="text-[11px] sm:text-sm font-mono leading-relaxed inline-block min-w-full">
-                  <code
-                    dangerouslySetInnerHTML={{
-                      __html: highlight(current.code, current.lang),
-                    }}
-                    className="text-text-secondary"
-                  />
-                </pre>
+              {/* Code with Scroll Hint */}
+              <div className="relative flex-1 min-h-0 group/code">
+                <div className="absolute inset-y-0 right-0 w-8 bg-linear-to-l from-[#020810] to-transparent pointer-events-none z-10 opacity-60 group-hover/code:opacity-20 transition-opacity" />
+                
+                <div className="p-4 sm:p-6 overflow-x-auto max-w-full h-full custom-scrollbar">
+                  <pre className="text-xs sm:text-sm font-mono leading-relaxed inline-block min-w-full">
+                    <code
+                      dangerouslySetInnerHTML={{
+                        __html: highlight(current.code, current.lang),
+                      }}
+                      className="text-text-secondary"
+                    />
+                  </pre>
+                </div>
               </div>
 
               {/* Footer bar */}
-              <div className="px-4 py-2.5 border-t border-border/40 bg-bg-surface/30 flex items-center justify-between">
+              <div className="px-4 py-2.5 border-t border-border/40 bg-bg-surface/30 flex items-center justify-between shrink-0">
                 <div className="flex items-center gap-1.5">
                   <Terminal className="w-3.5 h-3.5 text-text-muted" />
                   <span className="text-xs text-text-muted font-mono">
                     @herald-protocol/sdk v1.1.0
                   </span>
                 </div>
-                <div className="flex items-center gap-1.5">
+                <div className="hidden xs:flex items-center gap-1.5">
                   <div className="w-1.5 h-1.5 rounded-full bg-teal animate-pulse" />
                   <span className="text-xs text-teal font-mono">ready</span>
                 </div>

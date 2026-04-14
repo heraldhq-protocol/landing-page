@@ -1,0 +1,24 @@
+---
+title: Why DeFi protocols shouldn't store their users' emails
+description: The case for privacy-preserving notifications and why storing PII is a liability for protocols.
+author: Herald Team
+date: "2026-04-14"
+---
+
+In the world of DeFi, privacy is not just a feature; it's a fundamental requirement. Yet, many protocols still rely on traditional web2 methods for user notifications—specifically, storing user emails in centralized databases.
+
+### The Liability of PII
+
+Stored email addresses represent a significant liability for decentralised protocols:
+
+1. **GDPR Exposure**: Storing PII (Personally Identifiable Information) brings accidental regulatory burden.
+2. **Security Risk**: A database breach can link wallet addresses to real-world identities.
+3. **User Distrust**: Engineering teams at Drift, Jupiter, and others know that users respect privacy above all else.
+
+### The Herald Approach
+
+Herald solves this by providing a **notification layer** that uses ZK proofs and localized encryption. Protocols can send alerts via email, Telegram, or SMS without ever knowing the recipient's contact info.
+
+> "Send. Don't store." — This is our north star.
+
+By leveraging the Herald SDK, you can notify your users about liquidations or governance votes with just a wallet address. We handle the rest.

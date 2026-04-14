@@ -12,9 +12,9 @@ interface Props {
 }
 
 const statusColors = {
-  up: 'bg-emerald-500',
-  down: 'bg-rose-500',
-  degraded: 'bg-amber-500',
+  up: 'bg-teal',
+  down: 'bg-red',
+  degraded: 'bg-amber',
 };
 
 export default function StatusCard({ monitor, isLive = false }: Props) {
@@ -33,8 +33,8 @@ export default function StatusCard({ monitor, isLive = false }: Props) {
   return (
     <div 
       className={`
-        bg-white dark:bg-gray-900 rounded-3xl border
-        ${pulse ? 'border-blue-500 shadow-xl shadow-blue-500/10' : 'border-gray-100 dark:border-white/5'}
+        bg-bg-surface rounded-3xl border
+        ${pulse ? 'border-teal shadow-xl shadow-teal/10' : 'border-bg-border'}
         transition-all duration-500 overflow-hidden group/card backdrop-blur-sm
       `}
     >
@@ -46,7 +46,7 @@ export default function StatusCard({ monitor, isLive = false }: Props) {
           <div className="relative">
             <div className={`w-3.5 h-3.5 rounded-full ${statusColors[monitor.currentStatus]} shadow-lg`} />
             {isLive && monitor.currentStatus === 'up' && (
-              <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full animate-ping" />
+              <div className="absolute -top-1 -right-1 w-2 h-2 bg-teal rounded-full animate-ping" />
             )}
           </div>
           <div>
@@ -55,7 +55,7 @@ export default function StatusCard({ monitor, isLive = false }: Props) {
                 {monitor.name}
               </h3>
               {isLive && (
-                <span className="hidden sm:flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-500 text-[10px] font-bold uppercase tracking-wider border border-blue-500/20">
+                <span className="hidden sm:flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-teal/10 text-teal text-[10px] font-bold uppercase tracking-wider border border-teal/20">
                   <Zap className="w-2.5 h-2.5" />
                   Live
                 </span>
@@ -98,7 +98,7 @@ export default function StatusCard({ monitor, isLive = false }: Props) {
                   <Activity className="w-3.5 h-3.5" />
                   Availability History
                 </h4>
-                <span className="text-[10px] font-bold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full">
+                <span className="text-[10px] font-bold text-teal bg-teal/10 px-2 py-0.5 rounded-full">
                   Last 24h
                 </span>
               </div>
@@ -111,7 +111,7 @@ export default function StatusCard({ monitor, isLive = false }: Props) {
                   <Clock className="w-3.5 h-3.5" />
                   Performance Pattern
                 </h4>
-                <span className="text-[10px] font-bold text-blue-500 bg-blue-500/10 px-2 py-0.5 rounded-full">
+                <span className="text-[10px] font-bold text-teal bg-teal/10 px-2 py-0.5 rounded-full">
                   Latency Trend
                 </span>
               </div>

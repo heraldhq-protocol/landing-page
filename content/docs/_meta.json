@@ -1,9 +1,10 @@
 {
-  "getting-started": "Getting Started",
+  "quickstart": "Quickstart",
   "overview": "Overview",
-  "protocol": "Protocol",
   "sdk": "SDK",
   "api": "API",
-  "user-guides": "User Guides",
-  "philosophy": "Philosophy"
+  "privacy-model": "Privacy Model",
+  "specifications": "Specifications",
+  "guides": "Guides",
+  "webhooks": "Webhooks"
 }

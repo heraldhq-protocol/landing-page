@@ -1,0 +1,42 @@
+---
+title: Webhooks
+description: Receive real-time push notifications of delivery results and ZK-attestation events.
+---
+
+Herald provides outbound webhooks to notify your backend when a notification has been successfully delivered or when a ZK-receipt has been minted on-chain.
+
+### Endpoint Configuration
+
+Webhooks are configured via the Herald Dashboard. Every webhook event includes a signature in the header for verification.
+
+```bash
+# Example Header
+X-Herald-Signature: t=161454...,v1=9c...
+```
+
+### Event Types
+
+| Event | Trigger |
+| :--- | :--- |
+| `notification.delivered` | The message has been successfully handed off to the provider (SES/TG). |
+| `receipt.minted` | The ZK-proof of delivery has been written to the Solana blockchain. |
+| `user.registered` | A new user has mapped their public key to a contact channel. |
+
+### Payload Example
+
+```json
+{
+  "id": "evt_01HX4...",
+  "type": "notification.delivered",
+  "created": 1614547200,
+  "data": {
+    "notification_id": "hrld_xxx",
+    "wallet": "7xR4mKp2nQ...",
+    "channel": "telegram"
+  }
+}
+```
+
+### Security
+
+We recommend verifying the `X-Herald-Signature` using your secret key to ensure the event originated from our Nitro Enclave.

@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   redirects: async () => [
-    { source: "/docs", destination: "/docs/getting-started", permanent: false },
+    { source: "/docs", destination: "/docs/quickstart", permanent: false },
   ],
   images: {
     remotePatterns: [

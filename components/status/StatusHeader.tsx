@@ -8,24 +8,24 @@ interface Props {
 const statusConfig = {
   operational: {
     label: 'All Systems Operational',
-    color: 'bg-emerald-500',
-    textColor: 'text-emerald-700 dark:text-emerald-400',
-    bgColor: 'bg-emerald-500/10',
-    borderColor: 'border-emerald-500/20',
+    color: 'bg-teal',
+    textColor: 'text-teal',
+    bgColor: 'bg-teal/10',
+    borderColor: 'border-teal/20',
   },
   degraded: {
     label: 'Degraded Performance',
-    color: 'bg-amber-500',
-    textColor: 'text-amber-700 dark:text-amber-400',
-    bgColor: 'bg-amber-500/10',
-    borderColor: 'border-amber-500/20',
+    color: 'bg-amber',
+    textColor: 'text-amber',
+    bgColor: 'bg-amber/10',
+    borderColor: 'border-amber/20',
   },
   major_outage: {
     label: 'Major System Outage',
-    color: 'bg-rose-500',
-    textColor: 'text-rose-700 dark:text-rose-400',
-    bgColor: 'bg-rose-500/10',
-    borderColor: 'border-rose-500/20',
+    color: 'bg-red',
+    textColor: 'text-red',
+    bgColor: 'bg-red/10',
+    borderColor: 'border-red/20',
   },
 };
 

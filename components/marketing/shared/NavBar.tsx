@@ -30,6 +30,7 @@ export default function NavBar() {
     { name: "Pricing", href: "/pricing" },
     { name: "Docs", href: "/docs" },
     { name: "Blog", href: "/blog" },
+    { name: "Changelog", href: "/changelog" },
   ];
 
   return (
