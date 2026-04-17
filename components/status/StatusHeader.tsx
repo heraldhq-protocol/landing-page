@@ -95,12 +95,12 @@ export default function StatusHeader({ overallStatus, lastUpdated }: Props) {
           </div>
         </div>
 
-        <div className="flex items-center justify-between sm:ml-auto sm:mr-2">
+        <div className="flex items-center justify-between gap-4 sm:ml-auto sm:mr-2">
           <div className="flex items-center gap-2 text-text-muted">
             <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-            <span className="text-[10px] sm:text-xs font-medium uppercase tracking-wider">Last check</span>
+            <span className="text-[10px] sm:text-xs font-medium uppercase tracking-wider hidden xs:inline">Last check</span>
           </div>
-          <p className="text-sm sm:text-base lg:text-lg font-semibold text-text-primary tabular-nums">
+          <p className="text-sm sm:text-base lg:text-lg font-semibold text-text-primary tabular-nums font-mono min-w-[70px] sm:min-w-[85px] text-right">
             {formatTime(lastUpdated)}
           </p>
         </div>

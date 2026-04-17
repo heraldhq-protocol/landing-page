@@ -57,7 +57,7 @@ export default function ConnectionStatus({
       {lastUpdate && (
         <div className="hidden md:flex items-center gap-1.5 text-text-muted/60">
           <span className="text-[9px] uppercase tracking-wider">Sync</span>
-          <span className="font-medium text-text-muted tabular-nums">
+          <span className="font-medium text-text-muted tabular-nums font-mono min-w-[50px]">
             {formatTime(lastUpdate)}
           </span>
         </div>
