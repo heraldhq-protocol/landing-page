@@ -1,0 +1,14 @@
+{
+  "domains": [
+    {
+      "name": "useherald.xyz",
+      "redirect": "www.useherald.xyz"
+    },
+    {
+      "name": "www.useherald.xyz"
+    },
+    {
+      "name": "blog.useherald.xyz"
+    }
+  ]
+}
