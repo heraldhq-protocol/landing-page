@@ -70,7 +70,7 @@ export default function IntegrationsPage() {
             <Terminal className="w-8 h-8 text-text-muted mb-4" />
             <h3 className="text-lg font-bold text-text-secondary mb-2">Your Protocol Here?</h3>
             <Link 
-              href="/docs/getting-started" 
+              href="/docs/quickstart" 
               className="text-xs font-bold text-teal hover:underline uppercase tracking-widest"
             >
               View Integration docs →

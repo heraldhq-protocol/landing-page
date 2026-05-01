@@ -92,5 +92,171 @@ Retrieves the current status of a notification.
 | **Developer** | 2 | 1,000 |
 | **Growth** | 20 | 50,000 |
 | **Scale** | 100 | 250,000 |
+| **Enterprise** | 500 | 1,000,000 |
 
 *Rates are enforced based on the API key provided. Check your usage via `GET /v1/usage`.*
+
+---
+
+## Additional Endpoints
+
+### Health Check
+`GET /health`
+
+No authentication required. Returns the service health status.
+
+```json
+{ "status": "ok", "timestamp": "2026-04-25T12:00:00Z" }
+```
+
+---
+
+### List Notifications
+`GET /v1/notifications`
+
+Returns paginated notifications for the authenticated protocol.
+
+**Query Parameters:**
+- `limit` (optional, default 20, max 100)
+- `offset` (optional, default 0)
+
+**Response (200 OK):**
+```json
+{
+  "notifications": [
+    {
+      "id": "ulid_01H...",
+      "wallet": "7xR4mKp2nQ...",
+      "status": "delivered",
+      "channel": "email",
+      "createdAt": "2024-04-12T20:00:00Z"
+    }
+  ],
+  "total": 142,
+  "hasMore": true
+}
+```
+
+---
+
+### Webhooks
+
+#### Register Webhook
+`POST /v1/webhooks`
+
+Register a URL to receive delivery event notifications.
+
+**Request Body:**
+```json
+{
+  "url": "https://myprotocol.com/webhooks/herald",
+  "events": ["notification.delivered", "receipt.minted"]
+}
+```
+
+**Response (201 Created):**
+```json
+{
+  "id": "wh_01HX...",
+  "url": "https://myprotocol.com/webhooks/herald",
+  "secret": "whsec_xxx"
+}
+```
+
+#### List Webhooks
+`GET /v1/webhooks`
+
+Returns all registered webhooks for the protocol.
+
+#### Update Webhook
+`PATCH /v1/webhooks/:id`
+
+Update webhook URL or event subscriptions.
+
+#### Delete Webhook
+`DELETE /v1/webhooks/:id`
+
+Remove a webhook endpoint.
+
+---
+
+### Analytics
+`GET /v1/analytics`
+
+Returns delivery analytics for the authenticated protocol.
+
+**Query Parameters:**
+- `period` (optional: `7d`, `30d`, `90d`, default `30d`)
+
+**Response (200 OK):**
+```json
+{
+  "period": "30d",
+  "totalSent": 4521,
+  "totalDelivered": 4489,
+  "deliveryRate": 99.3,
+  "byChannel": {
+    "email": 3200,
+    "telegram": 1289
+  }
+}
+```
+
+---
+
+### Usage
+`GET /v1/usage`
+
+Returns current usage vs. quota for the billing period.
+
+**Response (200 OK):**
+```json
+{
+  "tier": "growth",
+  "limit": 50000,
+  "used": 12450,
+  "remaining": 37550,
+  "resetsAt": "2026-05-25T00:00:00Z"
+}
+```
+
+---
+
+### Billing Status
+`GET /v1/billing/status`
+
+Returns current subscription tier and payment status.
+
+**Response (200 OK):**
+```json
+{
+  "tier": "growth",
+  "status": "active",
+  "subscriptionExpiresAt": "2026-05-25T00:00:00Z",
+  "helioCheckoutUrl": "https://helio.xyz/checkout/..."
+}
+```
+
+---
+
+### Preview
+`POST /v1/preview`
+
+Preview how a notification will be rendered before sending. Useful for testing templates.
+
+**Request Body:**
+```json
+{
+  "subject": "Test Alert",
+  "body": "This is a preview of your notification.",
+  "category": "defi"
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "renderedHtml": "<html>...</html>",
+  "renderedText": "Test Alert\n\nThis is a preview..."
+}
+```

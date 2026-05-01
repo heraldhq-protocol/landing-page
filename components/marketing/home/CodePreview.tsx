@@ -151,7 +151,7 @@ export default function CodePreview() {
                 className="bg-teal text-bg-base hover:bg-teal/90 font-bold rounded-xl px-6 h-11 shadow-[0_0_20px_rgba(0,200,150,0.2)] hover:shadow-[0_0_30px_rgba(0,200,150,0.35)] transition-shadow duration-300 group"
               >
                 <Link
-                  href="/docs/getting-started/quickstart"
+                  href="/docs/quickstart"
                   className="flex items-center gap-2"
                 >
                   View quickstart
@@ -240,7 +240,7 @@ export default function CodePreview() {
                 <div className="flex items-center gap-1.5">
                   <Terminal className="w-3.5 h-3.5 text-text-muted" />
                   <span className="text-xs text-text-muted font-mono">
-                    @herald-protocol/sdk v1.1.0
+                    @herald-protocol/sdk v1.3.1
                   </span>
                 </div>
                 <div className="hidden xs:flex items-center gap-1.5">

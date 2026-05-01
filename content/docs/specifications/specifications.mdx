@@ -10,14 +10,34 @@ The Herald Protocol is defined by a set of cryptographic and architectural speci
 ## 1. Identity Specification
 - **Address Format**: Solana Pubkey (32 bytes).
 - **Identity PDA**: `[b"identity", owner_pubkey]` using the Herald Program ID.
-- **Account Layout**:
+- **Account Layout** (1024 bytes):
   - `owner`: Pubkey (32 bytes)
-  - `encrypted_contact`: Bytes (Variable, max 256)
-  - `contact_hash`: Bytes (32 bytes, SHA-256)
+  - `encrypted_email`: Bytes (max 512)
+  - `email_hash`: Bytes (32 bytes, SHA-256)
   - `nonce`: Bytes (24 bytes)
-  - `opt_ins`: U64 Bitfield
+  - `opt_ins`: Bitfield (`opt_in_all`, `opt_in_defi`, `opt_in_governance`, `opt_in_marketing`)
+  - `digest_mode`: U8
+  - `registered_at`: i64 (Unix timestamp)
+  - **Channel Flags**: `channel_email`, `channel_telegram`, `channel_sms` (U8 each)
+  - **Channel Data**: `encrypted_telegram_id`, `encrypted_phone` (encrypted blobs)
+  - **Notification Keys**: `sealed_x25519_pubkey`, `sender_x25519_pubkey`, `notification_key_version`
 
-## 2. Notification Specification
+## 2. Protocol Specification
+- **Protocol PDA**: `[b"protocol", protocol_wallet]` using the Herald Program ID.
+- **Account Layout** (256 bytes):
+  - `owner`: Pubkey (32 bytes)
+  - `name_hash`: Bytes (32 bytes)
+  - `tier`: U8 (0=Dev, 1=Growth, 2=Scale, 3=Enterprise)
+  - `subscription_expires_at`: i64
+  - `last_renewed_at`: i64
+  - `periods_paid`: U64
+  - `sends_this_period`: U64
+  - `is_active`: Bool
+  - `is_suspended`: Bool
+  - `lifetime_usdc_paid`: U64
+  - `registered_at`: i64
+
+## 3. Notification Specification
 - **Payload Format**: CBOR (Concise Binary Object Representation).
 - **Encryption Algorithm**: X25519 (NaCl `crypto_box`).
 - **Signature Algorithm**: Ed25519.

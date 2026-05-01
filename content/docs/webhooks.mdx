@@ -18,9 +18,12 @@ X-Herald-Signature: t=161454...,v1=9c...
 
 | Event | Trigger |
 | :--- | :--- |
-| `notification.delivered` | The message has been successfully handed off to the provider (SES/TG). |
+| `notification.delivered` | The message has been successfully handed off to the provider (SES/TG/SMS). |
+| `notification.bounced` | The email bounced back (hard or soft bounce). |
+| `notification.failed` | Delivery failed after all retry attempts. |
 | `receipt.minted` | The ZK-proof of delivery has been written to the Solana blockchain. |
 | `user.registered` | A new user has mapped their public key to a contact channel. |
+| `quota.exceeded` | The protocol has exceeded its monthly messaging quota. |
 
 ### Payload Example
 
@@ -32,9 +35,30 @@ X-Herald-Signature: t=161454...,v1=9c...
   "data": {
     "notification_id": "hrld_xxx",
     "wallet": "7xR4mKp2nQ...",
-    "channel": "telegram"
+    "channel": "telegram",
+    "deliveredAt": "2026-04-25T12:00:00Z",
+    "receiptTx": "5xK9mP..."
   }
 }
+```
+
+### Managing Webhooks
+
+Webhooks can be managed via the REST API or the [Herald Dashboard](https://app.useherald.xyz).
+
+```bash
+# Register a new webhook
+curl -X POST https://api.useherald.xyz/v1/webhooks \
+  -H "Authorization: Bearer hrld_live_xxx" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://myprotocol.com/webhooks/herald",
+    "events": ["notification.delivered", "receipt.minted"]
+  }'
+
+# List all webhooks
+curl -X GET https://api.useherald.xyz/v1/webhooks \
+  -H "Authorization: Bearer hrld_live_xxx"
 ```
 
 ### Security

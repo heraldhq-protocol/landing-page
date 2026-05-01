@@ -10,7 +10,7 @@ const LINKS = {
   ],
   Resources: [
     { name: "Documentation", href: "/docs" },
-    { name: "Quickstart", href: "/docs/getting-started/quickstart" },
+    { name: "Quickstart", href: "/docs/quickstart" },
     { name: "SDK Reference", href: "/docs/sdk/typescript" },
     { name: "Blog", href: "/blog" },
   ],

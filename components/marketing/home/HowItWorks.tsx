@@ -27,7 +27,7 @@ const STEPS = [
   {
     number: "03",
     title: "Secure Delivery",
-    desc: "The Nitro Enclave decrypts in-memory, sends via Email, Telegram, or SMS, then writes a ZK receipt.",
+    desc: "Herald's secure decryption layer processes the encrypted payload in-memory, then delivers via Email, Telegram, or SMS before writing a ZK receipt.",
     icon: Zap,
     tag: "On-chain proof",
   },

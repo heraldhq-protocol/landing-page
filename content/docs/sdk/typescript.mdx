@@ -5,7 +5,7 @@ description: The official @herald-protocol/sdk for interacting with the Herald R
 
 # TypeScript SDK
 
-The `@herald-protocol/sdk` is the easiest way to integrate privacy-preserving notifications into your app. It provides high-level abstractions for registration, identity lookups, and sending notifications.
+The `@herald-protocol/sdk` is the easiest way to integrate privacy-preserving notifications into your app. It provides high-level abstractions for registration, identity lookups, channel management, E2E encryption, and sending notifications.
 
 ## Installation
 
@@ -13,15 +13,16 @@ The `@herald-protocol/sdk` is the easiest way to integrate privacy-preserving no
 npm install @herald-protocol/sdk
 ```
 
-## The Three Clients
+## The Five Clients
 
-The SDK is organized into three specialized clients to ensure security and minimize bundle size.
+The SDK is organized into specialized clients to ensure security, minimize bundle size, and match different use cases.
 
 ### 1. `UserClient`
 **Use for**: Frontend applications where the user signs with their own wallet.
-- Register identities.
+- Register identities with encrypted email.
 - Update notification preferences.
 - Manage opt-in categories.
+- Delete identity (GDPR erasure).
 
 ```typescript
 import { UserClient } from '@herald-protocol/sdk';
@@ -43,10 +44,14 @@ await client.registerIdentity({
 - Check if a wallet is registered.
 - Fetch user preferences.
 - Validate protocol status.
+- Batch fetch identity accounts.
 
 ```typescript
 const readClient = new ReadClient({ cluster: 'mainnet-beta' });
 const isRegistered = await readClient.isRegistered(walletAddress);
+
+// Check if a protocol can send (mirrors on-chain can_send logic)
+const canSend = await readClient.checkProtocolCanSend(protocolPubkey);
 ```
 
 ### 3. `Herald` (Gateway Client)
@@ -60,6 +65,98 @@ import { Herald } from '@herald-protocol/sdk';
 
 const herald = new Herald({ apiKey: 'hrld_live_...' });
 await herald.notify({ wallet: '...', subject: '...' });
+```
+
+### 4. `NotificationKeyClient`
+**Use for**: End-to-end encryption key management for users who want to decrypt notifications client-side.
+- Register X25519 keys on-chain.
+- Rotate encryption keys.
+- Revoke keys.
+- Decrypt notifications locally.
+
+```typescript
+import { NotificationKeyClient } from '@herald-protocol/sdk';
+
+const keyClient = new NotificationKeyClient({ cluster: 'mainnet-beta' });
+
+// Derive X25519 keypair from wallet
+const keypair = deriveX25519Keypair(walletKeypair);
+
+// Register sealed pubkey on-chain
+await keyClient.registerKey({
+  owner: userPublicKey,
+  sealedPubkey: sealedKey,
+  senderPubkey: senderKey,
+});
+
+// Decrypt a notification body
+const plaintext = await keyClient.decrypt({
+  encryptedBody: encryptedPayload,
+  notificationKey: keypair,
+});
+```
+
+### 5. `ChannelUserClient`
+**Use for**: Multi-channel notification delivery setup (Telegram, SMS).
+- Register encrypted Telegram chat IDs.
+- Register encrypted phone numbers for SMS.
+- Enable/disable specific channels.
+- Remove channel data (GDPR compliance).
+
+```typescript
+import { ChannelUserClient } from '@herald-protocol/sdk';
+
+const channelClient = new ChannelUserClient({ cluster: 'mainnet-beta' });
+
+// Register Telegram channel
+await channelClient.registerTelegram({
+  owner: userPublicKey,
+  encryptedChatId: encryptedId,
+});
+
+// Register SMS channel
+await channelClient.registerSms({
+  owner: userPublicKey,
+  encryptedPhone: encryptedPhone,
+});
+```
+
+---
+
+## Encryption Utilities
+
+The SDK exposes low-level encryption helpers for custom integrations.
+
+```typescript
+import {
+  encryptEmail,
+  decryptEmail,
+  hashEmail,
+  deriveX25519FromEd25519,
+  deriveX25519Keypair,
+  sealX25519PubkeyForEnclave,
+} from '@herald-protocol/sdk';
+
+// Hash an email for identity verification
+const hash = hashEmail('user@example.com', salt);
+
+// Encrypt an email for on-chain storage
+const { encrypted, nonce } = encryptEmail(email, userKeypair, authorityPubkey);
+
+// Derive X25519 key from Ed25519 wallet
+const x25519Pubkey = deriveX25519FromEd25519(ed25519Pubkey);
+```
+
+## PDA Utilities
+
+```typescript
+import { findIdentityPda, findProtocolPda, deriveAllIdentityAddresses } from '@herald-protocol/sdk';
+
+// Find the identity PDA for a wallet
+const [identityPda] = findIdentityPda(userPublicKey, programId);
+
+// Find the protocol PDA
+const [protocolPda] = findProtocolPda(protocolPubkey, programId);
 ```
 
 ---
@@ -84,3 +181,5 @@ try {
 
 - **`@herald-protocol/sdk/billing`**: Manage subscriptions and Helio payments.
 - **`@herald-protocol/sdk/channels`**: Advanced configuration for Telegram and SMS.
+- **`@herald-protocol/sdk/encryption`**: Low-level encryption utilities.
+- **`@herald-protocol/sdk/events`**: Real-time event streaming with `HeraldEventListener`.

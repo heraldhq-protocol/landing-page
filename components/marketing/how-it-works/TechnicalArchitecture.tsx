@@ -25,7 +25,7 @@ const STEPS: Step[] = [
     title: "Anonymous Request",
     subLabel: "Phase 2: Protocol Trigger",
     desc: "A protocol calls the Herald API with a wallet address and a message. Herald fetches the encrypted contact PDA from the Solana blockchain.",
-    details: ["No PII in request", "On-chain Identity Lookup", "Zk-Identity Masking"],
+    details: ["No PII in request", "On-chain Identity Lookup", "PDA Resolution"],
     icon: Globe
   },
   {
@@ -39,7 +39,7 @@ const STEPS: Step[] = [
     title: "Zero-Trace Delivery",
     subLabel: "Phase 4: Sealed Output",
     desc: "Herald delivers the notification via SES, Telegram, or SMS within the enclave. The message is signed and a ZK-receipt is written back to Solana.",
-    details: ["Atomic SES/TG Handshake", "On-chain ZK Receipt", "Memory Zeroed Instantly"],
+    details: ["Multi-Channel Delivery", "On-chain ZK Receipt", "Memory Zeroed Instantly"],
     icon: Shield
   }
 ];
@@ -178,7 +178,7 @@ export default function TechnicalArchitecture() {
                     ))}
                  </div>
                  <p className="text-[10px] font-mono text-text-muted uppercase tracking-widest">
-                    Technical Specifications • Beta v1.1
+                    Technical Specifications • v1.3.1
                  </p>
               </div>
             </div>
