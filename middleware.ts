@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 const BLOG_HOST = "blog.useherald.xyz";
+const MAIN_HOST = "https://www.useherald.xyz";
 
 export function middleware(request: NextRequest) {
   const hostname = request.nextUrl.hostname;
@@ -17,7 +18,7 @@ export function middleware(request: NextRequest) {
       return NextResponse.rewrite(new URL(`/blog/${slug}`, request.url));
     }
 
-    return NextResponse.rewrite(new URL("/blog", request.url));
+    return NextResponse.redirect(new URL(pathname, MAIN_HOST));
   }
 
   return NextResponse.next();
