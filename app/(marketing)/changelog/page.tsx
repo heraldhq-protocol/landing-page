@@ -39,18 +39,28 @@ function RepoBadge({
   );
 }
 
+function stripMarkdown(text: string): string {
+  return text
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/\[([^\]]*)\]/g, "$1")
+    .replace(/^\[[^\]]+\]\s*/i, "")
+    .trim();
+}
+
 function ChangeItem({ text }: { text: string }) {
-  const rawText = text.trim().replace(/^[-*]\s+/, "");
-  const trimmed = rawText.replace(/^\d+\.\s+/, "");
-  const isBreaking = trimmed.toLowerCase().startsWith("breaking") || trimmed.toLowerCase().includes("[breaking]");
-  const isFeature =
-    trimmed.toLowerCase().startsWith("feat") ||
-    trimmed.toLowerCase().startsWith("add") ||
-    trimmed.toLowerCase().startsWith("new");
-  const isFix =
-    trimmed.toLowerCase().startsWith("fix") || trimmed.toLowerCase().startsWith("patch") || trimmed.toLowerCase().startsWith("bug");
-  const isDocs = trimmed.toLowerCase().startsWith("docs") || trimmed.toLowerCase().startsWith("doc");
-  const isRefactor = trimmed.toLowerCase().startsWith("refactor");
+  const rawText = text.trim().replace(/^[-*]\s+/, "").replace(/^\d+\.\s+/, "");
+  const cleanText = stripMarkdown(rawText);
+  const lower = cleanText.toLowerCase();
+
+  const isBreaking = lower.startsWith("breaking") || lower.includes("breaking");
+  const isFeature = lower.startsWith("feat") || lower.startsWith("add") || lower.startsWith("new") || lower.startsWith("implement") || lower.startsWith("expose") || lower.startsWith("support") || lower.startsWith("properly");
+  const isFix = lower.startsWith("fix") || lower.startsWith("patch") || lower.startsWith("bug") || lower.startsWith("resolve") || lower.startsWith("correctly");
+  const isDocs = lower.startsWith("doc") || lower.startsWith("jsdoc") || lower.startsWith("readme") || lower.startsWith("standalone") || lower.startsWith("complete overhaul") || lower.startsWith("provide exhaustive");
+  const isChore = lower.startsWith("chore") || lower.startsWith("build") || lower.startsWith("deps") || lower.startsWith("ci") || lower.startsWith("relocate") || lower.startsWith("add `release-it");
+  const isTest = lower.startsWith("test") || lower.startsWith("added idempotency") || lower.startsWith("updated protocol") || lower.startsWith("fixed 'account") || lower.startsWith("fixed identity");
+  const isRefactor = lower.startsWith("refactor") || lower.startsWith("use glob");
 
   let badgeClass = "bg-bg-elevated text-text-muted";
   let badgeText = "";
@@ -70,19 +80,24 @@ function ChangeItem({ text }: { text: string }) {
   } else if (isRefactor) {
     badgeClass = "bg-blue-500/15 text-blue-400 border border-blue-500/20";
     badgeText = "REF";
+  } else if (isTest) {
+    badgeClass = "bg-cyan/15 text-cyan border border-cyan/20";
+    badgeText = "TEST";
+  } else if (isChore) {
+    badgeClass = "bg-bg-elevated text-text-muted border border-bg-border";
+    badgeText = "CHORE";
   }
 
-  const cleanText = trimmed
-    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
-    .replace(/^\[breaking\]\s*/i, "")
-    .replace(/^\[\w+\]\s*/i, "");
-
   return (
-    <li className="flex items-start gap-2 sm:gap-3 py-1.5 sm:py-2">
+    <li className="flex items-start gap-2 sm:gap-3 py-1.5 sm:py-2 group">
       <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 mt-0.5">
-        <div className={`px-1 py-0.5 rounded text-[8px] sm:text-[9px] font-bold tracking-wider ${badgeClass}`}>
-          {badgeText}
-        </div>
+        {badgeText ? (
+          <div className={`px-1.5 py-0.5 rounded text-[8px] sm:text-[9px] font-bold tracking-wider ${badgeClass}`}>
+            {badgeText}
+          </div>
+        ) : (
+          <div className="w-1.5 h-1.5 rounded-full bg-text-muted/40 group-hover:bg-teal transition-colors mt-0.5" />
+        )}
       </div>
       <span className="text-text-secondary text-xs sm:text-sm leading-relaxed">{cleanText}</span>
     </li>
@@ -157,10 +172,10 @@ function ChangelogSection({ entry }: { entry: ChangelogEntry }) {
       )}
 
       {otherContent.length > 0 && (
-        <div className="space-y-2">
+        <div className="space-y-1 pl-3 border-l border-bg-border/50">
           {otherContent.map((paragraph, idx) => (
-            <p key={idx} className="text-xs sm:text-sm text-text-secondary leading-relaxed">
-              {paragraph}
+            <p key={idx} className="text-xs sm:text-sm text-text-muted/80 leading-relaxed">
+              {stripMarkdown(paragraph)}
             </p>
           ))}
         </div>
