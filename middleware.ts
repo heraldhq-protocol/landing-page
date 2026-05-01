@@ -2,13 +2,18 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 const BLOG_HOST = "blog.useherald.xyz";
-const MAIN_HOST = "https://www.useherald.xyz";
+const MAIN_HOST = process.env.NODE_ENV === "production"
+  ? "https://www.useherald.xyz"
+  : "https://localhost:3000";
 
 export function middleware(request: NextRequest) {
   const hostname = request.nextUrl.hostname;
   const pathname = request.nextUrl.pathname;
 
-  if (hostname === BLOG_HOST || hostname.startsWith("blog.")) {
+  const isBlogSubdomain = hostname === BLOG_HOST || hostname.startsWith("blog.");
+  const isProduction = process.env.NODE_ENV === "production";
+
+  if (isProduction && isBlogSubdomain) {
     if (pathname === "/" || pathname === "/blog") {
       return NextResponse.rewrite(new URL("/blog", request.url));
     }
