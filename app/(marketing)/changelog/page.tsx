@@ -132,78 +132,92 @@ function ChangelogSection({ entry }: { entry: ChangelogEntry }) {
   }
 
   return (
-    <section className="relative pl-6 sm:pl-16 pr-2 border-l border-bg-border pb-16 sm:pb-24 last:pb-0 last:border-l-transparent">
-      <div className="absolute left-[-4px] sm:left-[-5px] top-2 w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-teal shadow-[0_0_10px_#00C896]" />
-
-      <div className="flex flex-col gap-3 sm:gap-4 mb-6 sm:mb-8">
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-          <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs font-mono text-text-muted bg-bg-surface px-2 sm:px-3 py-1 rounded-full border border-bg-border">
-            <Calendar className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-            <span>
-              {entry.date
-                ? new Date(entry.date).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })
-                : "Unreleased"}
-            </span>
-          </div>
-          <div className="hidden sm:block w-px h-4 bg-bg-border" />
-          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold font-display text-text-primary">
-            {entry.version}
-          </h2>
+    <section className="group relative">
+      <div className="flex items-start gap-3 sm:gap-4">
+        <div className="relative flex flex-col items-center flex-shrink-0 w-2.5">
+          <div className="w-2.5 h-2.5 rounded-full bg-teal shadow-[0_0_8px_#00C896/60] flex-shrink-0 mt-2" />
         </div>
-        <div className="flex items-center gap-2">
-          <RepoBadge
-            owner={entry.owner}
-            repo={entry.repo}
-            url={`https://github.com/${entry.owner}/${entry.repo}`}
-          />
+
+        <div className="flex-1 pb-8 sm:pb-10 last:pb-0 min-w-0">
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            <div className="flex items-center gap-1.5 text-[10px] sm:text-xs font-mono text-text-muted bg-bg-surface/50 px-2 sm:px-2.5 py-0.5 rounded-full border border-bg-border/60">
+              <Calendar className="w-3 h-3" />
+              <span>
+                {entry.date
+                  ? new Date(entry.date).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })
+                  : "Unreleased"}
+              </span>
+            </div>
+            <div className="h-3.5 w-px bg-bg-border/60" />
+            <h2 className="text-lg sm:text-xl font-bold font-display text-text-primary">
+              {entry.version}
+            </h2>
+          </div>
+          <div className="mb-4">
+            <RepoBadge
+              owner={entry.owner}
+              repo={entry.repo}
+              url={`https://github.com/${entry.owner}/${entry.repo}`}
+            />
+          </div>
+
+          {listItems.length > 0 && (
+            <ul className="space-y-1.5 mb-4">
+              {listItems.map((item, idx) => (
+                <ChangeItem key={idx} text={item} />
+              ))}
+            </ul>
+          )}
+
+          {otherContent.length > 0 && (
+            <div className="space-y-1 pl-3 border-l border-bg-border/30">
+              {otherContent.map((paragraph, idx) => (
+                <p key={idx} className="text-xs sm:text-sm text-text-muted/80 leading-relaxed">
+                  {stripMarkdown(paragraph)}
+                </p>
+              ))}
+            </div>
+          )}
         </div>
       </div>
-
-      {listItems.length > 0 && (
-        <ul className="space-y-0 mb-4 sm:mb-6">
-          {listItems.map((item, idx) => (
-            <ChangeItem key={idx} text={item} />
-          ))}
-        </ul>
-      )}
-
-      {otherContent.length > 0 && (
-        <div className="space-y-1 pl-3 border-l border-bg-border/50">
-          {otherContent.map((paragraph, idx) => (
-            <p key={idx} className="text-xs sm:text-sm text-text-muted/80 leading-relaxed">
-              {stripMarkdown(paragraph)}
-            </p>
-          ))}
-        </div>
-      )}
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-bg-border/40 to-transparent last:hidden" />
     </section>
   );
 }
 
 function LoadingSkeleton() {
   return (
-    <div className="max-w-4xl space-y-16 sm:space-y-24">
+    <div className="max-w-2xl">
       {[1, 2, 3].map((i) => (
-        <div key={i} className="relative pl-6 sm:pl-16 border-l border-bg-border pb-16 sm:pb-24">
-          <div className="absolute left-[-4px] sm:left-[-5px] top-2 w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-bg-border animate-pulse" />
-          <div className="flex flex-col gap-3 sm:gap-4 mb-6 sm:mb-8">
-            <div className="h-6 w-28 sm:h-7 sm:w-32 bg-bg-surface rounded-full animate-pulse" />
-            <div className="h-6 w-20 sm:h-8 sm:w-24 bg-bg-surface rounded animate-pulse" />
+        <section key={i} className="relative pb-8 sm:pb-10 last:pb-0">
+          <div className="flex items-start gap-3 sm:gap-4">
+            <div className="flex-shrink-0 w-2.5 mt-2">
+              <div className="w-2.5 h-2.5 rounded-full bg-bg-border animate-pulse" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="h-5 w-24 sm:w-28 bg-bg-surface/50 rounded-full animate-pulse border border-bg-border/60" />
+                <div className="h-3.5 w-px bg-bg-border/60" />
+                <div className="h-6 w-16 sm:w-20 bg-bg-surface rounded animate-pulse" />
+              </div>
+              <div className="h-6 w-32 bg-bg-surface rounded-md mb-4 animate-pulse border border-bg-border/60" />
+              <div className="space-y-2">
+                {[1, 2, 3].map((j) => (
+                  <div
+                    key={j}
+                    className="h-4 bg-bg-surface/50 rounded animate-pulse border border-bg-border/30"
+                    style={{ width: `${55 + Math.random() * 40}%` }}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
-          <div className="space-y-2 sm:space-y-3">
-            {[1, 2, 3, 4].map((j) => (
-              <div 
-                key={j} 
-                className="h-3 sm:h-4 bg-bg-surface rounded animate-pulse" 
-                style={{ width: `${60 + Math.random() * 35}%` }} 
-              />
-            ))}
-          </div>
-        </div>
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-bg-border/40 to-transparent" />
+        </section>
       ))}
     </div>
   );
@@ -231,7 +245,7 @@ async function ChangelogContent() {
   }
 
   return (
-    <div className="max-w-4xl space-y-16 sm:space-y-24">
+    <div className="max-w-2xl">
       {entries.map((entry, idx) => (
         <ChangelogSection key={`${entry.owner}-${entry.repo}-${entry.version}-${idx}`} entry={entry} />
       ))}
@@ -245,14 +259,14 @@ export default function ChangelogPage() {
       <NavBar />
 
       <main className="container mx-auto px-4 sm:px-6 py-16 sm:py-24 lg:py-32">
-        <header className="max-w-2xl mb-16 sm:mb-24">
-          <p className="text-teal font-bold tracking-[0.2em] uppercase text-[10px] sm:text-xs mb-3 sm:mb-4">
+        <header className="max-w-xl mb-10 sm:mb-14">
+          <p className="text-teal font-bold tracking-[0.2em] uppercase text-[10px] sm:text-xs mb-2 sm:mb-3">
             Evolution
           </p>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold font-display leading-[1.1] mb-4 sm:mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold font-display leading-[1.1] mb-3 sm:mb-5">
             Product <span className="text-teal text-glow">Updates</span>
           </h1>
-          <p className="text-sm sm:text-base lg:text-lg text-text-secondary leading-relaxed mb-6 sm:mb-8">
+          <p className="text-sm sm:text-base lg:text-lg text-text-secondary leading-relaxed mb-5 sm:mb-7">
             Stay up to date with the latest features, security improvements, and SDK releases
             from the Herald protocol.
           </p>
