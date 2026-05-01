@@ -6,8 +6,6 @@ const nextConfig: NextConfig = {
     { source: "/docs", destination: "/docs/quickstart", permanent: false },
     { source: "/register", destination: "https://notify.useherald.xyz/register", permanent: false },
     { source: "/app", destination: "https://app.useherald.xyz", permanent: false },
-    { source: "/blog", destination: "https://blog.useherald.xyz", permanent: false },
-    { source: "/blog/:path*", destination: "https://blog.useherald.xyz/:path*", permanent: false },
   ],
   images: {
     remotePatterns: [
