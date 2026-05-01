@@ -142,27 +142,25 @@ export async function fetchChangelogFromRepo(
   owner: string,
   repo: string
 ): Promise<ChangelogEntry[]> {
-  try {
-    const response = await fetch(
-      `https://api.github.com/repos/${owner}/${repo}/contents/CHANGELOG.md`,
-      {
-        headers: {
-          Accept: "application/vnd.github.v3.raw",
-        },
-      }
-    );
+  const branches = ["main", "master"];
 
-    if (!response.ok) {
-      console.error(`Failed to fetch changelog for ${owner}/${repo}: ${response.status}`);
-      return [];
+  for (const branch of branches) {
+    try {
+      const response = await fetch(
+        `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/CHANGELOG.md`
+      );
+
+      if (!response.ok) continue;
+
+      const content = await response.text();
+      return parseChangelog(content, owner, repo);
+    } catch (error) {
+      continue;
     }
-
-    const content = await response.text();
-    return parseChangelog(content, owner, repo);
-  } catch (error) {
-    console.error(`Error fetching changelog for ${owner}/${repo}:`, error);
-    return [];
   }
+
+  console.error(`Failed to fetch changelog for ${owner}/${repo}: CHANGELOG.md not found on main or master`);
+  return [];
 }
 
 export async function fetchAllChangelogs(): Promise<ChangelogEntry[]> {
