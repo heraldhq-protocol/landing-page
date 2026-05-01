@@ -35,7 +35,7 @@ export const CHANGELOG_REPOS: ChangelogRepo[] = [
 ];
 
 function parseVersionFromLine(line: string): { version: string; date?: string } | null {
-  const match = line.match(/^##?\s*\[?v?(\d+\.\d+(?:\.\d+)?[^\s]*)\]?\s*[-–]?\s*(.*)$/i);
+  const match = line.match(/^##?\s*\[?v?(\d+\.\d+(?:\.\d+)?)[\])\s-–]*(.*)$/i);
   if (match) {
     const version = match[1];
     const rest = match[2].trim();
@@ -46,14 +46,12 @@ function parseVersionFromLine(line: string): { version: string; date?: string } 
     };
   }
 
-  const simpleMatch = line.match(/^##?\s*\[?v?(\d+\.\d+(?:\.\d+)?)\]?\s*$/i);
-  if (simpleMatch) {
-    return {
-      version: simpleMatch[1].startsWith("v") ? simpleMatch[1] : `v${simpleMatch[1]}`,
-    };
-  }
-
   return null;
+}
+
+function isSectionHeader(trimmed: string): boolean {
+  const sectionKeywords = ["features", "bug fixes", "chores", "documentation", "security", "tests", "breaking changes", "deprecated", "performance improvements"];
+  return sectionKeywords.some((keyword) => trimmed.toLowerCase().startsWith(`### ${keyword}`) || trimmed.toLowerCase().startsWith(`## ${keyword}`));
 }
 
 function parseChangelog(content: string, owner: string, repo: string): ChangelogEntry[] {
@@ -69,6 +67,10 @@ function parseChangelog(content: string, owner: string, repo: string): Changelog
     const trimmed = line.trim();
 
     if (trimmed.toLowerCase().startsWith("# changelog")) continue;
+    if (trimmed.toLowerCase().startsWith("all notable changes")) continue;
+    if (trimmed.toLowerCase().startsWith("the format is based on")) continue;
+    if (trimmed.toLowerCase().startsWith("and this project adheres")) continue;
+    if (trimmed.toLowerCase().startsWith("see [conventional commits")) continue;
 
     const versionInfo = parseVersionFromLine(line);
 
@@ -104,6 +106,8 @@ function parseChangelog(content: string, owner: string, repo: string): Changelog
       currentVersion = "Unreleased";
       currentDate = undefined;
       currentContent = [];
+    } else if (isSectionHeader(trimmed)) {
+      continue;
     } else if (
       (trimmed.startsWith("## ") || trimmed.startsWith("### ")) &&
       !inUnreleased

@@ -40,16 +40,17 @@ function RepoBadge({
 }
 
 function ChangeItem({ text }: { text: string }) {
-  const trimmed = text.trim();
-  const isBreaking = trimmed.startsWith("breaking") || trimmed.includes("[breaking]");
+  const rawText = text.trim().replace(/^[-*]\s+/, "");
+  const trimmed = rawText.replace(/^\d+\.\s+/, "");
+  const isBreaking = trimmed.toLowerCase().startsWith("breaking") || trimmed.toLowerCase().includes("[breaking]");
   const isFeature =
-    trimmed.startsWith("feat") ||
-    trimmed.startsWith("add") ||
-    trimmed.startsWith("new");
+    trimmed.toLowerCase().startsWith("feat") ||
+    trimmed.toLowerCase().startsWith("add") ||
+    trimmed.toLowerCase().startsWith("new");
   const isFix =
-    trimmed.startsWith("fix") || trimmed.startsWith("patch") || trimmed.startsWith("bug");
-  const isDocs = trimmed.startsWith("docs") || trimmed.startsWith("doc");
-  const isRefactor = trimmed.startsWith("refactor");
+    trimmed.toLowerCase().startsWith("fix") || trimmed.toLowerCase().startsWith("patch") || trimmed.toLowerCase().startsWith("bug");
+  const isDocs = trimmed.toLowerCase().startsWith("docs") || trimmed.toLowerCase().startsWith("doc");
+  const isRefactor = trimmed.toLowerCase().startsWith("refactor");
 
   let badgeClass = "bg-bg-elevated text-text-muted";
   let badgeText = "";
@@ -72,6 +73,7 @@ function ChangeItem({ text }: { text: string }) {
   }
 
   const cleanText = trimmed
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
     .replace(/^\[breaking\]\s*/i, "")
     .replace(/^\[\w+\]\s*/i, "");
 
@@ -92,9 +94,13 @@ function ChangelogSection({ entry }: { entry: ChangelogEntry }) {
   const listItems: string[] = [];
   const otherContent: string[] = [];
   let inList = false;
+  const sectionKeywords = ["features", "bug fixes", "chores", "documentation", "security", "tests", "breaking changes", "deprecated", "performance improvements"];
 
   for (const line of lines) {
     const trimmed = line.trim();
+    if (!trimmed) continue;
+    if (sectionKeywords.some((k) => trimmed.toLowerCase().startsWith(`### ${k}`) || trimmed.toLowerCase().startsWith(`## ${k}`))) continue;
+
     if (
       trimmed.startsWith("-") ||
       trimmed.startsWith("*") ||
