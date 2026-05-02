@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { ChevronLeft, ChevronRight, X, Play } from "lucide-react";
+import { ChevronLeft, ChevronRight, X, Play, Pause } from "lucide-react";
 import Image from "next/image";
 
 interface Slide {
@@ -33,6 +33,7 @@ export default function PitchCarousel({ slides, videoUrl }: PitchCarouselProps) 
   const [current, setCurrent] = useState(0);
   const [showVideo, setShowVideo] = useState(false);
   const [showOverview, setShowOverview] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showControls, setShowControls] = useState(true);
@@ -40,6 +41,7 @@ export default function PitchCarousel({ slides, videoUrl }: PitchCarouselProps) 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const progressRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const controlsTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pausedAtRef = useRef(0);
 
   const currentSlide = slides[current];
   const currentDuration = calculateSlideDuration(currentSlide);
@@ -77,6 +79,27 @@ export default function PitchCarousel({ slides, videoUrl }: PitchCarouselProps) 
     }, 500);
   }, [isLastSlide, isTransitioning, clearTimers]);
 
+  const togglePause = useCallback(() => {
+    if (isPaused) {
+      const duration = calculateSlideDuration(slides[current]);
+      const remainingMs = ((100 - pausedAtRef.current) / 100) * duration;
+      progressRef.current = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 100) return 100;
+          return prev + (100 / (duration / PROGRESS_STEP));
+        });
+      }, PROGRESS_STEP);
+      timeoutRef.current = setTimeout(() => {
+        advanceSlide();
+      }, remainingMs);
+      setIsPaused(false);
+    } else {
+      pausedAtRef.current = progress;
+      clearTimers();
+      setIsPaused(true);
+    }
+  }, [isPaused, current, progress, clearTimers, advanceSlide]);
+
   const scheduleAdvance = useCallback(
     (slideIndex: number) => {
       const slide = slides[slideIndex];
@@ -98,10 +121,15 @@ export default function PitchCarousel({ slides, videoUrl }: PitchCarouselProps) 
     if (index === current || isTransitioning) return;
     setIsTransitioning(true);
     clearTimers();
+    if (!isPaused) setIsPaused(false);
     setTimeout(() => {
       setCurrent(index);
       setIsTransitioning(false);
-      scheduleAdvance(index);
+      if (!isPaused) {
+        scheduleAdvance(index);
+      } else {
+        setProgress(0);
+      }
     }, 500);
   };
 
@@ -161,7 +189,7 @@ export default function PitchCarousel({ slides, videoUrl }: PitchCarouselProps) 
   }, []);
 
   useEffect(() => {
-    if (!isTransitioning && current > 0) {
+    if (!isTransitioning && current > 0 && !isPaused) {
       const duration = calculateSlideDuration(slides[current]);
 
       clearTimers();
@@ -184,11 +212,15 @@ export default function PitchCarousel({ slides, videoUrl }: PitchCarouselProps) 
 
       return () => cancelAnimationFrame(id);
     }
-  }, [current, isTransitioning]);
+  }, [current, isTransitioning, isPaused]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (showVideo || showOverview) return;
+      if (e.key === " ") {
+        e.preventDefault();
+        togglePause();
+      }
       if (e.key === "ArrowRight") goNext();
       if (e.key === "ArrowLeft") goPrev();
       if (e.key === "Escape") setShowVideo(false);
@@ -196,7 +228,7 @@ export default function PitchCarousel({ slides, videoUrl }: PitchCarouselProps) 
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [current, isTransitioning, showVideo, showOverview]);
+  }, [current, isTransitioning, showVideo, showOverview, togglePause]);
 
   const durationSec = Math.round(currentDuration / 1000);
 
@@ -321,20 +353,34 @@ export default function PitchCarousel({ slides, videoUrl }: PitchCarouselProps) 
               {String(current + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
             </span>
 
-            <div className="flex gap-0.5 sm:gap-1 overflow-x-auto max-w-[50%] sm:max-w-none px-2 sm:px-0 scrollbar-hide">
-              {slides.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => goToSlide(index)}
-                  className={`h-0.5 sm:h-1 rounded-full transition-all duration-300 flex-shrink-0 ${
-                    index === current
-                      ? "w-6 sm:w-8 bg-teal"
-                      : index < current
-                      ? "w-1.5 sm:w-2 bg-teal/40"
-                      : "w-1.5 sm:w-2 bg-bg-border-hi"
-                  }`}
-                />
-              ))}
+            <div className="flex items-center gap-3 sm:gap-4">
+              <button
+                onClick={togglePause}
+                className="p-1.5 sm:p-2 rounded-full bg-bg-base/60 border border-border-lo/30 hover:bg-bg-elevated hover:border-teal/40 transition-all text-text-muted hover:text-teal backdrop-blur-sm"
+                aria-label={isPaused ? "Resume" : "Pause"}
+              >
+                {isPaused ? (
+                  <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                ) : (
+                  <Pause className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                )}
+              </button>
+
+              <div className="flex gap-0.5 sm:gap-1 overflow-x-auto max-w-[40%] sm:max-w-none px-2 sm:px-0 scrollbar-hide">
+                {slides.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => goToSlide(index)}
+                    className={`h-0.5 sm:h-1 rounded-full transition-all duration-300 flex-shrink-0 ${
+                      index === current
+                        ? "w-6 sm:w-8 bg-teal"
+                        : index < current
+                        ? "w-1.5 sm:w-2 bg-teal/40"
+                        : "w-1.5 sm:w-2 bg-bg-border-hi"
+                    }`}
+                  />
+                ))}
+              </div>
             </div>
 
             {isLastSlide && (
@@ -344,17 +390,23 @@ export default function PitchCarousel({ slides, videoUrl }: PitchCarouselProps) 
             )}
           </div>
 
-          <div className="relative h-0.5 sm:h-1 bg-bg-border-hi/50 rounded-full overflow-hidden">
+          <div className={`relative h-0.5 sm:h-1 bg-bg-border-hi/50 rounded-full overflow-hidden transition-opacity ${isPaused ? "opacity-50" : ""}`}>
             <div
-              className="absolute left-0 top-0 h-full bg-teal rounded-full transition-none"
+              className={`absolute left-0 top-0 h-full rounded-full transition-none ${isPaused ? "bg-teal/70" : "bg-teal"}`}
               style={{ width: `${progress}%` }}
             />
           </div>
 
           <div className="flex justify-center">
-            <span className="text-[9px] sm:text-[10px] font-mono text-text-muted/50">
-              {durationSec}s
-            </span>
+            {isPaused ? (
+              <span className="text-[9px] sm:text-[10px] font-bold text-teal/60 uppercase tracking-widest">
+                Paused
+              </span>
+            ) : (
+              <span className="text-[9px] sm:text-[10px] font-mono text-text-muted/50">
+                {durationSec}s
+              </span>
+            )}
           </div>
         </div>
       </div>
