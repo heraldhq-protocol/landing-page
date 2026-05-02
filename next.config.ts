@@ -44,6 +44,11 @@ const nextConfig: NextConfig = {
         hostname: "asset.brandfetch.io",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "herald-storage-bucket.s3.eu-north-1.amazonaws.com",
+        pathname: "/**",
+      },
     ],
     // Optional: Configure image formats and sizes
     formats: ["image/webp", "image/avif"],
