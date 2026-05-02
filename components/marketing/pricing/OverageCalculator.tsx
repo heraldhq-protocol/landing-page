@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Calculator, ArrowRight } from "lucide-react";
+import TierBreakdown from "./TierBreakdown";
 
 const OVERAGE_RATES = {
   growth: 0.002,
@@ -11,6 +12,7 @@ const OVERAGE_RATES = {
 export default function OverageCalculator() {
   const [sends, setSends] = useState(100000);
   const [tier, setTier] = useState<"growth" | "scale">("growth");
+  const [showBreakdown, setShowBreakdown] = useState(false);
 
   const cost = sends * OVERAGE_RATES[tier];
 
@@ -85,7 +87,10 @@ export default function OverageCalculator() {
               </div>
 
               <div className="mt-12">
-                <button className="flex items-center gap-3 text-teal font-bold text-[10px] uppercase tracking-[0.2em] hover:gap-5 transition-all group">
+                <button 
+                  onClick={() => setShowBreakdown(true)}
+                  className="flex items-center gap-3 text-teal font-bold text-[10px] uppercase tracking-[0.2em] hover:gap-5 transition-all group"
+                >
                     Full Tier Breakdown <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </button>
               </div>
@@ -94,6 +99,14 @@ export default function OverageCalculator() {
           </div>
         </div>
       </div>
+
+      {showBreakdown && (
+        <TierBreakdown 
+          activeTier={tier} 
+          sends={sends} 
+          onClose={() => setShowBreakdown(false)} 
+        />
+      )}
     </section>
   );
 }

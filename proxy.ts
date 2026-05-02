@@ -6,7 +6,7 @@ const MAIN_HOST = process.env.NODE_ENV === "production"
   ? "https://www.useherald.xyz"
   : "https://localhost:3000";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const hostname = request.nextUrl.hostname;
   const pathname = request.nextUrl.pathname;
 
