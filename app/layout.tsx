@@ -1,6 +1,7 @@
 import { RootProvider } from "fumadocs-ui/provider/next";
 import type { Metadata } from "next";
 import { Syne, DM_Sans, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import JsonLd from "@/components/seo/JsonLd";
 import "./globals.css";
 
@@ -83,6 +84,7 @@ export default function RootLayout({
         <RootProvider theme={{ forcedTheme: "dark" }}>
           {children}
         </RootProvider>
+        <Analytics />
       </body>
     </html>
   );
