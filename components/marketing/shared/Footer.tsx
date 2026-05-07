@@ -7,6 +7,7 @@ const LINKS = {
     { name: "For Users", href: "/for-users" },
     { name: "Pricing", href: "/pricing" },
     { name: "Changelog", href: "/changelog" },
+    { name: "Validation", href: "/validation" },
   ],
   Resources: [
     { name: "Documentation", href: "/docs" },
