@@ -1,0 +1,94 @@
+---
+title: Troubleshooting
+description: Common errors and solutions when integrating Herald.
+---
+
+# Troubleshooting
+
+## API Errors
+
+### `INSUFFICIENT_QUOTA`
+
+You've exceeded your tier's monthly notification volume.
+
+**Fix**: Upgrade your tier or wait for the billing cycle reset. Check usage at `GET /v1/usage`.
+
+```typescript
+try {
+  await herald.notify({ wallet, subject, body, category: "defi" });
+} catch (e) {
+  if (isHeraldErrorCode(e, "INSUFFICIENT_QUOTA")) {
+    // Alert your team or redirect to billing
+  }
+}
+```
+
+### `RATE_LIMIT_EXCEEDED`
+
+Too many requests per second for your tier.
+
+**Fix**: Implement exponential backoff or reduce request frequency.
+
+```typescript
+async function notifyWithRetry(payload, maxRetries = 3) {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await herald.notify(payload);
+    } catch (e) {
+      if (isHeraldErrorCode(e, "RATE_LIMIT_EXCEEDED")) {
+        await new Promise((r) => setTimeout(r, 1000 * 2 ** i));
+        continue;
+      }
+      throw e;
+    }
+  }
+}
+```
+
+### `UNAUTHORIZED` / `401`
+
+Invalid or missing API key.
+
+**Fix**: Ensure your `Authorization` header uses a valid `hrld_live_...` or `hrld_test_...` key. Generate a new key at [app.useherald.xyz](https://app.useherald.xyz).
+
+### `NOT_FOUND` / `404`
+
+The wallet address has no registered Identity PDA.
+
+**Fix**: Check registration status first with `client.isRegistered(wallet)`. Prompt unregistered users to register at [notify.useherald.xyz](https://notify.useherald.xyz/register).
+
+---
+
+## Integration Issues
+
+### User not receiving notifications
+
+| Cause | Check |
+|---|---|
+| Wallet not registered | `readClient.isRegistered(wallet)` |
+| Wrong notification category | User must opt-in to the category you're sending |
+| Email in spam folder | Ask user to check spam / whitelist `@useherald.xyz` |
+| Channel not enabled | User must enable email/telegram/sms in their preferences |
+| Wrong environment | Did you send to `sandbox` when user registered on `mainnet-beta`? |
+
+### Notifications are delayed
+
+Notifications are processed asynchronously via BullMQ queues. Typical delivery time is **< 1.5 seconds**. If you experience delays:
+
+1. Check `GET /v1/notifications/:id` for current status.
+2. Higher-tier queues (Growth+) have priority processing.
+3. Exponential retries happen over 24 hours for failed deliveries.
+
+### Billing / payment not working
+
+1. Ensure your Helio checkout was completed successfully.
+2. Check `GET /v1/billing/status` for your subscription state.
+3. Auto-renewal happens every 30 days. Cancel via the [Dashboard](https://app.useherald.xyz/billing).
+
+---
+
+## Still stuck?
+
+- **Email**: [hello@useherald.xyz](mailto:hello@useherald.xyz)
+- **GitHub Issues**: [github.com/heraldhq-protocol/herald-sdk-ts](https://github.com/heraldhq-protocol/herald-sdk-ts/issues)
+- **Dashboard**: [app.useherald.xyz](https://app.useherald.xyz)

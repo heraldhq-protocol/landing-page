@@ -34,6 +34,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             </div>
           )
         }}
+        searchToggle={{ enabled: true }}
     >
       {children}
     </DocsLayout>

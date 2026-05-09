@@ -1,7 +1,5 @@
 import { Metadata } from "next";
 import { fetchAllChangelogs, CHANGELOG_REPOS, ChangelogEntry } from "@/lib/github-changelog";
-import NavBar from "@/components/marketing/shared/NavBar";
-import Footer from "@/components/marketing/shared/Footer";
 import { GitBranch, Calendar, ExternalLink, Package } from "lucide-react";
 import { Suspense } from "react";
 
@@ -256,8 +254,6 @@ async function ChangelogContent() {
 export default function ChangelogPage() {
   return (
     <div className="min-h-screen bg-bg-base text-text-primary">
-      <NavBar />
-
       <main className="container mx-auto px-4 sm:px-6 py-16 sm:py-24 lg:py-32">
         <header className="max-w-xl mb-10 sm:mb-14">
           <p className="text-teal font-bold tracking-[0.2em] uppercase text-[10px] sm:text-xs mb-2 sm:mb-3">
@@ -287,8 +283,6 @@ export default function ChangelogPage() {
           <ChangelogContent />
         </Suspense>
       </main>
-
-      <Footer />
     </div>
   );
 }

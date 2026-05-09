@@ -63,4 +63,44 @@ curl -X GET https://api.useherald.xyz/v1/webhooks \
 
 ### Security
 
-We recommend verifying the `X-Herald-Signature` using your secret key to ensure the event originated from our Nitro Enclave.
+We recommend verifying the `X-Herald-Signature` header using your webhook secret to ensure the event originated from Herald's Nitro Enclave.
+
+```typescript
+import { createHmac, timingSafeEqual } from "node:crypto";
+
+function verifyWebhookSignature(
+  payload: string,
+  signatureHeader: string,
+  secret: string
+): boolean {
+  const [timestamp, signature] = signatureHeader
+    .split(",")
+    .map((s) => s.split("=")[1]);
+
+  const signedPayload = `${timestamp}.${payload}`;
+  const expectedSig = createHmac("sha256", secret)
+    .update(signedPayload)
+    .digest("hex");
+
+  return timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSig));
+}
+
+// Usage in your webhook handler
+export async function POST(request: Request) {
+  const payload = await request.text();
+  const sig = request.headers.get("X-Herald-Signature") ?? "";
+  const isValid = verifyWebhookSignature(
+    payload,
+    sig,
+    process.env.HERALD_WEBHOOK_SECRET!
+  );
+
+  if (!isValid) return new Response("Unauthorized", { status: 401 });
+
+  const event = JSON.parse(payload);
+  // handle event...
+  return new Response("OK", { status: 200 });
+}
+```
+
+**Note**: Your webhook secret (`whsec_xxx`) is returned when you register a webhook endpoint. Store it securely and never expose it in client-side code.

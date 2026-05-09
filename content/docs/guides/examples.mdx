@@ -1,0 +1,257 @@
+---
+title: Full Integration Examples
+description: Copy-paste ready code for common Herald integration patterns.
+---
+
+# Full Integration Examples
+
+## 1. Backend Express Server
+
+A complete Express.js server that monitors DeFi positions and sends liquidation alerts.
+
+```typescript
+import "dotenv/config";
+import express from "express";
+import { Herald, ReadClient } from "@herald-protocol/sdk";
+
+const app = express();
+app.use(express.json());
+
+const herald = new Herald({
+  apiKey: process.env.HERALD_API_KEY!,        // hrld_live_...
+  environment: process.env.HERALD_ENV ?? "production",
+});
+
+const readClient = new ReadClient({ cluster: "mainnet-beta" });
+
+// Check if user can receive notifications before sending
+async function sendLiquidationAlert(wallet: string, healthFactor: number) {
+  const isRegistered = await readClient.isRegistered(wallet);
+  if (!isRegistered) {
+    console.log(`Wallet ${wallet} not registered. Skipping.`);
+    return null;
+  }
+
+  return herald.notify({
+    wallet,
+    subject: "Liquidation Warning",
+    body: `Your position health factor dropped to ${healthFactor.toFixed(2)}.`,
+    category: "defi",
+    idempotencyKey: `liq_${wallet}_${Date.now()}`,
+  });
+}
+
+// Example endpoint: your liquidation bot POSTs here
+app.post("/alert", async (req, res) => {
+  const { wallet, healthFactor } = req.body;
+  try {
+    const result = await sendLiquidationAlert(wallet, healthFactor);
+    if (!result) return res.json({ status: "skipped", reason: "unregistered" });
+    res.json({ status: "queued", notificationId: result.notificationId });
+  } catch (e) {
+    console.error("Failed to send alert:", e);
+    res.status(500).json({ error: "delivery_failed" });
+  }
+});
+
+// Check delivery status endpoint
+app.get("/status/:notificationId", async (req, res) => {
+  const status = await herald.getStatus(req.params.notificationId);
+  res.json(status);
+});
+
+app.listen(3001, () => console.log("Herald integration running on :3001"));
+```
+
+---
+
+## 2. Next.js API Route (Serverless)
+
+Trigger notifications from a Next.js app using Route Handlers.
+
+```typescript
+// app/api/notify/route.ts
+import { NextResponse } from "next/server";
+import { Herald } from "@herald-protocol/sdk";
+
+const herald = new Herald({
+  apiKey: process.env.HERALD_API_KEY!,
+  environment: "production",
+});
+
+export async function POST(request: Request) {
+  try {
+    const { wallet, subject, body, category } = await request.json();
+
+    if (!wallet || !subject || !body) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    const result = await herald.notify({
+      wallet,
+      subject,
+      body,
+      category: category ?? "defi",
+      idempotencyKey: crypto.randomUUID(),
+    });
+
+    return NextResponse.json(
+      { notificationId: result.notificationId },
+      { status: 202 }
+    );
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "unknown error";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
+```
+
+---
+
+## 3. Batch Airdrop Notifications
+
+Send notifications to multiple users efficiently.
+
+```typescript
+import { Herald } from "@herald-protocol/sdk";
+
+const herald = new Herald({ apiKey: process.env.HERALD_API_KEY! });
+
+interface UserAlert {
+  wallet: string;
+  subject: string;
+  body: string;
+}
+
+async function sendBatchAlerts(alerts: UserAlert[]) {
+  // Process in chunks of 100 (API limit)
+  for (let i = 0; i < alerts.length; i += 100) {
+    const chunk = alerts.slice(i, i + 100);
+    const batch = chunk.map((a) => ({
+      wallet: a.wallet,
+      subject: a.subject,
+      body: a.body,
+      category: "governance" as const,
+      idempotencyKey: crypto.randomUUID(),
+    }));
+
+    try {
+      const result = await herald.notifyBatch({ notifications: batch });
+      console.log(
+        `Batch ${i / 100 + 1}: ${result.count} notifications queued`
+      );
+    } catch (e) {
+      console.error(`Batch ${i / 100 + 1} failed:`, e);
+    }
+  }
+}
+
+// Usage
+sendBatchAlerts([
+  { wallet: "7xR4...", subject: "Proposal Passed", body: "Vote #42 passed." },
+  { wallet: "9yG2...", subject: "Proposal Passed", body: "Vote #42 passed." },
+]);
+```
+
+---
+
+## 4. Webhook Receiver with Signature Verification
+
+```typescript
+// app/api/webhooks/herald/route.ts
+import { NextResponse } from "next/server";
+import { createHmac, timingSafeEqual } from "node:crypto";
+
+function verifySignature(
+  payload: string,
+  signatureHeader: string,
+  secret: string
+): boolean {
+  const parts = signatureHeader.split(",");
+  const timestamp = parts[0]?.split("=")[1] ?? "";
+  const signature = parts[1]?.split("=")[1] ?? "";
+  const signedPayload = `${timestamp}.${payload}`;
+  const expected = createHmac("sha256", secret)
+    .update(signedPayload)
+    .digest("hex");
+  return timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+}
+
+export async function POST(request: Request) {
+  const payload = await request.text();
+  const sig = request.headers.get("X-Herald-Signature") ?? "";
+  const secret = process.env.HERALD_WEBHOOK_SECRET!;
+
+  if (!verifySignature(payload, sig, secret)) {
+    return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
+  }
+
+  const event = JSON.parse(payload);
+
+  switch (event.type) {
+    case "notification.delivered":
+      console.log(`Delivered: ${event.data.notification_id}`);
+      break;
+    case "notification.bounced":
+      console.warn(`Bounced: ${event.data.notification_id}`);
+      break;
+    case "quota.exceeded":
+      console.error("Monthly quota exceeded — upgrade tier!");
+      break;
+  }
+
+  return NextResponse.json({ received: true });
+}
+```
+
+---
+
+## 5. React User Registration Check
+
+Frontend component to check registration and prompt users.
+
+```typescript
+"use client";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { ReadClient } from "@herald-protocol/sdk";
+import { useEffect, useState } from "react";
+
+export function NotificationSettings() {
+  const { publicKey } = useWallet();
+  const [isRegistered, setIsRegistered] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (!publicKey) return;
+    const client = new ReadClient({ cluster: "mainnet-beta" });
+    client.isRegistered(publicKey.toBase58()).then(setIsRegistered);
+  }, [publicKey]);
+
+  if (!publicKey) return <p>Connect your wallet to check notification status.</p>;
+  if (isRegistered === null) return <p>Checking...</p>;
+
+  return (
+    <div>
+      {isRegistered ? (
+        <p>Notifications are active for this wallet.</p>
+      ) : (
+        <a
+          href={`https://notify.useherald.xyz/register?wallet=${publicKey.toBase58()}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Enable Notifications
+        </a>
+      )}
+    </div>
+  );
+}
+```
+
+## Next Steps
+
+- [Production Checklist](/docs/guides/production-checklist) — go-to-market readiness.
+- [REST API Reference](/docs/api/rest) — all available endpoints.
+- [Troubleshooting](/docs/guides/troubleshooting) — common errors and fixes.

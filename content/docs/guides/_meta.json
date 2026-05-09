@@ -1,4 +1,7 @@
 {
   "production-checklist": "Production Checklist",
-  "integration-patterns": "Integration Patterns"
+  "integration-patterns": "Integration Patterns",
+  "examples": "Full Integration Examples",
+  "ai-agent-mcp": "AI Agent MCP",
+  "troubleshooting": "Troubleshooting"
 }

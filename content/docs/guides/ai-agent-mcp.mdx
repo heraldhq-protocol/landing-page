@@ -1,0 +1,81 @@
+---
+title: AI Agent MCP
+description: Connect AI agents (Claude, Cursor, etc.) to Herald docs via MCP for assisted integration.
+---
+
+# AI Agent MCP
+
+Herald exposes a **Model Context Protocol (MCP)** endpoint that lets AI agents browse documentation, search for topics, and retrieve copy-paste ready code — making integration faster.
+
+## Endpoint
+
+```
+POST https://useherald.xyz/api/mcp
+```
+
+The endpoint implements the **MCP Streamable HTTP** transport (JSON-RPC 2.0). No authentication required.
+
+## Available Tools
+
+| Tool | Description |
+|---|---|
+| `get_herald_context` | Full protocol context — architecture, SDK, API, specs, integration patterns |
+| `search_herald_docs` | Search documentation by keyword. Params: `query`, `maxResults` |
+| `get_integration_example` | Copy-paste code. Params: `pattern` (`backend`, `serverless`, `webhook`, `batch`, `registration-check`) |
+| `get_doc_page` | Read a doc page by slug. Params: `slug` (e.g. `quickstart/quickstart`, `sdk/typescript`) |
+
+---
+
+## Configuring in Claude Desktop
+
+Add to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "herald-docs": {
+      "type": "url",
+      "url": "https://useherald.xyz/api/mcp"
+    }
+  }
+}
+```
+
+## Configuring in Cursor
+
+1. Go to **Settings > Features > MCP Servers**
+2. Add a new MCP server with URL: `https://useherald.xyz/api/mcp`
+
+## Testing via curl
+
+```bash
+# List tools
+curl -X POST https://useherald.xyz/api/mcp \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}'
+
+# Get full context
+curl -X POST https://useherald.xyz/api/mcp \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"get_herald_context","arguments":{}}}'
+
+# Search docs
+curl -X POST https://useherald.xyz/api/mcp \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"search_herald_docs","arguments":{"query":"webhook signature"}}}'
+
+# Get integration example
+curl -X POST https://useherald.xyz/api/mcp \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":4,"method":"tools/call","params":{"name":"get_integration_example","arguments":{"pattern":"webhook"}}}'
+```
+
+## Protocol
+
+The endpoint uses **MCP Streamable HTTP** transport:
+
+1. **Initialize**: Send `{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"client","version":"1.0"}}}`
+2. **List tools**: `{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}`
+3. **Call tool**: `{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"tool_name","arguments":{...}}}`
+
+All responses follow standard JSON-RPC 2.0 format.
