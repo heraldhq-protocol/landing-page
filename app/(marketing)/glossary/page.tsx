@@ -42,7 +42,7 @@ export default function GlossaryPage() {
       <div className="container mx-auto px-6">
         <div className="max-w-3xl mb-16">
           <div className="flex items-center gap-3 text-teal mb-6">
-            <BookOpen className="w-5 h-5" />
+            <BookOpen size={20} />
             <span className="text-xs font-bold uppercase tracking-[0.3em]">Knowledge Base</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-black font-display tracking-tight text-text-primary mb-6">
@@ -71,7 +71,7 @@ export default function GlossaryPage() {
         {/* Dynamic CTA */}
         <div className="mt-20 flex flex-col items-center text-center max-w-2xl mx-auto space-y-8">
            <div className="w-16 h-16 rounded-2xl bg-teal/10 flex items-center justify-center">
-             <Search className="w-8 h-8 text-teal" />
+             <Search className="text-teal" size={32} />
            </div>
            <h2 className="text-3xl font-black font-display">Deepen your understanding</h2>
            <p className="text-text-secondary">
@@ -81,7 +81,7 @@ export default function GlossaryPage() {
            <div className="flex items-center gap-4">
             <Link href="/docs" className="inline-flex items-center gap-2 px-8 py-4 bg-white/5 border border-white/10 rounded-2xl font-bold text-teal hover:bg-white/10 transition-all group">
               Visit Documentation
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="group-hover:translate-x-1 transition-transform" size={16} />
             </Link>
            </div>
         </div>

@@ -23,7 +23,7 @@ function StatusContent() {
       <div className="flex flex-col items-center justify-center min-h-[70vh] sm:min-h-[60vh] text-center px-4 space-y-6 sm:space-y-8 animate-in fade-in duration-700">
         <div className="relative">
           <div className="w-20 h-20 sm:w-24 sm:h-24 bg-red/[0.08] rounded-3xl sm:rounded-4xl flex items-center justify-center border border-red/15 shadow-2xl shadow-red/10">
-            <WifiOff className="w-10 h-10 sm:w-12 sm:h-12 text-red" />
+            <WifiOff className="text-red" size={40} />
           </div>
           <div className="absolute inset-0 bg-red/20 blur-3xl rounded-full -z-10 animate-pulse" />
         </div>
@@ -42,7 +42,7 @@ function StatusContent() {
           }}
           className="group px-6 sm:px-8 py-3 sm:py-3.5 bg-teal text-bg-base rounded-2xl font-bold text-sm hover:bg-teal/90 transition-all shadow-lg shadow-teal/20 active:scale-95 flex items-center gap-2"
         >
-          <RefreshCw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
+          <RefreshCw className="group-hover:rotate-180 transition-transform duration-500" size={16} />
           Retry Connection
         </button>
       </div>
@@ -130,7 +130,7 @@ function StatusContent() {
             className="text-teal hover:text-teal/80 transition-colors flex items-center gap-1.5 font-medium"
           >
             Herald Protocol
-            <ExternalLink className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+            <ExternalLink size={12} />
           </a>
         </div>
       </footer>

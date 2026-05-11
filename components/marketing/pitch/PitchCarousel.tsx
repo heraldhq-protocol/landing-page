@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { ChevronLeft, ChevronRight, X, Play, Pause } from "lucide-react";
+import { ChevronLeft, Play, Pause } from "lucide-react";
+import { ChevronRightIcon as ChevronRight } from "@/components/ui/chevron-right";
+import { XIcon as X } from "@/components/ui/x";
 import Image from "next/image";
 
 interface Slide {
@@ -243,13 +245,13 @@ export default function PitchCarousel({ slides, videoUrl }: PitchCarouselProps) 
         {slides.map((slide, index) => (
           <div
             key={slide.id}
-            className={`absolute inset-0 top-24 sm:top-32 md:top-40 bottom-44 sm:bottom-48 md:bottom-52 transition-opacity duration-500 ${
+            className={`absolute inset-0 top-24 sm:top-32 md:top-40 bottom-24 sm:bottom-28 md:bottom-32 transition-opacity duration-500 ${
               index === current ? "opacity-100 z-10" : "opacity-0 z-0"
             }`}
           >
             <div className="relative w-full h-full flex flex-col items-center justify-center p-2 sm:p-4">
               {slide.image ? (
-                <div className="flex flex-col items-center gap-3 sm:gap-4 w-full max-w-5xl">
+                <div className="w-full max-w-5xl">
                   <div className="relative w-full rounded-lg overflow-hidden flex-shrink-0" style={{ aspectRatio: "16 / 9" }}>
                     <Image
                       src={slide.image}
@@ -261,21 +263,6 @@ export default function PitchCarousel({ slides, videoUrl }: PitchCarouselProps) 
                       quality={90}
                     />
                   </div>
-
-                  {(slide.title || slide.description) && (
-                    <div className="text-center w-full px-2 sm:px-4">
-                      {slide.title && (
-                        <h2 className="text-[13px] sm:text-lg md:text-xl font-bold text-text-primary mb-1">
-                          {slide.title}
-                        </h2>
-                      )}
-                      {slide.description && (
-                        <p className="text-[10px] sm:text-xs md:text-sm text-text-muted/80 leading-relaxed max-w-2xl mx-auto line-clamp-2 sm:line-clamp-3">
-                          {slide.description}
-                        </p>
-                      )}
-                    </div>
-                  )}
                 </div>
               ) : (
                 <div className="w-full h-full bg-bg-surface/50 flex items-center justify-center">
@@ -305,7 +292,7 @@ export default function PitchCarousel({ slides, videoUrl }: PitchCarouselProps) 
           onClick={() => setShowOverview(true)}
           className="flex items-center gap-1.5 sm:gap-2 text-text-muted hover:text-text-primary transition-colors text-[10px] sm:text-xs font-bold uppercase tracking-widest px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-bg-elevated/50"
         >
-          <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          <X size={14} />
           <span className="hidden sm:inline">Overview</span>
         </button>
 
@@ -314,7 +301,7 @@ export default function PitchCarousel({ slides, videoUrl }: PitchCarouselProps) 
             onClick={() => setShowVideo(true)}
             className="flex items-center gap-1.5 sm:gap-2 text-teal hover:text-teal/80 transition-colors text-[10px] sm:text-xs font-bold uppercase tracking-widest px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-bg-elevated/50 border border-teal/20 hover:border-teal/40"
           >
-            <Play className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+            <Play size={10} />
             <span className="hidden sm:inline">Watch Video</span>
           </button>
         )}
@@ -329,7 +316,7 @@ export default function PitchCarousel({ slides, videoUrl }: PitchCarouselProps) 
           onClick={goPrev}
           className="p-2 sm:p-2.5 md:p-3 rounded-full bg-bg-base/80 border border-border-hi hover:bg-bg-elevated hover:border-teal/50 transition-all text-text-muted hover:text-teal backdrop-blur-sm"
         >
-          <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+          <ChevronLeft size={16} />
         </button>
       </div>
 
@@ -342,11 +329,22 @@ export default function PitchCarousel({ slides, videoUrl }: PitchCarouselProps) 
           onClick={goNext}
           className="p-2 sm:p-2.5 md:p-3 rounded-full bg-bg-base/80 border border-border-hi hover:bg-bg-elevated hover:border-teal/50 transition-all text-text-muted hover:text-teal backdrop-blur-sm"
         >
-          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+          <ChevronRight size={16} />
         </button>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 z-20 p-3 sm:p-4 md:p-8 pb-6 sm:pb-8 md:pb-10">
+      {/* Slide Title above controls bar */}
+      {currentSlide?.title && (
+        <div className="absolute left-0 right-0 z-30 px-3 sm:px-4 md:px-6 lg:px-8 text-center pointer-events-none"
+             style={{ bottom: "clamp(64px, 12vh, 100px)" }}>
+          <h2 className="text-sm sm:text-lg md:text-xl font-bold text-text-primary">
+            {currentSlide.title}
+          </h2>
+        </div>
+      )}
+
+      <div className="absolute bottom-0 left-0 right-0 z-20 bg-bg-base/90 backdrop-blur-sm border-t border-border/10">
+        <div className="p-3 sm:p-4 md:p-6 lg:p-8 pb-4 sm:pb-6 lg:pb-8">
         <div className="max-w-4xl mx-auto space-y-2 sm:space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-[10px] sm:text-xs font-mono text-text-muted font-bold">
@@ -360,9 +358,9 @@ export default function PitchCarousel({ slides, videoUrl }: PitchCarouselProps) 
                 aria-label={isPaused ? "Resume" : "Pause"}
               >
                 {isPaused ? (
-                  <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <Play size={14} />
                 ) : (
-                  <Pause className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <Pause size={14} />
                 )}
               </button>
 
@@ -408,6 +406,7 @@ export default function PitchCarousel({ slides, videoUrl }: PitchCarouselProps) 
               </span>
             )}
           </div>
+        </div>
         </div>
       </div>
 
@@ -468,7 +467,7 @@ function PitchVideoModal({
           onClick={onClose}
           className="absolute top-2 sm:top-4 right-2 sm:right-4 z-10 p-1.5 sm:p-2 rounded-full bg-bg-base/80 hover:bg-bg-elevated transition-colors text-text-muted hover:text-text-primary"
         >
-          <X className="w-4 h-4 sm:w-5 sm:h-5" />
+          <X size={16} />
         </button>
 
         {videoId ? (
@@ -536,7 +535,7 @@ function DeckOverview({
                 onClick={onReplay}
                 className="flex items-center gap-1.5 text-teal hover:text-teal/80 transition-colors text-[10px] sm:text-xs font-bold uppercase tracking-widest px-3 sm:px-4 py-1.5 sm:py-2 rounded-full hover:bg-bg-elevated/50 border border-teal/20 hover:border-teal/40"
               >
-                <Play className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+<Play size={10} />
                 <span className="hidden sm:inline">Replay Pitch</span>
               </button>
 
@@ -544,7 +543,7 @@ function DeckOverview({
                 onClick={onClose}
                 className="w-9 h-9 flex items-center justify-center rounded-full text-text-muted hover:text-text-primary hover:bg-white/5 transition-colors"
               >
-                <X className="w-5 h-5" />
+                <X size={20} />
               </button>
             </div>
           </div>
@@ -636,7 +635,7 @@ function DeckOverview({
               onClick={onReplay}
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-teal/10 border border-teal/20 hover:bg-teal/20 hover:border-teal/30 transition-all text-teal font-bold text-xs sm:text-sm uppercase tracking-widest"
             >
-              <Play className="w-3 h-3" />
+              <Play size={12} />
               Replay Full Pitch
             </button>
           </div>

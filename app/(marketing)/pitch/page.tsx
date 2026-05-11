@@ -89,7 +89,7 @@ const SLIDES = [
   },
 ];
 
-const YOUTUBE_URL = "";
+const YOUTUBE_URL = "https://youtu.be/so3XGleCiU4";
 
 export default function PitchPage() {
   return (

@@ -64,7 +64,7 @@ export default async function IntegrationDetailPage({ params }: PageProps) {
           <div className="lg:col-span-7 space-y-10">
             <div>
               <Link href="/integrations" className="inline-flex items-center gap-2 text-teal text-sm font-bold uppercase tracking-widest mb-10 hover:gap-3 transition-all">
-                <ArrowRight className="w-4 h-4 rotate-180" />
+                <ArrowRight className="rotate-180" size={16} />
                 Back to Integrations
               </Link>
               
@@ -90,7 +90,7 @@ export default async function IntegrationDetailPage({ params }: PageProps) {
               {app.useCases.map((useCase, i) => (
                 <div key={i} className="flex items-start gap-4 p-5 bg-white/5 border border-white/5 rounded-2xl hover:bg-white/10 transition-colors">
                   <div className="p-2 bg-teal/10 rounded-lg">
-                    <Bell className="w-4 h-4 text-teal" />
+                    <Bell className="text-teal" size={16} />
                   </div>
                   <span className="text-sm font-bold text-text-primary leading-tight">{useCase}</span>
                 </div>
@@ -132,19 +132,19 @@ export default async function IntegrationDetailPage({ params }: PageProps) {
                   className="w-full py-5 bg-teal text-navy font-black rounded-2xl flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-teal/20"
                 >
                   REGISTER YOUR WALLET
-                  <ArrowRight className="w-5 h-5" />
+                  <ArrowRight size={20} />
                 </Link>
                 <div className="flex items-center justify-center gap-4 text-text-muted text-[10px] font-bold uppercase tracking-[0.2em]">
-                  <span className="flex items-center gap-1"><ShieldCheck className="w-3 h-3" /> ZK-SECURE</span>
+                  <span className="flex items-center gap-1"><ShieldCheck size={12} /> ZK-SECURE</span>
                   <span className="w-1 h-1 rounded-full bg-border" />
-                  <span className="flex items-center gap-1"><Zap className="w-3 h-3" /> SOLANA NATIVE</span>
+                  <span className="flex items-center gap-1"><Zap size={12} /> SOLANA NATIVE</span>
                 </div>
               </div>
 
               <div className="pt-6 border-t border-border/50">
                 <div className="flex items-center gap-4 text-xs font-bold text-text-primary group cursor-default">
                   <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-teal/10 transition-colors">
-                     <Terminal className="w-4 h-4 text-text-muted group-hover:text-teal" />
+                     <Terminal className="text-text-muted group-hover:text-teal" size={16} />
                   </div>
                   <div>
                     <p>Are you the {app.name} team?</p>

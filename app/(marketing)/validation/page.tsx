@@ -6,12 +6,12 @@ import {
   CheckCircle,
   AlertTriangle,
   BarChart3,
-  Search,
-  ShieldCheck,
   TrendingUp,
-  ArrowRight,
   ExternalLink,
 } from "lucide-react";
+import { SearchIcon as Search } from "@/components/ui/search";
+import { ShieldCheckIcon as ShieldCheck } from "@/components/ui/shield-check";
+import { ArrowRightIcon as ArrowRight } from "@/components/ui/arrow-right";
 import { cn } from "@/lib/utils";
 
 const SCORECARD = [
@@ -187,7 +187,7 @@ export default function ValidationPage() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,200,150,0.08),transparent)]" />
         <div className="relative max-w-4xl mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-teal/20 bg-teal/5 mb-6">
-            <ShieldCheck className="w-4 h-4 text-teal" />
+            <ShieldCheck className="text-teal" size={16} />
             <span className="text-sm font-semibold text-teal">
               Colosseum Copilot Validated
             </span>
@@ -208,7 +208,7 @@ export default function ValidationPage() {
             <Card className="bg-navy-2 border-teal/30 rounded-2xl overflow-hidden">
               <CardContent className="p-8">
                 <div className="flex items-center justify-center gap-3 mb-4">
-                  <CheckCircle className="w-8 h-8 text-teal" />
+                  <CheckCircle className="text-teal" size={32} />
                 </div>
                 <h2 className="text-3xl font-bold font-display text-text-primary mb-2">
                   Verdict: GO ✅
@@ -257,7 +257,7 @@ export default function ValidationPage() {
       {/* Scorecard */}
       <section className="max-w-4xl mx-auto px-4">
         <div className="flex items-center gap-3 mb-6">
-          <BarChart3 className="w-5 h-5 text-teal" />
+          <BarChart3 className="text-teal" size={20} />
           <h2 className="text-2xl font-bold font-display text-text-primary">
             Scorecard
           </h2>
@@ -301,7 +301,7 @@ export default function ValidationPage() {
       {/* Competitive Landscape */}
       <section className="max-w-4xl mx-auto px-4">
         <div className="flex items-center gap-3 mb-6">
-          <ExternalLink className="w-5 h-5 text-teal" />
+          <ExternalLink className="text-teal" size={20} />
           <h2 className="text-2xl font-bold font-display text-text-primary">
             Competitive Landscape
           </h2>
@@ -327,7 +327,7 @@ export default function ValidationPage() {
                           rel="noopener noreferrer"
                           className="text-text-muted hover:text-teal transition-colors"
                         >
-                          <ExternalLink className="w-4 h-4" />
+                          <ExternalLink size={16} />
                         </a>
                       )}
                     </div>
@@ -362,7 +362,7 @@ export default function ValidationPage() {
       {/* Colosseum Search Results */}
       <section className="max-w-4xl mx-auto px-4">
         <div className="flex items-center gap-3 mb-6">
-          <Search className="w-5 h-5 text-teal" />
+          <Search className="text-teal" size={20} />
           <h2 className="text-2xl font-bold font-display text-text-primary">
             Colosseum Copilot Search Results
           </h2>
@@ -445,7 +445,7 @@ export default function ValidationPage() {
       {/* Demand Signals */}
       <section className="max-w-4xl mx-auto px-4">
         <div className="flex items-center gap-3 mb-6">
-          <TrendingUp className="w-5 h-5 text-teal" />
+          <TrendingUp className="text-teal" size={20} />
           <h2 className="text-2xl font-bold font-display text-text-primary">
             Demand Signal Analysis
           </h2>
@@ -508,7 +508,7 @@ export default function ValidationPage() {
       {/* Crypto Necessity */}
       <section className="max-w-4xl mx-auto px-4">
         <div className="flex items-center gap-3 mb-6">
-          <ShieldCheck className="w-5 h-5 text-teal" />
+          <ShieldCheck className="text-teal" size={20} />
           <h2 className="text-2xl font-bold font-display text-text-primary">
             Crypto Necessity Check
           </h2>
@@ -558,9 +558,9 @@ export default function ValidationPage() {
                     }`}
                   >
                     {item.needed ? (
-                      <CheckCircle className="w-5 h-5 text-teal" />
+                      <CheckCircle className="text-teal" size={20} />
                     ) : (
-                      <AlertTriangle className="w-5 h-5 text-slate-500" />
+                      <AlertTriangle className="text-slate-500" size={20} />
                     )}
                   </div>
                   <div className="flex-1">
@@ -582,7 +582,7 @@ export default function ValidationPage() {
             </div>
             <div className="mt-6 pt-6 border-t border-border/30">
               <div className="flex items-center gap-3">
-                <CheckCircle className="w-6 h-6 text-teal" />
+                <CheckCircle className="text-teal" size={24} />
                 <div>
                   <p className="text-lg font-bold text-text-primary">
                     Crypto is <span className="text-teal">necessary</span>
@@ -601,7 +601,7 @@ export default function ValidationPage() {
       {/* Next Steps */}
       <section className="max-w-4xl mx-auto px-4">
         <div className="flex items-center gap-3 mb-6">
-          <ArrowRight className="w-5 h-5 text-teal" />
+          <ArrowRight className="text-teal" size={20} />
           <h2 className="text-2xl font-bold font-display text-text-primary">
             Priority Next Steps
           </h2>
@@ -679,7 +679,7 @@ export default function ValidationPage() {
        {/* Product Review */}
        <section className="max-w-4xl mx-auto px-4 pt-8">
          <div className="flex items-center gap-3 mb-6">
-           <ShieldCheck className="w-5 h-5 text-teal" />
+           <ShieldCheck className="text-teal" size={20} />
            <h2 className="text-2xl font-bold font-display text-text-primary">
              Product Review
            </h2>
@@ -761,7 +761,7 @@ export default function ValidationPage() {
              <Card key={item.title} className="bg-navy-2 border-teal/20 rounded-xl">
                <CardContent className="p-5">
                  <div className="flex items-center gap-2 mb-2">
-                   <CheckCircle className="w-4 h-4 text-teal shrink-0" />
+                   <CheckCircle className="text-teal shrink-0" size={16} />
                    <h4 className="text-sm font-bold text-text-primary">{item.title}</h4>
                  </div>
                  <p className="text-xs text-text-muted">{item.detail}</p>
@@ -780,7 +780,7 @@ export default function ValidationPage() {
              <Card key={item.title} className="bg-navy-2 border-border rounded-xl">
                <CardContent className="p-5">
                  <div className="flex items-center gap-2 mb-2">
-                   <ArrowRight className="w-4 h-4 text-amber-400 shrink-0" />
+                   <ArrowRight className="text-amber-400 shrink-0" size={16} />
                    <h4 className="text-sm font-bold text-text-primary">{item.title}</h4>
                    <BadgePill text={item.badge} variant={item.badge.includes("Highest") || item.badge.includes("Existential") ? "destructive" : "success"} />
                  </div>
@@ -894,7 +894,7 @@ export default function ValidationPage() {
                 className="inline-flex items-center justify-center gap-2 bg-navy-2 border border-border hover:border-teal/20 text-text-primary font-medium px-8 py-3 rounded-full transition-colors"
               >
                 View on GitHub
-                <ExternalLink className="w-4 h-4" />
+                <ExternalLink size={16} />
               </a>
             </div>
           </CardContent>

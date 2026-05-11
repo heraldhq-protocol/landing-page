@@ -14,7 +14,7 @@ export default function GlobalError({
     <html>
       <body>
         <ErrorView
-          icon={<ZapOff className="w-10 h-10 text-rose-500" />}
+          icon={<ZapOff className="text-rose-500" size={40} />}
           code="CRITICAL"
           title="Core Failure"
           message="The Herald backbone has suffered a catastrophic failure. Manual reset required."

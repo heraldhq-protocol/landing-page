@@ -25,14 +25,14 @@ function RepoBadge({
       rel="noopener noreferrer"
       className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-bg-surface border border-bg-border hover:border-teal/50 hover:bg-teal/5 transition-all group text-[10px] sm:text-xs font-medium"
     >
-      <GitBranch className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-text-muted group-hover:text-teal transition-colors" />
+      <GitBranch className="text-text-muted group-hover:text-teal transition-colors" size={12} />
       <span className="text-text-secondary group-hover:text-text-primary transition-colors hidden sm:inline">
         {owner}/{repo}
       </span>
       <span className="text-text-secondary group-hover:text-text-primary transition-colors sm:hidden">
         {repo}
       </span>
-      <ExternalLink className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-text-muted opacity-0 group-hover:opacity-100 transition-opacity" />
+      <ExternalLink className="text-text-muted opacity-0 group-hover:opacity-100 transition-opacity" size={10} />
     </a>
   );
 }
@@ -139,7 +139,7 @@ function ChangelogSection({ entry }: { entry: ChangelogEntry }) {
         <div className="flex-1 pb-8 sm:pb-10 last:pb-0 min-w-0">
           <div className="flex flex-wrap items-center gap-2 mb-3">
             <div className="flex items-center gap-1.5 text-[10px] sm:text-xs font-mono text-text-muted bg-bg-surface/50 px-2 sm:px-2.5 py-0.5 rounded-full border border-bg-border/60">
-              <Calendar className="w-3 h-3" />
+              <Calendar size={12} />
               <span>
                 {entry.date
                   ? new Date(entry.date).toLocaleDateString("en-US", {
@@ -225,7 +225,7 @@ function EmptyState() {
   return (
     <div className="max-w-2xl text-center py-16 sm:py-24 px-4">
       <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-bg-surface border border-bg-border mb-6">
-        <Package className="w-7 h-7 sm:w-8 sm:h-8 text-text-muted" />
+        <Package className="text-text-muted" size={28} />
       </div>
       <h2 className="text-xl sm:text-2xl font-bold font-display mb-3 sm:mb-4">No Updates Available</h2>
       <p className="text-sm sm:text-base text-text-secondary">

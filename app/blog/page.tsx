@@ -43,7 +43,7 @@ export default function BlogIndex() {
                 <div className="p-8 flex-1">
                   <div className="flex items-center gap-4 text-xs text-text-muted mb-6">
                     <div className="flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5" />
+                      <Calendar size={14} />
                       <span>
                         {data.date
                           ? new Date(data.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
@@ -62,11 +62,11 @@ export default function BlogIndex() {
 
                 <div className="px-8 py-4 border-t border-bg-border bg-bg-surface/50 flex items-center justify-between">
                   <span className="text-xs font-bold text-teal flex items-center gap-2 group-hover:translate-x-1 transition-transform">
-                    Read article <ArrowRight className="w-3.5 h-3.5" />
+                    Read article <ArrowRight size={14} />
                   </span>
                   <div className="flex items-center gap-2">
                     <div className="w-6 h-6 rounded-full bg-teal/20 flex items-center justify-center">
-                      <User className="w-3 h-3 text-teal" />
+                      <User className="text-teal" size={12} />
                     </div>
                     <span className="text-[10px] font-mono text-text-muted">{data.author ?? 'Herald'}</span>
                   </div>

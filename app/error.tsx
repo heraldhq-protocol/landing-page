@@ -18,7 +18,7 @@ export default function Error({
 
   return (
     <ErrorView
-      icon={<AlertTriangle className="w-10 h-10 text-rose-500" />}
+      icon={<AlertTriangle className="text-rose-500" size={40} />}
       code="500"
       title="Relay Anomaly"
       message="A critical interruption occurred within the notification layer. Our engineers have been alerted to the breakdown."

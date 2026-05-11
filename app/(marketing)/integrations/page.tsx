@@ -37,7 +37,7 @@ export default function IntegrationsPage() {
               className="group relative bg-card/40 backdrop-blur-sm border border-border/50 rounded-3xl p-8 hover:border-teal/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-teal/10 overflow-hidden"
             >
               <div className="absolute top-0 right-0 p-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                <ArrowRight className="w-5 h-5 text-teal" />
+                <ArrowRight className="text-teal" size={20} />
               </div>
 
               <div className="flex items-center gap-4 mb-6">
@@ -67,7 +67,7 @@ export default function IntegrationsPage() {
           
           {/* Incoming Integration Placeholder */}
           <div className="border border-dashed border-border/50 rounded-3xl p-8 flex flex-col items-center justify-center text-center opacity-60">
-            <Terminal className="w-8 h-8 text-text-muted mb-4" />
+            <Terminal className="text-text-muted mb-4" size={32} />
             <h3 className="text-lg font-bold text-text-secondary mb-2">Your Protocol Here?</h3>
             <Link 
               href="/docs/quickstart" 
@@ -93,11 +93,11 @@ export default function IntegrationsPage() {
               </p>
               <div className="flex flex-wrap gap-8 pt-4">
                 <div className="flex items-center gap-3">
-                  <ShieldCheck className="text-teal w-6 h-6" />
+                  <ShieldCheck className="text-teal" size={24} />
                   <span className="text-sm font-bold uppercase tracking-widest">Client-side Encryption</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Zap className="text-teal w-6 h-6" />
+                  <Zap className="text-teal" size={24} />
                   <span className="text-sm font-bold uppercase tracking-widest">Instant Delivery</span>
                 </div>
               </div>

@@ -1,12 +1,12 @@
 import HeroSection from "@/components/marketing/home/HeroSection";
 import DemoAnimation from "@/components/marketing/home/DemoAnimation";
-import LogoMarquee from "@/components/marketing/home/LogoMarquee";
+// import LogoMarquee from "@/components/marketing/home/LogoMarquee";
 import HowItWorks from "@/components/marketing/home/HowItWorks";
 import DualValueProp from "@/components/marketing/home/DualValueProp";
 import FeatureGrid from "@/components/marketing/home/FeatureGrid";
 import CodePreview from "@/components/marketing/home/CodePreview";
 import PricingTable from "@/components/marketing/pricing/PricingTable";
-import BlogStrip from "@/components/marketing/home/BlogStrip";
+// import BlogStrip from "@/components/marketing/home/BlogStrip";
 import FinalCTA from "@/components/marketing/home/FinalCTA";
 import NavBar from "@/components/marketing/shared/NavBar";
 import Footer from "@/components/marketing/shared/Footer";
@@ -19,7 +19,7 @@ export default function HomePage() {
       <HeroSection />
 
       {/* 4.1.2 Social Proof Strip */}
-      <LogoMarquee />
+      {/* <LogoMarquee /> */}
 
       {/* 4.1.3 How It Works (Scroll animated) */}
       <HowItWorks />
@@ -30,7 +30,7 @@ export default function HomePage() {
       <FeatureGrid />
       <CodePreview />
       <PricingTable />
-      <BlogStrip />
+      {/* <BlogStrip /> */}
       <FinalCTA />
       <Footer />
     </div>

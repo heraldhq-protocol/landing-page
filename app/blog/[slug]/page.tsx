@@ -32,14 +32,14 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
             href="/blog" 
             className="inline-flex items-center gap-2 text-sm text-text-muted hover:text-teal transition-colors mb-12"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft size={16} />
             Back to journal
           </Link>
 
           <header className="mb-16">
             <div className="flex items-center gap-6 text-sm text-text-secondary mb-8">
               <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
+                <Calendar size={16} />
                 <span>
                   {data.date
                     ? new Date(data.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
@@ -48,7 +48,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-full bg-teal/20 flex items-center justify-center">
-                  <User className="w-4 h-4 text-teal" />
+                  <User className="text-teal" size={16} />
                 </div>
                 <span className="font-mono text-text-muted">{data.author ?? 'Herald Team'}</span>
               </div>
@@ -71,7 +71,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
             <div className="flex items-center gap-4">
               <p className="text-sm font-bold text-text-muted">Share this article</p>
               <button className="p-2 bg-bg-surface border border-bg-border rounded-lg hover:border-teal/30 transition-colors">
-                <Share2 className="w-4 h-4 text-text-secondary" />
+                <Share2 className="text-text-secondary" size={16} />
               </button>
             </div>
             <Link 
@@ -79,7 +79,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
               className="px-6 py-3 bg-teal/10 border border-teal/20 text-teal font-bold rounded-xl hover:bg-teal/20 transition-all flex items-center gap-3"
             >
               Start integrating with Herald
-              <ArrowLeft className="w-4 h-4 rotate-180" />
+              <ArrowLeft className="rotate-180" size={16} />
             </Link>
           </footer>
         </article>

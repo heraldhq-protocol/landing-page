@@ -2,20 +2,20 @@ import { Metadata } from "next";
 import Link from "next/link";
 import {
   Shield,
-  Lock,
-  Cpu,
-  Eye,
-  FileCheck,
   Server,
   AlertTriangle,
-  ArrowRight,
   CheckCircle2,
-  Clock,
-  Key,
   Database,
   Network,
-  Terminal,
 } from "lucide-react";
+import { LockIcon as Lock } from "@/components/ui/lock";
+import { CpuIcon as Cpu } from "@/components/ui/cpu";
+import { EyeIcon as Eye } from "@/components/ui/eye";
+import { FileCheckIcon as FileCheck } from "@/components/ui/file-check";
+import { ArrowRightIcon as ArrowRight } from "@/components/ui/arrow-right";
+import { ClockIcon as Clock } from "@/components/ui/clock";
+import { KeyIcon as Key } from "@/components/ui/key";
+import { TerminalIcon as Terminal } from "@/components/ui/terminal";
 
 export const metadata: Metadata = {
   title: "Security | Herald Protocol",
@@ -41,7 +41,7 @@ const AUDIT_FINDINGS = [
 function SecurityBadge({ children }: { children: React.ReactNode }) {
   return (
     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-teal/20 bg-teal/5 text-teal text-xs font-bold uppercase tracking-widest">
-      <Shield className="w-3 h-3" />
+      <Shield size={12} />
       {children}
     </span>
   );
@@ -61,7 +61,7 @@ function PillarCard({
   return (
     <div className="group border border-border/50 rounded-2xl p-6 hover:border-teal/30 transition-all duration-300 bg-bg-base hover:bg-bg-surface/30">
       <div className="w-12 h-12 rounded-xl bg-teal/10 border border-teal/20 flex items-center justify-center mb-5">
-        <Icon className="w-5 h-5 text-teal" />
+        <Icon size={20} className="text-teal" />
       </div>
       <h3 className="text-lg font-bold font-display text-text-primary mb-2">
         {title}
@@ -117,7 +117,7 @@ function EncryptionBlock({
   return (
     <div className="border border-border/50 rounded-xl p-5 bg-bg-surface/30">
       <div className="flex items-center gap-3 mb-3">
-        <Icon className="w-4 h-4 text-teal" />
+        <Icon size={16} className="text-teal" />
         <h4 className="text-sm font-bold text-text-primary">{title}</h4>
       </div>
       <p className="text-xs text-text-secondary leading-relaxed">
@@ -139,7 +139,7 @@ function SecurityFeature({
   return (
     <div className="flex items-start gap-4 p-5 border border-border/30 rounded-xl bg-bg-base hover:border-teal/20 transition-colors">
       <div className="w-10 h-10 rounded-lg bg-teal/10 flex items-center justify-center shrink-0">
-        <Icon className="w-4 h-4 text-teal" />
+        <Icon size={16} className="text-teal" />
       </div>
       <div>
         <h4 className="text-sm font-bold text-text-primary mb-1">{title}</h4>
@@ -198,7 +198,7 @@ function StatusBadge({ status }: { status: string }) {
   if (isFixed) {
     return (
       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-teal/10 text-teal text-[10px] font-bold uppercase tracking-wider">
-        <CheckCircle2 className="w-2.5 h-2.5" />
+        <CheckCircle2 size={10} />
         {status}
       </span>
     );
@@ -206,7 +206,7 @@ function StatusBadge({ status }: { status: string }) {
   if (isAccepted) {
     return (
       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber/10 text-amber text-[10px] font-bold uppercase tracking-wider">
-        <Clock className="w-2.5 h-2.5" />
+        <Clock size={10} />
         {status}
       </span>
     );
@@ -214,7 +214,7 @@ function StatusBadge({ status }: { status: string }) {
   if (isSafe) {
     return (
       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-purple/10 text-purple text-[10px] font-bold uppercase tracking-wider">
-        <Shield className="w-2.5 h-2.5" />
+        <Shield size={10} />
         {status}
       </span>
     );
@@ -234,7 +234,7 @@ function InfraItem({
   return (
     <div className="flex items-start gap-4 p-5 border border-border/30 rounded-xl bg-bg-base hover:border-teal/20 transition-colors">
       <div className="w-10 h-10 rounded-lg bg-teal/10 flex items-center justify-center shrink-0">
-        <Icon className="w-4 h-4 text-teal" />
+        <Icon size={16} className="text-teal" />
       </div>
       <div>
         <h4 className="text-sm font-bold text-text-primary mb-1">{title}</h4>
@@ -621,7 +621,7 @@ export default function SecurityPage() {
             </p>
             <div className="space-y-4">
               <div className="flex items-start gap-3">
-                <CheckCircle2 className="w-5 h-5 text-teal shrink-0 mt-0.5" />
+                <CheckCircle2 size={20} className="text-teal shrink-0 mt-0.5" />
                 <div>
                   <h4 className="text-sm font-bold text-text-primary mb-1">
                     Scope
@@ -633,7 +633,7 @@ export default function SecurityPage() {
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <CheckCircle2 className="w-5 h-5 text-teal shrink-0 mt-0.5" />
+                <CheckCircle2 size={20} className="text-teal shrink-0 mt-0.5" />
                 <div>
                   <h4 className="text-sm font-bold text-text-primary mb-1">
                     Contact
@@ -650,7 +650,7 @@ export default function SecurityPage() {
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <CheckCircle2 className="w-5 h-5 text-teal shrink-0 mt-0.5" />
+                <CheckCircle2 size={20} className="text-teal shrink-0 mt-0.5" />
                 <div>
                   <h4 className="text-sm font-bold text-text-primary mb-1">
                     Response Time
@@ -684,14 +684,14 @@ export default function SecurityPage() {
               className="flex items-center gap-2 px-6 py-3 bg-teal text-bg-base font-bold rounded-xl hover:bg-teal/90 transition-colors shadow-[0_0_20px_rgba(0,200,150,0.2)]"
             >
               View Source Code
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight size={16} />
             </Link>
             <Link
               href="/docs/quickstart"
               className="flex items-center gap-2 px-6 py-3 border border-border rounded-xl text-text-secondary hover:text-teal hover:border-teal/30 transition-colors"
             >
               Read the Docs
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight size={16} />
             </Link>
           </div>
         </div>
