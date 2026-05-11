@@ -32,7 +32,6 @@ export default function NavBar() {
     { name: "How it works", href: "/how-it-works" },
     { name: "Pricing", href: "/pricing" },
     { name: "Docs", href: "/docs" },
-    { name: "Blog", href: "/blog" },
     { name: "Changelog", href: "/changelog" },
   ];
 

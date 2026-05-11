@@ -7,6 +7,7 @@ import { CheckIcon as Check } from "@/components/ui/check";
 import { ArrowRightIcon as ArrowRight } from "@/components/ui/arrow-right";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { SyntaxHighlight } from "@/components/ui/syntax-highlight";
 
 const CODE_SAMPLES = {
   typescript: {
@@ -72,27 +73,6 @@ const result = await herald.notify({
 };
 
 type Tab = keyof typeof CODE_SAMPLES;
-
-// Basic syntax highlighting — colour key tokens
-function highlight(code: string, lang: string): string {
-  if (lang === "bash") {
-    return code
-      .replace(/(".*?")/g, '<span class="text-amber">$1</span>')
-      .replace(/(#.*)/g, '<span class="text-text-muted">$1</span>')
-      .replace(/\b(curl|POST|GET)\b/g, '<span class="text-purple">$1</span>');
-  }
-  return code
-    .replace(/('.*?'|`.*?`)/g, '<span class="text-amber">$1</span>')
-    .replace(/(\/\/.*)/g, '<span class="text-text-muted/60 italic">$1</span>')
-    .replace(
-      /\b(await|const|import|from|true|false|async|let|use|pub|fn|struct|enum|impl)\b/g,
-      '<span class="text-purple">$1</span>',
-    )
-    .replace(
-      /\b(herald|Herald|notify|NotifyRequest|Category)\b/g,
-      '<span class="text-teal">$1</span>',
-    );
-}
 
 export default function CodePreview() {
   const [tab, setTab] = useState<Tab>("typescript");
@@ -176,13 +156,13 @@ export default function CodePreview() {
             {/* Glow */}
             <div className="absolute -inset-1 bg-linear-to-r from-teal/15 to-purple/15 rounded-2xl blur-xl opacity-0 xl:group-hover:opacity-100 transition-opacity duration-700" />
 
-            <div className="relative bg-[#020810] border border-border rounded-2xl overflow-hidden shadow-2xl flex flex-col min-h-[320px] sm:min-h-0">
+            <div className="relative bg-[#011627] border border-[#1D3B53] rounded-2xl overflow-hidden shadow-2xl flex flex-col min-h-[320px] sm:min-h-0">
               {/* Window chrome */}
-              <div className="flex items-center justify-between px-4 py-3 border-b border-border/60 bg-bg-surface/50 shrink-0">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-[#1D3B53] bg-[#01111D] shrink-0">
                 <div className="hidden sm:flex gap-1.5">
-                  <div className="w-3 h-3 rounded-full bg-red/50" />
-                  <div className="w-3 h-3 rounded-full bg-amber/50" />
-                  <div className="w-3 h-3 rounded-full bg-green/50" />
+                  <div className="w-3 h-3 rounded-full bg-[#FF5F56] border border-[#E0443E]" />
+                  <div className="w-3 h-3 rounded-full bg-[#FFBD2E] border border-[#DE9F2D]" />
+                  <div className="w-3 h-3 rounded-full bg-[#27C93F] border border-[#1AAB29]" />
                 </div>
 
                 {/* Tabs */}
@@ -224,31 +204,20 @@ export default function CodePreview() {
 
               {/* Code with Scroll Hint */}
               <div className="relative flex-1 min-h-0 group/code">
-                <div className="absolute inset-y-0 right-0 w-8 bg-linear-to-l from-[#020810] to-transparent pointer-events-none z-10 opacity-60 group-hover/code:opacity-20 transition-opacity" />
+                <div className="absolute inset-y-0 right-0 w-8 bg-linear-to-l from-[#011627] to-transparent pointer-events-none z-10 opacity-60 group-hover/code:opacity-20 transition-opacity" />
                 
                 <div className="p-4 sm:p-6 overflow-x-auto max-w-full h-full custom-scrollbar">
-                  <pre className="text-xs sm:text-sm font-mono leading-relaxed inline-block min-w-full">
-                    <code
-                      dangerouslySetInnerHTML={{
-                        __html: highlight(current.code, current.lang),
-                      }}
-                      className="text-text-secondary"
-                    />
-                  </pre>
+                  <SyntaxHighlight code={current.code} language={current.lang} />
                 </div>
               </div>
 
               {/* Footer bar */}
-              <div className="px-4 py-2.5 border-t border-border/40 bg-bg-surface/30 flex items-center justify-between shrink-0">
+              <div className="px-4 py-2.5 border-t border-[#1D3B53] bg-[#01111D] flex items-center justify-between shrink-0">
                 <div className="flex items-center gap-1.5">
-                  <Terminal size={14} className="text-text-muted" />
-                  <span className="text-xs text-text-muted font-mono">
-                    @herald-protocol/sdk v1.3.1
+                  <Terminal size={14} className="text-[#5F7E97]" />
+                  <span className="text-xs text-[#5F7E97] font-mono">
+                    ready
                   </span>
-                </div>
-                <div className="hidden xs:flex items-center gap-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-teal animate-pulse" />
-                  <span className="text-xs text-teal font-mono">ready</span>
                 </div>
               </div>
             </div>
