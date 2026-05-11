@@ -6,7 +6,8 @@ import { useGSAP } from "@gsap/react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight } from "lucide-react";
+import { ArrowRightIcon as ArrowRight } from "@/components/ui/arrow-right";
+import { NetworkSolana } from "@web3icons/react";
 
 const STATS = [
   { label: "API response", value: "< 200ms" },
@@ -52,9 +53,9 @@ export default function HeroSection() {
         <div className="hero-badge inline-flex mb-8">
           <Badge
             variant="outline"
-            className="border-teal/30 text-teal bg-teal/5 px-3 py-1 tracking-widest uppercase text-xs font-bold"
+            className="border-teal/30 text-teal bg-teal/5 px-3 py-1 tracking-widest uppercase text-xs font-bold flex items-center gap-2"
           >
-            ◈ Built on Solana
+            <NetworkSolana variant="branded" size={16} /> Built on Solana
           </Badge>
         </div>
 
@@ -84,7 +85,7 @@ export default function HeroSection() {
             >
               <Link href="/for-protocols">
                 Integrate as a protocol
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
           </div>

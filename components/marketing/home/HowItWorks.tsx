@@ -4,7 +4,10 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { ArrowRight, Wallet, Lock, Zap } from "lucide-react";
+import { ArrowRightIcon as ArrowRight } from "@/components/ui/arrow-right";
+import { WalletIcon as Wallet } from "@/components/ui/wallet";
+import { LockIcon as Lock } from "@/components/ui/lock";
+import { ZapIcon as Zap } from "@/components/ui/zap";
 import JsonLd from "@/components/seo/JsonLd";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -94,7 +97,7 @@ export default function HowItWorks() {
                 className="flex items-center gap-2 text-sm font-semibold text-teal hover:text-teal/80 transition-colors group"
               >
                 Deep dive into the privacy model
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </a>
             </div>
           </div>
@@ -125,7 +128,7 @@ export default function HowItWorks() {
                     <div className="flex-1 pt-2">
                        <div className="inline-flex items-center gap-2 mb-6">
                          <div className="w-10 h-10 rounded-xl bg-teal/10 flex items-center justify-center">
-                           <Icon className="w-4 h-4 text-teal" />
+                           <Icon size={16} className="text-teal" />
                          </div>
                          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-teal/20 bg-teal/5">
                            <span className="w-1.5 h-1.5 rounded-full bg-teal" />
@@ -155,7 +158,7 @@ export default function HowItWorks() {
                 className="flex items-center gap-2 text-sm font-semibold text-teal group"
               >
                 Deep dive into the privacy model
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </a>
           </div>
 

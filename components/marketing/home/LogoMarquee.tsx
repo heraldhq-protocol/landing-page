@@ -1,14 +1,16 @@
 "use client";
 
 import Image from "next/image";
+import { NetworkSolana } from "@web3icons/react";
 
-const PARTNERS = [
+const PARTNERS: ({ name: string; logo?: string; component?: React.ReactNode })[] = [
   { name: "Jupiter", logo: "/logos/jupiter.svg" },
   { name: "Drift", logo: "/logos/drift.svg" },
   { name: "Marinade", logo: "/logos/marinade.svg" },
   { name: "Squads", logo: "/logos/squads.svg" },
   { name: "Marginfi", logo: "/logos/marginfi.svg" },
   { name: "Orca", logo: "/logos/orca.svg" },
+  { name: "Solana", component: <NetworkSolana variant="branded" size={32} /> },
 ];
 
 export default function LogoMarquee() {
@@ -36,13 +38,17 @@ export default function LogoMarquee() {
               key={`${partner.name}-${index}`}
               className="flex items-center justify-center grayscale opacity-30 hover:grayscale-0 hover:opacity-100 hover:scale-110 hover:-translate-y-0.5 transition-all duration-300 shrink-0"
             >
-              <Image
-                src={partner.logo}
-                alt={partner.name}
-                width={120}
-                height={36}
-                className="h-7 w-auto object-contain"
-              />
+              {partner.logo ? (
+                <Image
+                  src={partner.logo}
+                  alt={partner.name}
+                  width={120}
+                  height={36}
+                  className="h-7 w-auto object-contain"
+                />
+              ) : (
+                partner.component
+              )}
             </div>
           ))}
         </div>

@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Terminal, Copy, Check, ArrowRight } from "lucide-react";
+import { TerminalIcon as Terminal } from "@/components/ui/terminal";
+import { CopyIcon as Copy } from "@/components/ui/copy";
+import { CheckIcon as Check } from "@/components/ui/check";
+import { ArrowRightIcon as ArrowRight } from "@/components/ui/arrow-right";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -155,7 +158,7 @@ export default function CodePreview() {
                   className="flex items-center gap-2"
                 >
                   View quickstart
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
               </Button>
               <Link
@@ -163,7 +166,7 @@ export default function CodePreview() {
                 className="text-sm text-text-muted hover:text-teal transition-colors flex items-center gap-1.5 group"
               >
                 SDK reference
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
           </div>
@@ -207,12 +210,12 @@ export default function CodePreview() {
                 >
                   {copied ? (
                     <>
-                      <Check className="w-3.5 h-3.5 text-teal" />
+                      <Check size={14} className="text-teal" />
                       <span className="text-teal hidden xs:inline">Copied</span>
                     </>
                   ) : (
                     <>
-                      <Copy className="w-3.5 h-3.5" />
+                      <Copy size={14} />
                       <span className="hidden xs:inline">Copy</span>
                     </>
                   )}
@@ -238,7 +241,7 @@ export default function CodePreview() {
               {/* Footer bar */}
               <div className="px-4 py-2.5 border-t border-border/40 bg-bg-surface/30 flex items-center justify-between shrink-0">
                 <div className="flex items-center gap-1.5">
-                  <Terminal className="w-3.5 h-3.5 text-text-muted" />
+                  <Terminal size={14} className="text-text-muted" />
                   <span className="text-xs text-text-muted font-mono">
                     @herald-protocol/sdk v1.3.1
                   </span>

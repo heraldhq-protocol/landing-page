@@ -1,4 +1,12 @@
-import { ShieldCheck, Zap, Receipt, Globe, Cpu, Bell } from "lucide-react";
+"use client";
+
+import { Globe } from "lucide-react";
+import { ShieldCheckIcon as ShieldCheck } from "@/components/ui/shield-check";
+import { ZapIcon as Zap } from "@/components/ui/zap";
+import { ReceiptIcon as Receipt } from "@/components/ui/receipt";
+import { CpuIcon as Cpu } from "@/components/ui/cpu";
+import { BellIcon as Bell } from "@/components/ui/bell";
+import AnimatedIcon from "@/components/ui/animated-icon";
 
 const FEATURES = [
   {
@@ -84,6 +92,7 @@ export default function FeatureGrid() {
           {FEATURES.map((f, i) => {
             const Icon = f.icon;
             const a = accentMap[f.accent];
+            const isGlobe = f.title === "Global Scale";
             return (
               <div
                 key={i}
@@ -98,7 +107,11 @@ export default function FeatureGrid() {
                 <div
                   className={`relative w-14 h-14 rounded-2xl ${a.iconBg} flex items-center justify-center mb-8 border border-white/5 shadow-2xl transition-transform duration-500 group-hover:-translate-y-2 group-hover:scale-110`}
                 >
-                  <Icon className={`w-6 h-6 ${a.icon}`} />
+                  {isGlobe ? (
+                    <AnimatedIcon icon={Icon} className={a.icon} size={24} />
+                  ) : (
+                    <Icon size={24} className={a.icon} />
+                  )}
                 </div>
 
                 {/* Unconstrained Text */}

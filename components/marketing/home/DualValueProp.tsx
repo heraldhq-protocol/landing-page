@@ -1,6 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Check, ArrowRight, Code2, Shield } from "lucide-react";
+import { Code2, Shield } from "lucide-react";
+import { CheckIcon as Check } from "@/components/ui/check";
+import { ArrowRightIcon as ArrowRight } from "@/components/ui/arrow-right";
+import AnimatedIcon from "@/components/ui/animated-icon";
 
 const PROTOCOL_POINTS = [
   "One API call — wallet address + message",
@@ -44,7 +49,7 @@ export default function DualValueProp() {
             {/* Top label */}
             <div className="flex items-center gap-2 mb-8">
               <div className="w-8 h-8 rounded-lg bg-purple/10 border border-purple/20 flex items-center justify-center">
-                <Code2 className="w-4 h-4 text-purple" />
+                <AnimatedIcon icon={Code2} className="text-purple" size={16} />
               </div>
               <span className="text-xs font-bold uppercase tracking-[0.18em] text-purple">
                 For Protocols
@@ -68,7 +73,7 @@ export default function DualValueProp() {
                   className="flex items-start gap-3 text-sm text-text-secondary"
                 >
                   <div className="mt-0.5 shrink-0 w-4 h-4 rounded-full bg-purple/15 border border-purple/30 flex items-center justify-center">
-                    <Check className="w-2.5 h-2.5 text-purple" />
+                    <Check size={10} className="text-purple" />
                   </div>
                   {item}
                 </li>
@@ -85,7 +90,7 @@ export default function DualValueProp() {
                 className="flex items-center gap-2"
               >
                 Start integrating
-                <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
               </Link>
             </Button>
 
@@ -114,7 +119,7 @@ export default function DualValueProp() {
             {/* Top label */}
             <div className="flex items-center gap-2 mb-8">
               <div className="w-8 h-8 rounded-lg bg-teal/10 border border-teal/20 flex items-center justify-center">
-                <Shield className="w-4 h-4 text-teal" />
+                <AnimatedIcon icon={Shield} className="text-teal" size={16} />
               </div>
               <span className="text-xs font-bold uppercase tracking-[0.18em] text-teal">
                 For Users
@@ -138,7 +143,7 @@ export default function DualValueProp() {
                   className="flex items-start gap-3 text-sm text-text-secondary"
                 >
                   <div className="mt-0.5 shrink-0 w-4 h-4 rounded-full bg-teal/10 border border-teal/25 flex items-center justify-center">
-                    <Check className="w-2.5 h-2.5 text-teal" />
+                    <Check size={10} className="text-teal" />
                   </div>
                   {item}
                 </li>
@@ -156,7 +161,7 @@ export default function DualValueProp() {
                 className="flex items-center gap-2"
               >
                 Register for free
-                <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
               </Link>
             </Button>
 
