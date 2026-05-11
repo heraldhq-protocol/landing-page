@@ -1,6 +1,8 @@
 "use client";
 
-import { Wifi, WifiOff, RefreshCw } from "lucide-react";
+import { WifiOff } from "lucide-react";
+import { WifiIcon as Wifi } from "@/components/ui/wifi";
+import { RefreshCWIcon as RefreshCw } from "@/components/ui/refresh-cw";
 
 interface Props {
   isConnected: boolean;
@@ -32,7 +34,7 @@ export default function ConnectionStatus({
         {isConnected ? (
           <div className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-teal/10 border border-teal/15">
             <div className="relative flex items-center justify-center">
-              <Wifi className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-teal" />
+              <Wifi className="text-teal" size={14} />
               <div className="absolute inset-0 text-teal animate-ping opacity-40">
                 <Wifi className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </div>
@@ -47,7 +49,7 @@ export default function ConnectionStatus({
           </div>
         ) : (
           <div className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-red/10 border border-red/15">
-            <WifiOff className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red" />
+            <WifiOff className="text-red" size={14} />
             <span className="text-red font-semibold hidden sm:inline">Disconnected</span>
             <span className="text-red font-semibold sm:hidden">Disc</span>
           </div>
@@ -69,7 +71,7 @@ export default function ConnectionStatus({
         title="Force refresh"
         disabled={!isConnected}
       >
-        <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-text-muted/50 group-hover:text-teal transition-colors" />
+        <RefreshCw className="text-text-muted/50 group-hover:text-teal transition-colors" size={14} />
       </button>
     </div>
   );

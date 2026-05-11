@@ -1,5 +1,6 @@
 import Link from "next/link";
-import Image from "next/image"
+import Image from "next/image";
+import { NetworkSolana } from "@web3icons/react";
 
 const LINKS = {
   Product: [
@@ -51,7 +52,7 @@ export default function Footer() {
 
             {/* Solana badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-purple/20 bg-purple/5">
-              <div className="w-1.5 h-1.5 rounded-full bg-purple" />
+              <NetworkSolana variant="branded" size={16} />
               <span className="text-xs font-semibold text-purple font-mono">Built on Solana</span>
             </div>
           </div>

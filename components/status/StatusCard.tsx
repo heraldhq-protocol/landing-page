@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, Globe, Zap, Clock, Server, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { ChevronDown, Globe, Server, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { ZapIcon as Zap } from "@/components/ui/zap";
+import { ClockIcon as Clock } from "@/components/ui/clock";
 import { MonitorStatus } from "../../app/status/types";
 import UptimeGraph from "./UptimeGraph";
 import ResponseTimeChart from "./ResponseTimeChart";
@@ -109,12 +111,12 @@ export default function StatusCard({ monitor, isLive = false }: Props) {
                   ${config.bgColor} ${config.textColor} ${config.borderColor}
                 `}
               >
-                <StatusIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                <StatusIcon size={10} />
                 {config.label}
               </span>
             </div>
             <p className="text-[10px] sm:text-xs text-text-muted flex items-center gap-1.5 sm:gap-2 mt-0.5 sm:mt-1">
-              <Globe className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+              <Globe className="shrink-0" size={14} />
               <span className="truncate">{getDomain(monitor.url)}</span>
             </p>
           </div>
@@ -152,7 +154,7 @@ export default function StatusCard({ monitor, isLive = false }: Props) {
 
           {isLive && (
             <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-teal/10 border border-teal/20">
-              <Zap className="w-3 h-3 text-teal" />
+              <Zap className="text-teal" size={12} />
               <span className="text-[10px] font-bold text-teal uppercase tracking-wider">
                 Live
               </span>
@@ -165,7 +167,7 @@ export default function StatusCard({ monitor, isLive = false }: Props) {
               ${expanded ? "rotate-180 bg-teal/10" : ""}
             `}
           >
-            <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-text-muted" />
+            <ChevronDown className="text-text-muted" size={20} />
           </div>
         </div>
       </button>
@@ -202,13 +204,13 @@ export default function StatusCard({ monitor, isLive = false }: Props) {
 
           <div className="mt-4 sm:mt-5 lg:mt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4 pt-4 sm:pt-5 border-t border-bg-border/30">
             <div className="flex items-center gap-2 text-[10px] sm:text-xs text-text-muted">
-              <Server className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <Server size={14} />
               <span>Reliability check via</span>
               <span className="font-semibold text-text-secondary hidden sm:inline">AWS EU-NORTH-1</span>
               <span className="font-semibold text-text-secondary sm:hidden">AWS</span>
             </div>
             <div className="flex items-center gap-2 text-[9px] sm:text-[10px] text-text-muted/40 uppercase font-bold tracking-tight">
-              <Clock className="w-3 h-3" />
+              <Clock size={12} />
               Herald Monitor v1.0
             </div>
           </div>

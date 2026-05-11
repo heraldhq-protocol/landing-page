@@ -80,7 +80,7 @@ export default function StatusHeader({ overallStatus, lastUpdated }: Props) {
           <div
             className={`relative shrink-0 w-14 h-14 sm:w-16 sm:h-16 lg:w-18 lg:h-18 rounded-2xl sm:rounded-3xl ${config.bgColor} border ${config.borderColor} flex items-center justify-center shadow-lg`}
           >
-            <Icon className={`w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 ${config.textColor}`} />
+            <Icon className={config.textColor} size={28} />
             <div
               className={`absolute inset-0 ${config.pulseColor} rounded-2xl sm:rounded-3xl animate-pulse opacity-30`}
             />
@@ -97,7 +97,7 @@ export default function StatusHeader({ overallStatus, lastUpdated }: Props) {
 
         <div className="flex items-center justify-between gap-4 sm:ml-auto sm:mr-2">
           <div className="flex items-center gap-2 text-text-muted">
-            <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            <Clock size={14} />
             <span className="text-[10px] sm:text-xs font-medium uppercase tracking-wider hidden xs:inline">Last check</span>
           </div>
           <p className="text-sm sm:text-base lg:text-lg font-semibold text-text-primary tabular-nums font-mono min-w-[70px] sm:min-w-[85px] text-right">

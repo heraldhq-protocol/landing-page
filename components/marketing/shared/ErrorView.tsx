@@ -80,7 +80,7 @@ export default function ErrorView({ icon, code, title, message, action }: ErrorV
 
       {/* Footer link back */}
       <div className="mt-20 flex items-center gap-2 text-gray-500 hover:text-white transition-colors cursor-default group">
-        <MoveLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+        <MoveLeft className="group-hover:-translate-x-1 transition-transform" size={16} />
         <Link href="/" className="text-xs font-bold uppercase tracking-widest">Back to Frontline</Link>
       </div>
     </main>

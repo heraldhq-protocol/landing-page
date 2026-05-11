@@ -1,6 +1,4 @@
-import { LucideIcon } from "lucide-react";
-
-export default function FeatureIcon({ Icon }: { Icon: LucideIcon }) {
+export default function FeatureIcon({ Icon }: { Icon: React.ComponentType<{ className?: string }> }) {
   return (
     <div className="relative group">
       {/* The "Herald Glow" effect */}

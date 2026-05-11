@@ -3,7 +3,9 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronRight } from "lucide-react";
+import { MenuIcon as Menu } from "@/components/ui/menu";
+import { XIcon as X } from "@/components/ui/x";
+import { ChevronRightIcon as ChevronRight } from "@/components/ui/chevron-right";
 import Image from "next/image";
 
 export default function NavBar() {
@@ -85,7 +87,7 @@ export default function NavBar() {
               className="text-sm font-medium text-text-muted hover:text-teal transition-colors duration-200 flex items-center gap-1 group"
             >
               For Protocols
-              <ChevronRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
+              <ChevronRight size={14} className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
             </Link>
             <Button
               asChild
@@ -104,9 +106,9 @@ export default function NavBar() {
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? (
-              <X className="w-5 h-5" />
+              <X size={20} />
             ) : (
-              <Menu className="w-5 h-5" />
+              <Menu size={20} />
             )}
           </button>
         </nav>

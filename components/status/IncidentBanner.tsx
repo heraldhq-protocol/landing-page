@@ -15,7 +15,7 @@ export default function IncidentBanner({ count }: Props) {
 
       <div className="flex items-center gap-3 sm:gap-4 relative">
         <div className="p-2.5 sm:p-3 rounded-2xl bg-red/15 text-red shadow-lg shadow-red/10">
-          <AlertTriangle className="w-5 h-5 sm:w-6 sm:h-6" />
+          <AlertTriangle size={20} />
         </div>
         <div>
           <p className="font-bold text-red tracking-tight text-base sm:text-lg">
@@ -38,7 +38,7 @@ export default function IncidentBanner({ count }: Props) {
       >
         <span className="hidden sm:inline">View Updates</span>
         <span className="sm:hidden">View</span>
-        <ExternalLink className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+        <ExternalLink size={14} />
       </a>
     </div>
   );
