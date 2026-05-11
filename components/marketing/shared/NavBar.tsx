@@ -7,6 +7,7 @@ import { MenuIcon as Menu } from "@/components/ui/menu";
 import { XIcon as X } from "@/components/ui/x";
 import { ChevronRightIcon as ChevronRight } from "@/components/ui/chevron-right";
 import Image from "next/image";
+import { AnimatePresence, motion } from "motion/react";
 
 export default function NavBar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -115,40 +116,66 @@ export default function NavBar() {
       </header>
 
       {/* ── Mobile Fullscreen Menu ─────────────────────────────────────── */}
-      {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-40 bg-bg-base/95 backdrop-blur-3xl pt-32 px-6 pb-8 flex flex-col justify-between overflow-y-auto">
-          <div className="flex flex-col gap-6">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-4xl font-display font-extrabold text-text-secondary hover:text-teal transition-colors"
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            key="mobile-menu"
+            initial={{ opacity: 0, x: 60 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 60 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="md:hidden fixed inset-0 z-40 bg-bg-base/95 backdrop-blur-3xl pt-32 px-6 pb-8 flex flex-col justify-between overflow-y-auto"
+          >
+            <div className="flex flex-col gap-6">
+              {navLinks.map((link, i) => (
+                <motion.div
+                  key={link.name}
+                  initial={{ opacity: 0, x: 40 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.05 * i, type: "spring", stiffness: 300, damping: 30 }}
+                >
+                  <Link
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-4xl font-display font-extrabold text-text-secondary hover:text-teal transition-colors"
+                  >
+                    {link.name}
+                  </Link>
+                </motion.div>
+              ))}
+              <motion.div
+                initial={{ opacity: 0, x: 40 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.05 * navLinks.length, type: "spring", stiffness: 300, damping: 30 }}
               >
-                {link.name}
-              </Link>
-            ))}
-            <Link
-              href="/for-protocols"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-4xl font-display font-extrabold text-teal transition-colors mt-6 pt-6 border-t border-border/50"
-            >
-              For Protocols
-            </Link>
-          </div>
+                <Link
+                  href="/for-protocols"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-4xl font-display font-extrabold text-teal transition-colors mt-6 pt-6 border-t border-border/50"
+                >
+                  For Protocols
+                </Link>
+              </motion.div>
+            </div>
 
-          <div className="mt-12 flex flex-col gap-4">
-            <Button asChild className="w-full bg-teal text-bg-base font-bold h-14 rounded-2xl shadow-[0_0_30px_rgba(0,200,150,0.2)] text-lg">
-              <Link href="https://notify.useherald.xyz/register" onClick={() => setMobileMenuOpen(false)}>
-                Register your wallet →
-              </Link>
-            </Button>
-            <p className="text-center text-xs text-text-muted mt-4">
-              © 2026 Herald Protocol
-            </p>
-          </div>
-        </div>
-      )}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05 * (navLinks.length + 2), type: "spring", stiffness: 300, damping: 30 }}
+              className="mt-12 flex flex-col gap-4"
+            >
+              <Button asChild className="w-full bg-teal text-bg-base font-bold h-14 rounded-2xl shadow-[0_0_30px_rgba(0,200,150,0.2)] text-lg">
+                <Link href="https://notify.useherald.xyz/register" onClick={() => setMobileMenuOpen(false)}>
+                  Register your wallet →
+                </Link>
+              </Button>
+              <p className="text-center text-xs text-text-muted mt-4">
+                © 2026 Herald Protocol
+              </p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

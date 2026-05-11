@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 import { source } from '@/lib/source';
-import { INTEGRATIONS } from '@/lib/integrations-data';
+import { FRAMEWORKS } from '@/lib/framework-data';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://useherald.xyz';
@@ -14,7 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  const dynamicIntegrations = INTEGRATIONS.map(i => `/integrations/${i.slug}`);
+  const dynamicIntegrations = FRAMEWORKS.map(f => `/integrations/${f.slug}`);
 
   // Marketing pages (Hardcoded as they are not in Fumadocs source)
   const marketingPages = [

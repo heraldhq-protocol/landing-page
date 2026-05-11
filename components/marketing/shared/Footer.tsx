@@ -11,6 +11,7 @@ const LINKS = {
     { name: "Validation", href: "/validation" },
   ],
   Resources: [
+    { name: "Integrations", href: "/integrations" },
     { name: "Documentation", href: "/docs" },
     { name: "Quickstart", href: "/docs/quickstart" },
     { name: "SDK Reference", href: "/docs/sdk/typescript" },

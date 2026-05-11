@@ -5,11 +5,12 @@ import { Minus } from "lucide-react";
 import { CheckIcon as Check } from "@/components/ui/check";
 import { ZapIcon as Zap } from "@/components/ui/zap";
 
-const TIERS = [
+const MONTHLY_TIERS = [
   {
     id: "developer",
     name: "Developer",
     price: "Free",
+    annualPrice: "Free",
     sends: "1k",
     overage: "N/A",
   },
@@ -17,6 +18,7 @@ const TIERS = [
     id: "growth",
     name: "Growth",
     price: "$99",
+    annualPrice: "$990",
     sends: "50k",
     overage: "$0.002",
   },
@@ -24,6 +26,7 @@ const TIERS = [
     id: "scale",
     name: "Scale",
     price: "$299",
+    annualPrice: "$2,990",
     sends: "250k",
     overage: "$0.0015",
   },
@@ -31,6 +34,7 @@ const TIERS = [
     id: "enterprise",
     name: "Enterprise",
     price: "Custom",
+    annualPrice: "Custom",
     sends: "1M+",
     overage: "Custom",
   },
@@ -95,8 +99,14 @@ const FEATURES = [
   },
 ];
 
-export default function PricingSpecSheet() {
+interface PricingSpecSheetProps {
+  billingPeriod?: "monthly" | "annual";
+}
+
+export default function PricingSpecSheet({ billingPeriod = "monthly" }: PricingSpecSheetProps) {
   const [activeTier, setActiveTier] = useState("growth");
+  const TIERS = MONTHLY_TIERS;
+  const isAnnual = billingPeriod === "annual";
 
   return (
     <section className="py-24 bg-bg-base border-t border-border/30">
@@ -143,8 +153,11 @@ export default function PricingSpecSheet() {
                     {tier.name}
                   </span>
                   <span className="text-4xl font-black text-text-primary px-0 leading-none">
-                    {tier.price}
+                    {isAnnual ? tier.annualPrice : tier.price}
                   </span>
+                  {isAnnual && tier.price !== "Free" && tier.price !== "Custom" && (
+                    <span className="text-[9px] font-bold text-teal">Save 17%</span>
+                  )}
                   <span className="text-[10px] font-mono text-text-muted uppercase tracking-widest">
                     {tier.sends} sends included
                   </span>
@@ -164,8 +177,13 @@ export default function PricingSpecSheet() {
                   {tier.name}
                 </span>
                 <span className="text-2xl font-black text-text-primary">
-                  {tier.price}
+                  {isAnnual ? tier.annualPrice : tier.price}
                 </span>
+                {isAnnual && tier.price !== "Free" && tier.price !== "Custom" && (
+                  <span className="text-[8px] font-bold text-teal bg-teal/10 px-2 py-0.5 rounded-full">
+                    Save 17%
+                  </span>
+                )}
                 <span className="text-[10px] font-mono text-text-muted uppercase">
                   {tier.sends} sends
                 </span>

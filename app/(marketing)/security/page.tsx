@@ -16,6 +16,7 @@ import { ArrowRightIcon as ArrowRight } from "@/components/ui/arrow-right";
 import { ClockIcon as Clock } from "@/components/ui/clock";
 import { KeyIcon as Key } from "@/components/ui/key";
 import { TerminalIcon as Terminal } from "@/components/ui/terminal";
+import ArchitectureDiagram from "@/components/marketing/security/ArchitectureDiagram";
 
 export const metadata: Metadata = {
   title: "Security | Herald Protocol",
@@ -342,6 +343,10 @@ export default function SecurityPage() {
             — two independent encrypted blocks stored on-chain, each decryptable
             by a different party using their own private key.
           </p>
+
+          <div className="mb-10">
+            <ArchitectureDiagram />
+          </div>
 
           <div className="bg-[#020810] border border-border rounded-2xl p-6 sm:p-8 mb-8">
             <div className="font-mono text-xs sm:text-sm">

@@ -1,8 +1,9 @@
 import { blogSource } from "@/lib/source";
 import Link from "next/link";
-import { ArrowRight, Calendar, User } from "lucide-react";
+import { ArrowRight, Calendar, User, BookOpen } from "lucide-react";
 import NavBar from "@/components/marketing/shared/NavBar";
 import Footer from "@/components/marketing/shared/Footer";
+import { EmptyState } from "@/components/ui/empty-state";
 
 // Custom frontmatter fields added via defineDocs schema extension
 type BlogData = {
@@ -31,6 +32,13 @@ export default function BlogIndex() {
           </p>
         </header>
 
+        {posts.length === 0 ? (
+          <EmptyState
+            icon={BookOpen}
+            title="No Articles Yet"
+            message="We're crafting deep dives into DeFi privacy, zero-PII architecture, and Herald product updates. Check back soon."
+          />
+        ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => {
             const data = post.data as unknown as BlogData;
@@ -75,6 +83,7 @@ export default function BlogIndex() {
             );
           })}
         </div>
+      )}
       </main>
 
       <Footer />

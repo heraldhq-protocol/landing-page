@@ -15,21 +15,30 @@ export default function HomePage() {
   return (
     <div className="relative overflow-hidden px-4">
       <NavBar />
-      {/* 4.1.1 Hero Section */}
-      <HeroSection />
+      <section id="hero">
+        <HeroSection />
+      </section>
 
       {/* 4.1.2 Social Proof Strip */}
       {/* <LogoMarquee /> */}
 
-      {/* 4.1.3 How It Works (Scroll animated) */}
-      <HowItWorks />
+      <section id="how-it-works">
+        <HowItWorks />
+      </section>
 
-      {/* 4.1.4 Dual Value Prop (Protocols vs Users) */}
-      <DualValueProp />
+      <section id="features">
+        <DualValueProp />
       
-      <FeatureGrid />
-      <CodePreview />
-      <PricingTable />
+      </section>
+      <section id="features-grid">
+        <FeatureGrid />
+      </section>
+      <section id="code-preview">
+        <CodePreview />
+      </section>
+      <section id="pricing">
+        <PricingTable />
+      </section>
       {/* <BlogStrip /> */}
       <FinalCTA />
       <Footer />

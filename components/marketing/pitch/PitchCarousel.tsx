@@ -5,6 +5,7 @@ import { ChevronLeft, Play, Pause } from "lucide-react";
 import { ChevronRightIcon as ChevronRight } from "@/components/ui/chevron-right";
 import { XIcon as X } from "@/components/ui/x";
 import Image from "next/image";
+import { AnimatePresence, motion } from "motion/react";
 
 interface Slide {
   id: number;
@@ -39,6 +40,7 @@ export default function PitchCarousel({ slides, videoUrl }: PitchCarouselProps) 
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showControls, setShowControls] = useState(true);
+  const [showNotes, setShowNotes] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const progressRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -343,6 +345,37 @@ export default function PitchCarousel({ slides, videoUrl }: PitchCarouselProps) 
         </div>
       )}
 
+      {/* ── Notes Panel ────────────────────────────────────────── */}
+      <AnimatePresence>
+        {showNotes && currentSlide?.description && (
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 40 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="fixed right-0 top-0 bottom-0 z-30 w-full sm:w-96 bg-bg-base/95 backdrop-blur-2xl border-l border-border/20 p-6 sm:p-8 pt-28 sm:pt-32 overflow-y-auto"
+          >
+            <button
+              onClick={() => setShowNotes(false)}
+              className="absolute top-4 right-4 p-2 rounded-full text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-all"
+            >
+              <X size={16} />
+            </button>
+            <div className="space-y-4">
+              <span className="text-[10px] font-bold text-teal uppercase tracking-widest font-mono">
+                Slide Notes
+              </span>
+              <h3 className="text-xl font-bold font-display text-text-primary">
+                {currentSlide.title}
+              </h3>
+              <p className="text-sm text-text-secondary leading-relaxed whitespace-pre-wrap">
+                {currentSlide.description}
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="absolute bottom-0 left-0 right-0 z-20 bg-bg-base/90 backdrop-blur-sm border-t border-border/10">
         <div className="p-3 sm:p-4 md:p-6 lg:p-8 pb-4 sm:pb-6 lg:pb-8">
         <div className="max-w-4xl mx-auto space-y-2 sm:space-y-3">
@@ -380,6 +413,21 @@ export default function PitchCarousel({ slides, videoUrl }: PitchCarouselProps) 
                 ))}
               </div>
             </div>
+
+            <button
+              onClick={() => setShowNotes(!showNotes)}
+              className={`p-1.5 sm:p-2 rounded-full border transition-all backdrop-blur-sm ${
+                showNotes
+                  ? "bg-teal/10 border-teal/40 text-teal"
+                  : "bg-bg-base/60 border-border-lo/30 text-text-muted hover:text-text-primary hover:bg-bg-elevated"
+              }`}
+              aria-label={showNotes ? "Hide notes" : "Show notes"}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 20h9" />
+                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+              </svg>
+            </button>
 
             {isLastSlide && (
               <span className="text-[8px] sm:text-[10px] font-bold text-teal uppercase tracking-widest hidden sm:block">
