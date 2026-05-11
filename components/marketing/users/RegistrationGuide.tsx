@@ -1,4 +1,5 @@
-import { Wallet, Fingerprint, BellRing, ArrowDown } from "lucide-react";
+import { Fingerprint, BellRing, ArrowDown } from "lucide-react";
+import { WalletIcon as Wallet } from "@/components/ui/wallet";
 
 const STEPS = [
   { 
@@ -39,11 +40,11 @@ export default function RegistrationGuide() {
                 {/* Icon Circle */}
                 <div className="relative z-10 shrink-0">
                   <div className="w-14 h-14 rounded-full bg-bg-base border border-border-hi flex items-center justify-center group-hover:border-teal transition-colors duration-500 shadow-2xl">
-                    <step.icon className="w-6 h-6 text-text-muted group-hover:text-teal transition-colors duration-500" />
+                    <step.icon className="text-text-muted group-hover:text-teal transition-colors duration-500" size={24} />
                   </div>
                   {i < STEPS.length - 1 && (
                     <div className="absolute top-16 left-1/2 -translate-x-1/2 md:hidden">
-                      <ArrowDown className="w-4 h-4 text-border" />
+                      <ArrowDown className="text-border" size={16} />
                     </div>
                   )}
                 </div>

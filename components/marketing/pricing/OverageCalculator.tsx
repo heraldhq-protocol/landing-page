@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Calculator, ArrowRight } from "lucide-react";
+import { Calculator } from "lucide-react";
+import { ArrowRightIcon as ArrowRight } from "@/components/ui/arrow-right";
 import TierBreakdown from "./TierBreakdown";
 
 const OVERAGE_RATES = {
@@ -27,7 +28,7 @@ export default function OverageCalculator() {
             {/* Input Side */}
             <div className="p-8 md:p-12 border-b md:border-b-0 md:border-r border-border-hi">
               <div className="flex items-center gap-2 mb-8">
-                <Calculator className="w-5 h-5 text-teal" />
+                <Calculator className="text-teal" size={20} />
                 <h3 className="text-[10px] font-bold font-mono tracking-[0.2em] text-text-primary uppercase">Scalability Tool</h3>
               </div>
               
@@ -91,7 +92,7 @@ export default function OverageCalculator() {
                   onClick={() => setShowBreakdown(true)}
                   className="flex items-center gap-3 text-teal font-bold text-[10px] uppercase tracking-[0.2em] hover:gap-5 transition-all group"
                 >
-                    Full Tier Breakdown <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                    Full Tier Breakdown <ArrowRight className="transition-transform group-hover:translate-x-1" size={16} />
                 </button>
               </div>
             </div>

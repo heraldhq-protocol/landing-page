@@ -1,6 +1,9 @@
 "use client";
 
-import { X, Check, Minus, Zap, ArrowLeft } from "lucide-react";
+import { Minus, ArrowLeft } from "lucide-react";
+import { XIcon as X } from "@/components/ui/x";
+import { CheckIcon as Check } from "@/components/ui/check";
+import { ZapIcon as Zap } from "@/components/ui/zap";
 
 const TIERS = [
   { id: "developer", name: "Developer", price: 0, sends: 1000, rate: null },
@@ -68,7 +71,7 @@ export default function TierBreakdown({ activeTier, sends, onClose }: TierBreakd
             onClick={onClose}
             className="flex items-center gap-1.5 md:gap-2 text-text-muted hover:text-teal transition-colors text-xs font-bold uppercase tracking-widest"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft size={16} />
             <span className="hidden sm:inline">Back</span>
           </button>
           <h3 className="text-[9px] md:text-[10px] font-bold font-mono tracking-[0.2em] text-teal uppercase text-center">
@@ -78,14 +81,14 @@ export default function TierBreakdown({ activeTier, sends, onClose }: TierBreakd
             onClick={onClose}
             className="p-1.5 md:p-2 rounded-lg hover:bg-bg-elevated transition-colors text-text-muted hover:text-text-primary"
           >
-            <X className="w-5 h-5" />
+            <X size={20} />
           </button>
         </div>
 
         <div className="p-4 md:p-10 space-y-8 md:space-y-12">
           <div>
             <div className="flex items-center gap-2 mb-4 md:mb-6">
-              <Zap className="w-3.5 h-3.5 md:w-4 md:h-4 text-teal" />
+              <Zap className="text-teal" size={14} />
               <h4 className="text-[9px] md:text-[10px] font-bold text-text-muted uppercase tracking-widest">
                 Cost at Volume
               </h4>
@@ -174,7 +177,7 @@ export default function TierBreakdown({ activeTier, sends, onClose }: TierBreakd
 
           <div>
             <div className="flex items-center gap-2 mb-4 md:mb-6">
-              <Check className="w-3.5 h-3.5 md:w-4 md:h-4 text-teal" />
+              <Check className="text-teal" size={14} />
               <h4 className="text-[9px] md:text-[10px] font-bold text-text-muted uppercase tracking-widest">
                 Channel Access
               </h4>
@@ -217,10 +220,10 @@ export default function TierBreakdown({ activeTier, sends, onClose }: TierBreakd
                         <td key={idx} className="p-3 md:p-4 text-center">
                           {hasAccess ? (
                             <div className="w-4 h-4 md:w-5 md:h-5 mx-auto rounded-full bg-teal/10 border border-teal/30 flex items-center justify-center">
-                              <Check className="w-2.5 h-2.5 md:w-3 md:h-3 text-teal" />
+                              <Check className="text-teal" size={10} />
                             </div>
                           ) : (
-                            <Minus className="w-3.5 h-3.5 md:w-4 md:h-4 mx-auto text-text-muted/20" />
+                            <Minus className="mx-auto text-text-muted/20" size={14} />
                           )}
                         </td>
                       ))}
@@ -233,7 +236,7 @@ export default function TierBreakdown({ activeTier, sends, onClose }: TierBreakd
 
           <div>
             <div className="flex items-center gap-2 mb-4 md:mb-6">
-              <Zap className="w-3.5 h-3.5 md:w-4 md:h-4 text-teal" />
+              <Zap className="text-teal" size={14} />
               <h4 className="text-[9px] md:text-[10px] font-bold text-text-muted uppercase tracking-widest">
                 Overage Rates
               </h4>

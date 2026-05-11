@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Minus, Zap } from "lucide-react";
+import { Minus } from "lucide-react";
+import { CheckIcon as Check } from "@/components/ui/check";
+import { ZapIcon as Zap } from "@/components/ui/zap";
 
 const TIERS = [
   {
@@ -223,7 +225,7 @@ export default function PricingSpecSheet() {
         {/* Footer Note */}
         <div className="mt-12 flex flex-col md:flex-row justify-between items-center gap-6 text-text-muted opacity-80">
           <div className="flex items-center gap-2">
-            <Zap className="w-3.5 h-3.5 text-teal" />
+            <Zap size={14} className="text-teal" />
             <span className="text-[10px] font-mono uppercase tracking-[0.2em] cursor-default">
               Scalable Protocol Infrastructure
             </span>
@@ -241,10 +243,10 @@ function FeatureValue({ value }: { value: string | boolean }) {
   if (typeof value === "boolean") {
     return value ? (
       <div className="w-5 h-5 rounded-full bg-teal/10 flex items-center justify-center border border-teal/30">
-        <Check className="w-3.5 h-3.5 text-teal" />
+        <Check size={14} className="text-teal" />
       </div>
     ) : (
-      <Minus className="w-4 h-4 text-text-muted/10" />
+      <Minus size={16} className="text-text-muted/10" />
     );
   }
   return (

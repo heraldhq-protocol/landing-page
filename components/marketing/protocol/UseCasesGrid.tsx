@@ -2,14 +2,15 @@
 
 import { useRef } from "react";
 import {
-  Activity,
   ScrollText,
   PieChart,
   ShieldAlert,
   LineChart,
   Image,
-  ArrowRight,
 } from "lucide-react";
+import { ActivityIcon as Activity } from "@/components/ui/activity";
+import { ArrowRightIcon as ArrowRight } from "@/components/ui/arrow-right";
+import AnimatedIcon from "@/components/ui/animated-icon";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -218,8 +219,9 @@ export default function UseCasesGrid() {
         {/* Right — scrolling cards column */}
         <div ref={cardsRef} className="py-24 will-change-transform">
           <div className="border-t border-border/40 flex flex-col">
-            {USE_CASES.map((useCase, idx) => {
+             {USE_CASES.map((useCase, idx) => {
               const Icon = useCase.icon;
+              const isAnim = Icon === Activity;
               return (
                 <div
                   key={idx}
@@ -228,7 +230,11 @@ export default function UseCasesGrid() {
                 >
                   {/* Icon */}
                   <div className="shrink-0 w-14 h-14 rounded-2xl bg-bg-surface border border-border group-hover:bg-teal/10 group-hover:border-teal/30 flex items-center justify-center transition-all duration-300">
-                    <Icon className="w-7 h-7 text-text-muted group-hover:text-teal transition-colors duration-300" />
+                    {isAnim ? (
+                      <Icon size={28} className="text-text-muted group-hover:text-teal transition-colors duration-300" />
+                    ) : (
+                      <AnimatedIcon icon={Icon} className="text-text-muted group-hover:text-teal transition-colors duration-300" size={28} />
+                    )}
                   </div>
 
                   {/* Text */}
@@ -248,7 +254,7 @@ export default function UseCasesGrid() {
 
                   {/* Arrow */}
                   <div className="shrink-0 opacity-0 group-hover:opacity-100 -translate-x-3 group-hover:translate-x-0 transition-all duration-300">
-                    <ArrowRight className="w-5 h-5 text-teal" />
+                    <ArrowRight size={20} className="text-teal" />
                   </div>
                 </div>
               );
@@ -279,6 +285,7 @@ export default function UseCasesGrid() {
         <div className="relative flex-1 flex items-center justify-center">
           {USE_CASES.map((useCase, idx) => {
             const Icon = useCase.icon;
+            const isAnim = Icon === Activity;
             return (
               <div
                 key={idx}
@@ -286,10 +293,14 @@ export default function UseCasesGrid() {
                 className="absolute inset-0 flex flex-col items-center justify-center text-center gap-6 px-4"
                 style={{ zIndex: USE_CASES.length - idx }}
               >
-                {/* Icon */}
-                <div className="w-20 h-20 rounded-3xl bg-teal/10 border border-teal/20 flex items-center justify-center shadow-xl shadow-teal/5">
-                  <Icon className="w-10 h-10 text-teal" />
-                </div>
+                  {/* Icon */}
+                  <div className="w-20 h-20 rounded-3xl bg-teal/10 border border-teal/20 flex items-center justify-center shadow-xl shadow-teal/5">
+                    {isAnim ? (
+                      <Icon size={40} className="text-teal" />
+                    ) : (
+                      <AnimatedIcon icon={Icon} className="text-teal" size={40} />
+                    )}
+                  </div>
 
                 {/* Tag */}
                 <span className="px-3 py-1 rounded-full bg-bg-surface border border-border text-[10px] font-mono font-bold tracking-wider text-text-muted uppercase">

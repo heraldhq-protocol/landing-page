@@ -19,7 +19,7 @@ export default function TheProblem() {
           {/* Legacy Flow (Left) */}
           <div className="flex-1 p-8 md:p-16 border-b md:border-b-0 md:border-r border-border-hi/50 relative group">
             <div className="flex items-center gap-4 mb-10">
-              <AlertTriangle className="w-6 h-6 text-text-muted group-hover:text-red/50 transition-colors" />
+              <AlertTriangle className="text-text-muted group-hover:text-red/50 transition-colors" size={24} />
               <h3 className="text-xl font-bold font-mono tracking-tight text-text-muted uppercase">The Legacy Flow</h3>
             </div>
             
@@ -43,7 +43,7 @@ export default function TheProblem() {
             <div className="absolute inset-0 bg-teal/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
             
             <div className="flex items-center gap-4 mb-10 relative z-10">
-              <LockKeyhole className="w-6 h-6 text-text-muted group-hover:text-teal transition-colors" />
+              <LockKeyhole className="text-text-muted group-hover:text-teal transition-colors" size={24} />
               <h3 className="text-xl font-bold font-mono tracking-tight text-text-primary uppercase">The Protocol Way</h3>
             </div>
             

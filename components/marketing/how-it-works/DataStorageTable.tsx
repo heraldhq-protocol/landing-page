@@ -1,6 +1,8 @@
 "use client";
 
-import { Check, X, ShieldCheck } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
+import { CheckIcon as Check } from "@/components/ui/check";
+import { XIcon as X } from "@/components/ui/x";
 
 const DATA_POINTS = [
   { item: "Wallet Public Key (Ed25519)", heraldSees: true, heraldStores: true, solanaStores: true },
@@ -76,7 +78,7 @@ export default function DataStorageTable() {
         </div>
 
         <div className="mt-16 max-w-2xl mx-auto p-8 border border-teal/20 bg-teal/3 flex flex-col md:flex-row gap-6 rounded-xl">
-            <ShieldCheck className="w-10 h-10 text-teal shrink-0" />
+            <ShieldCheck className="text-teal shrink-0" size={40} />
             <div>
                 <h4 className="text-lg font-bold text-text-primary mb-2">Architecturally Compliant</h4>
                 <p className="text-sm text-text-secondary leading-relaxed">
@@ -94,11 +96,11 @@ function StatusIcon({ active }: { active: boolean }) {
     <div className="flex justify-center">
       {active ? (
         <div className="w-5 h-5 rounded-md bg-teal/10 flex items-center justify-center border border-teal/20 shadow-sm">
-          <Check className="w-3 h-3 text-teal" />
+          <Check className="text-teal" size={12} />
         </div>
       ) : (
         <div className="w-5 h-5 flex items-center justify-center">
-           <X className="w-3 h-3 text-text-muted/30" />
+           <X className="text-text-muted/30" size={12} />
         </div>
       )}
     </div>

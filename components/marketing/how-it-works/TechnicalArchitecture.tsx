@@ -1,7 +1,10 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Shield, Lock, Cpu, Globe, LucideIcon } from "lucide-react";
+import { Shield, Globe } from "lucide-react";
+import { LockIcon as Lock } from "@/components/ui/lock";
+import { CpuIcon as Cpu } from "@/components/ui/cpu";
+import AnimatedIcon from "@/components/ui/animated-icon";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
@@ -9,7 +12,7 @@ interface Step {
   title: string;
   desc: string;
   details: string[];
-  icon: LucideIcon;
+  icon: React.ComponentType<{ className?: string; size?: number }>;
   subLabel: string;
 }
 
@@ -141,7 +144,7 @@ export default function TechnicalArchitecture() {
                   <div className="stage-icon w-16 h-16 rounded-2xl bg-teal/10 border border-teal/20 flex items-center justify-center mb-8">
                     {(() => {
                       const Icon = STEPS[activeTab].icon;
-                      return <Icon className="w-8 h-8 text-teal" />;
+                      return <Icon size={32} className="text-teal" />;
                     })()}
                   </div>
 

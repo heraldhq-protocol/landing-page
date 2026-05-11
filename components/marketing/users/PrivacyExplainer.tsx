@@ -1,4 +1,6 @@
-import { ShieldCheck, MailWarning, ArrowRight, Database, Unlock, Lock } from "lucide-react";
+import { ShieldCheck, MailWarning, Database, Unlock } from "lucide-react";
+import { ArrowRightIcon as ArrowRight } from "@/components/ui/arrow-right";
+import { LockIcon as Lock } from "@/components/ui/lock";
 
 export default function PrivacyExplainer() {
   return (
@@ -34,14 +36,14 @@ export default function PrivacyExplainer() {
                <div className="flex items-center gap-8 text-text-muted">
                   <div className="flex flex-col items-center gap-2">
                     <div className="p-4 rounded-xl bg-bg-surface border border-border-hi text-text-primary">
-                      <Unlock className="w-6 h-6" />
+                      <Unlock size={24} />
                     </div>
                     <span className="text-xs font-mono tracking-wider">WALLET</span>
                   </div>
-                  <ArrowRight className="w-6 h-6 text-red/30" />
+                  <ArrowRight className="text-red/30" size={24} />
                   <div className="flex flex-col items-center gap-2">
                     <div className="p-4 rounded-xl bg-bg-surface border border-border-hi text-red">
-                      <Unlock className="w-6 h-6" />
+                      <Unlock size={24} />
                     </div>
                     <span className="text-xs font-mono tracking-wider">EMAIL</span>
                   </div>
@@ -69,15 +71,15 @@ export default function PrivacyExplainer() {
                <div className="flex items-center gap-8 text-text-primary">
                   <div className="flex flex-col items-center gap-2">
                     <div className="p-4 rounded-xl bg-bg-surface border border-border-hi text-text-muted">
-                      <Unlock className="w-6 h-6" />
+                      <Unlock size={24} />
                     </div>
                     <span className="text-xs font-mono tracking-wider">WALLET</span>
                   </div>
-                  <ArrowRight className="w-6 h-6 text-teal/50" />
+                  <ArrowRight className="text-teal/50" size={24} />
                   <div className="flex flex-col items-center gap-2 relative">
                     <div className="absolute inset-0 bg-teal/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
                     <div className="p-4 rounded-xl bg-bg-surface border border-teal/50 text-teal relative z-10">
-                      <Lock className="w-6 h-6" />
+                      <Lock size={24} />
                     </div>
                     <span className="text-xs font-mono tracking-wider text-teal">ENCRYPTED</span>
                   </div>

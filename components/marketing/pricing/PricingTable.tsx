@@ -1,4 +1,7 @@
-import { Check, Minus, Zap, ArrowRight } from "lucide-react";
+import { Minus } from "lucide-react";
+import { CheckIcon as Check } from "@/components/ui/check";
+import { ZapIcon as Zap } from "@/components/ui/zap";
+import { ArrowRightIcon as ArrowRight } from "@/components/ui/arrow-right";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -167,7 +170,7 @@ export default function PricingTable() {
 
                 {/* Sends included */}
                 <div className="flex items-center gap-1.5 mb-4">
-                  <Zap className="w-3.5 h-3.5 text-teal shrink-0" />
+                   <Zap size={14} className="text-teal shrink-0" />
                   <span className="text-sm font-semibold text-teal font-mono">
                     {tier.sends} sends / month
                   </span>
@@ -200,11 +203,11 @@ export default function PricingTable() {
                     >
                       {f.available ? (
                         <div className="shrink-0 w-4 h-4 rounded-full bg-teal/10 border border-teal/25 flex items-center justify-center">
-                          <Check className="w-2.5 h-2.5 text-teal" />
+                           <Check size={10} className="text-teal" />
                         </div>
                       ) : (
                         <div className="shrink-0 w-4 h-4 rounded-full bg-border/50 flex items-center justify-center">
-                          <Minus className="w-2.5 h-2.5 text-text-muted" />
+                           <Minus size={10} className="text-text-muted" />
                         </div>
                       )}
                       <span
@@ -236,7 +239,7 @@ export default function PricingTable() {
                     className="flex items-center justify-center gap-2"
                   >
                     {tier.cta}
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </Button>
               </div>
