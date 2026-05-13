@@ -8,6 +8,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRightIcon as ArrowRight } from "@/components/ui/arrow-right";
 import { NetworkSolana } from "@web3icons/react";
+import { HERO_PROTOCOL_CTA, isExternal } from "@/lib/cta-config";
 
 const STATS = [
   { label: "API response", value: "< 200ms" },
@@ -83,8 +84,11 @@ export default function HeroSection() {
               size="lg"
               className="bg-teal text-navy hover:bg-teal/90 font-bold px-8 h-12 text-base rounded-xl w-full sm:w-auto group hover:-translate-y-1 hover:shadow-[0_0_24px_rgba(20,184,166,0.3)] transition-all duration-300"
             >
-              <Link href="/for-protocols">
-                Integrate as a protocol
+              <Link
+                href={HERO_PROTOCOL_CTA.href}
+                {...(isExternal(HERO_PROTOCOL_CTA.href) ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              >
+                {HERO_PROTOCOL_CTA.label}
                 <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>

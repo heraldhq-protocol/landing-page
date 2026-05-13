@@ -1,4 +1,6 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { PROTOCOL_HERO_CTA, isExternal } from "@/lib/cta-config";
 
 export default function ProtocolHero() {
   return (
@@ -13,11 +15,18 @@ export default function ProtocolHero() {
           One API call. Full compliance. Built-in privacy. Herald handles the email and SMS delivery, while ensuring your database stays clean of sensitive PII.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Button size="lg" className="bg-teal text-navy hover:bg-teal/90 font-bold px-8 py-6 h-auto text-lg rounded-xl">
-            Start integrating →
+          <Button asChild size="lg" className="bg-teal text-navy hover:bg-teal/90 font-bold px-8 py-6 h-auto text-lg rounded-xl">
+            <Link
+              href={PROTOCOL_HERO_CTA.href}
+              {...(isExternal(PROTOCOL_HERO_CTA.href) ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+            >
+              {PROTOCOL_HERO_CTA.label}
+            </Link>
           </Button>
           <Button variant="outline" size="lg" className="border-border-2 text-text-primary hover:border-teal/40 px-8 py-6 h-auto text-lg rounded-xl bg-card/50 backdrop-blur-sm">
-            View API docs →
+            <Link href="/docs/quickstart">
+              View API docs →
+            </Link>
           </Button>
         </div>
       </div>

@@ -6,6 +6,7 @@ import { Code2, Shield } from "lucide-react";
 import { CheckIcon as Check } from "@/components/ui/check";
 import { ArrowRightIcon as ArrowRight } from "@/components/ui/arrow-right";
 import AnimatedIcon from "@/components/ui/animated-icon";
+import { DUAL_PROTOCOL_CTA, isExternal } from "@/lib/cta-config";
 
 const PROTOCOL_POINTS = [
   "One API call — wallet address + message",
@@ -86,10 +87,11 @@ export default function DualValueProp() {
               className="bg-purple hover:bg-purple/90 text-white rounded-xl px-7 h-11 font-bold shadow-[0_0_24px_rgba(124,58,237,0.25)] hover:-translate-y-1 hover:shadow-[0_0_36px_rgba(124,58,237,0.4)] transition-all duration-300 group/btn"
             >
               <Link
-                href="https://app.useherald.xyz"
+                href={DUAL_PROTOCOL_CTA.href}
+                {...(isExternal(DUAL_PROTOCOL_CTA.href) ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                 className="flex items-center gap-2"
               >
-                Start integrating
+                {DUAL_PROTOCOL_CTA.label}
                 <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
               </Link>
             </Button>

@@ -8,6 +8,7 @@ import { XIcon as X } from "@/components/ui/x";
 import { ChevronRightIcon as ChevronRight } from "@/components/ui/chevron-right";
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
+import { NAV_CTA, isExternal } from "@/lib/cta-config";
 
 export default function NavBar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -93,8 +94,11 @@ export default function NavBar() {
               asChild
               className="bg-teal text-bg-base hover:bg-teal/90 font-bold rounded-full px-5 h-8 text-xs shadow-[0_0_20px_rgba(0,200,150,0.2)] hover:shadow-[0_0_30px_rgba(0,200,150,0.35)] hover:-translate-y-0.5 transition-all duration-300"
             >
-              <Link href="https://notify.useherald.xyz/register">
-                Register →
+              <Link
+                href={NAV_CTA.href}
+                {...(isExternal(NAV_CTA.href) ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              >
+                {NAV_CTA.label}
               </Link>
             </Button>
           </div>

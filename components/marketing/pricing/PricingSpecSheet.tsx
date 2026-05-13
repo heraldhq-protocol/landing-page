@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Minus } from "lucide-react";
 import { CheckIcon as Check } from "@/components/ui/check";
 import { ZapIcon as Zap } from "@/components/ui/zap";
+import { PRICING_SPEC_CTA, IS_EARLY_ACCESS, WAITLIST_URL, isExternal } from "@/lib/cta-config";
 
 const MONTHLY_TIERS = [
   {
@@ -226,15 +228,17 @@ export default function PricingSpecSheet({ billingPeriod = "monthly" }: PricingS
                   activeTier === tier.id ? "flex" : "hidden md:flex"
                 }`}
               >
-                <button
-                  className={`w-full py-3.5 font-bold text-[10px] uppercase tracking-widest transition-all rounded-lg border ${
+                <Link
+                  href={IS_EARLY_ACCESS ? WAITLIST_URL : "#"}
+                  {...(IS_EARLY_ACCESS ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  className={`block w-full py-3.5 font-bold text-[10px] uppercase tracking-widest transition-all rounded-lg border text-center ${
                     tier.id === activeTier
                       ? "bg-teal text-bg-base border-teal shadow-lg shadow-teal/10"
                       : "border-border-hi hover:border-teal/50 hover:text-teal"
                   }`}
                 >
-                  {tier.id === "enterprise" ? "Talk to us" : "Get Started"}
-                </button>
+                  {IS_EARLY_ACCESS ? PRICING_SPEC_CTA.label : (tier.id === "enterprise" ? "Talk to us" : "Get Started")}
+                </Link>
               </div>
             ))}
           </div>

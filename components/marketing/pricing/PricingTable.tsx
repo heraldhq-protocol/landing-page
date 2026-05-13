@@ -4,6 +4,7 @@ import { ZapIcon as Zap } from "@/components/ui/zap";
 import { ArrowRightIcon as ArrowRight } from "@/components/ui/arrow-right";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { PRICING_CTA, IS_EARLY_ACCESS, WAITLIST_URL, isExternal } from "@/lib/cta-config";
 
 const TIERS = [
   {
@@ -235,10 +236,11 @@ export default function PricingTable() {
                   }`}
                 >
                   <Link
-                    href={tier.ctaHref}
+                    href={IS_EARLY_ACCESS ? WAITLIST_URL : tier.ctaHref}
+                    {...(IS_EARLY_ACCESS || isExternal(tier.ctaHref) ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                     className="flex items-center justify-center gap-2"
                   >
-                    {tier.cta}
+                    {IS_EARLY_ACCESS ? PRICING_CTA.label : tier.cta}
                     <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </Button>
