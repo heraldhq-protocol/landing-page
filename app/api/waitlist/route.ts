@@ -18,7 +18,8 @@ const BRAND_EMAIL_HTML = (rows: string) => `<!DOCTYPE html>
   .container { max-width:600px; margin:0 auto; }
   .header { padding:8px 4px 28px; }
   .brand { display:flex; align-items:center; gap:10px; }
-  .brand-mark { width:32px; height:32px; background:#00C896; border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:16px; color:#fff; font-weight:700; }
+  .brand-mark { width:32px; height:32px; display:flex; align-items:center; justify-content:center; }
+  .brand-mark img { width:32px; height:32px; display:block; border-radius:7px; }
   .brand-name { font-family:'Syne',sans-serif; font-weight:700; font-size:15px; letter-spacing:-0.01em; color:#0F172A; }
   .card { background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:36px 32px; }
   .eyebrow { display:block; font-size:10px; text-transform:uppercase; letter-spacing:0.16em; font-weight:700; color:#00C896; margin:0 0 20px; }
@@ -33,7 +34,8 @@ const BRAND_EMAIL_HTML = (rows: string) => `<!DOCTYPE html>
   .footer-meta { font-size:12.5px; line-height:1.65; color:#64748B; margin:0; }
   .footer-divider { height:1px; background:#E2E8F0; margin:20px 0 18px; border:0; }
   .footer-brand { display:flex; align-items:center; gap:8px; font-size:12px; color:#64748B; flex-wrap:wrap; }
-  .footer-brand .dot-mark { width:20px; height:20px; background:#00C896; border-radius:5px; display:inline-flex; align-items:center; justify-content:center; font-size:10px; color:#fff; font-weight:700; }
+  .footer-brand .dot-mark { width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center; }
+  .footer-brand .dot-mark img { width:20px; height:20px; display:block; border-radius:5px; }
   .footer-brand strong { color:#475569; font-family:'Syne',sans-serif; font-weight:700; }
   .footer-brand a { color:#64748B; text-decoration:none; }
   .pipe { color:#CBD5E1; padding:0 4px; }
@@ -47,7 +49,7 @@ const BRAND_EMAIL_HTML = (rows: string) => `<!DOCTYPE html>
     <div class="container" style="max-width:600px;margin:0 auto;">
       <div class="header" style="padding:8px 4px 28px;">
         <div class="brand" style="display:flex;align-items:center;gap:10px;">
-          <span class="brand-mark" style="width:32px;height:32px;background:#00C896;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;font-size:16px;color:#fff;font-weight:700;">✦</span>
+          <span class="brand-mark" style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;"><img src="https://herald-storage-bucket.s3.eu-north-1.amazonaws.com/herald-logo.svg" width="32" height="32" style="width:32px;height:32px;display:block;border-radius:7px;" alt="Herald"></span>
           <span class="brand-name" style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px;letter-spacing:-0.01em;color:#0F172A;">Herald</span>
         </div>
       </div>
@@ -63,7 +65,7 @@ const BRAND_EMAIL_HTML = (rows: string) => `<!DOCTYPE html>
       <div class="footer" style="padding:28px 8px 8px;">
         <hr class="footer-divider" style="height:1px;background:#E2E8F0;margin:20px 0 18px;border:0;">
         <div class="footer-brand" style="display:flex;align-items:center;gap:8px;font-size:12px;color:#64748B;flex-wrap:wrap;">
-          <span class="dot-mark" style="width:20px;height:20px;background:#00C896;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700;">✦</span>
+          <span class="dot-mark" style="width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;"><img src="https://herald-storage-bucket.s3.eu-north-1.amazonaws.com/herald-logo.svg" width="20" height="20" style="width:20px;height:20px;display:block;border-radius:5px;" alt="Herald"></span>
           <strong style="color:#475569;font-family:'Syne',sans-serif;font-weight:700;">Herald</strong>
           <span class="pipe" style="color:#CBD5E1;padding:0 4px;">|</span>
           <span>Notification layer for Solana DeFi</span>
@@ -110,6 +112,7 @@ export async function POST(request: Request) {
     const { error } = await resend.emails.send({
       from: "waitlist@useherald.xyz",
       to: ["hello@useherald.xyz"],
+      bcc: ["herald.admin@gmail.com"],
       subject: `New waitlist signup: ${body.fullName} — ${body.protocolName}`,
       html: BRAND_EMAIL_HTML(rows),
     });
