@@ -111,7 +111,15 @@ export default function WaitlistForm() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
   const formRef = useRef<HTMLFormElement>(null);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const gformRef = useRef<HTMLFormElement>(null);
+  const hdFullName = useRef<HTMLInputElement>(null);
+  const hdWorkEmail = useRef<HTMLInputElement>(null);
+  const hdRole = useRef<HTMLInputElement>(null);
+  const hdWebsite = useRef<HTMLInputElement>(null);
+  const hdProtocolName = useRef<HTMLInputElement>(null);
+  const hdWallets = useRef<HTMLInputElement>(null);
+  const hdUseCase = useRef<HTMLInputElement>(null);
+  const hdChannel = useRef<HTMLInputElement>(null);
 
   const update = (field: FieldName, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -152,37 +160,20 @@ export default function WaitlistForm() {
 
     setStatus("submitting");
 
-    const formEl = document.createElement("form");
-    formEl.action = FORM_URL;
-    formEl.method = "POST";
-    formEl.target = "hidden-gform-iframe";
-
-    const fields: Record<string, string> = {
-      [entryIds.fullName]: form.fullName,
-      [entryIds.workEmail]: form.workEmail,
-      [entryIds.role]: form.role,
-      [entryIds.website]: form.website,
-      [entryIds.protocolName]: form.protocolName,
-      [entryIds.wallets]: form.wallets,
-      [entryIds.useCase]:
+    if (hdFullName.current) hdFullName.current.value = form.fullName;
+    if (hdWorkEmail.current) hdWorkEmail.current.value = form.workEmail;
+    if (hdRole.current) hdRole.current.value = form.role;
+    if (hdWebsite.current) hdWebsite.current.value = form.website;
+    if (hdProtocolName.current) hdProtocolName.current.value = form.protocolName;
+    if (hdWallets.current) hdWallets.current.value = form.wallets;
+    if (hdUseCase.current)
+      hdUseCase.current.value =
         form.useCase === "Other:"
           ? `Other: ${form.useCaseOther}`
-          : form.useCase,
-      [entryIds.channel]: form.channel,
-    };
+          : form.useCase;
+    if (hdChannel.current) hdChannel.current.value = form.channel;
 
-    for (const [name, value] of Object.entries(fields)) {
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = name;
-      input.value = value;
-      formEl.appendChild(input);
-    }
-
-    document.body.appendChild(formEl);
-    formEl.submit();
-    document.body.removeChild(formEl);
-
+    gformRef.current?.submit();
     setStatus("success");
   };
 
@@ -232,11 +223,27 @@ export default function WaitlistForm() {
   return (
     <>
       <iframe
-        ref={iframeRef}
         name="hidden-gform-iframe"
         className="hidden"
         title="Google Form submission target"
       />
+      <form
+        ref={gformRef}
+        action={FORM_URL}
+        method="POST"
+        target="hidden-gform-iframe"
+        className="hidden"
+        aria-hidden="true"
+      >
+        <input ref={hdFullName} type="hidden" name="entry.665426303" />
+        <input ref={hdWorkEmail} type="hidden" name="entry.242279822" />
+        <input ref={hdRole} type="hidden" name="entry.2000223748" />
+        <input ref={hdWebsite} type="hidden" name="entry.1070070356" />
+        <input ref={hdProtocolName} type="hidden" name="entry.1171760324" />
+        <input ref={hdWallets} type="hidden" name="entry.1951953669" />
+        <input ref={hdUseCase} type="hidden" name="entry.21602620" />
+        <input ref={hdChannel} type="hidden" name="entry.107119755" />
+      </form>
       <form
         ref={formRef}
         onSubmit={handleSubmit}
