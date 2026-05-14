@@ -249,17 +249,24 @@ export default function WaitlistForm() {
     icon,
     field,
     options,
+    required,
   }: {
     label: string;
     icon: React.ReactNode;
     field: FieldName;
     options: string[];
+    required?: boolean;
   }) {
     return (
       <fieldset>
         <legend className="text-sm font-semibold text-text-primary mb-3 flex items-center gap-2">
           {icon}
           {label}
+          {required ? (
+            <span className="text-red-400 ml-0.5">*</span>
+          ) : (
+            <span className="font-normal text-text-muted/50 ml-1 text-xs">(optional)</span>
+          )}
         </legend>
         {fieldError(field)}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
@@ -291,6 +298,7 @@ export default function WaitlistForm() {
           id="fullName"
           label="Full name"
           error={errors.fullName}
+          required
         >
           <input
             id="fullName"
@@ -307,7 +315,7 @@ export default function WaitlistForm() {
           />
         </FormField>
 
-        <FormField id="role" label="Your role" error={errors.role}>
+        <FormField id="role" label="Your role" error={errors.role} required>
           <input
             id="role"
             name="role"
@@ -323,7 +331,7 @@ export default function WaitlistForm() {
           />
         </FormField>
 
-        <FormField id="workEmail" label="Work email" error={errors.workEmail}>
+        <FormField id="workEmail" label="Work email" error={errors.workEmail} required>
           <input
             id="workEmail"
             name="workEmail"
@@ -339,7 +347,7 @@ export default function WaitlistForm() {
           />
         </FormField>
 
-        <FormField id="protocolName" label="Protocol name" error={errors.protocolName}>
+        <FormField id="protocolName" label="Protocol name" error={errors.protocolName} required>
           <input
             id="protocolName"
             name="protocolName"
@@ -356,7 +364,7 @@ export default function WaitlistForm() {
         </FormField>
 
         <div className="sm:col-span-2">
-          <FormField id="website" label="Protocol website" error={errors.website}>
+          <FormField id="website" label="Protocol website" error={errors.website} required>
             <input
               id="website"
               name="website"
@@ -380,6 +388,7 @@ export default function WaitlistForm() {
         icon={<Hash size={14} className="text-teal" />}
         field="wallets"
         options={WALLET_OPTIONS}
+        required
       />
 
       {/* ── Primary Notification Use Case ───────────────────── */}
@@ -387,6 +396,7 @@ export default function WaitlistForm() {
         <legend className="text-sm font-semibold text-text-primary mb-3 flex items-center gap-2">
           <Bell size={14} className="text-teal" />
           Primary Notification Use Case
+          <span className="text-red-400 ml-0.5">*</span>
         </legend>
         {fieldError("useCase")}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
@@ -527,6 +537,7 @@ export default function WaitlistForm() {
         icon={<Send size={14} className="text-teal" />}
         field="channel"
         options={CHANNEL_OPTIONS}
+        required
       />
 
       {/* ── Submit ──────────────────────────────────────────── */}
@@ -565,11 +576,13 @@ function FormField({
   label,
   error,
   children,
+  required,
 }: {
   id: string;
   label: string;
   error?: string;
   children: React.ReactNode;
+  required?: boolean;
 }) {
   return (
     <div>
@@ -578,6 +591,11 @@ function FormField({
         className="text-sm font-semibold text-text-primary mb-1.5 block"
       >
         {label}
+        {required ? (
+          <span className="text-red-400 ml-0.5">*</span>
+        ) : (
+          <span className="font-normal text-text-muted/50 ml-1 text-xs">(optional)</span>
+        )}
       </label>
       {children}
       {error && (
