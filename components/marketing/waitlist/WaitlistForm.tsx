@@ -5,7 +5,7 @@ import Link from "next/link";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { CheckIcon as Check } from "@/components/ui/check";
-import { Loader2, Hash, Bell, Send } from "lucide-react";
+import { Loader2, Hash, Bell, Send, Globe, Users, Clock, Wrench, Activity, Link2, MessageSquare, Zap, Sparkles } from "lucide-react";
 
 const API_URL = "/api/waitlist";
 
@@ -19,6 +19,15 @@ const schema = z.object({
   useCase: z.string().min(1, "Select a use case"),
   useCaseOther: z.string().optional(),
   channel: z.string().min(1, "Select a channel"),
+  chain: z.string().optional(),
+  teamSize: z.string().optional(),
+  stage: z.string().optional(),
+  timeline: z.string().optional(),
+  currentSetup: z.string().optional(),
+  volume: z.string().optional(),
+  socialLinks: z.string().optional(),
+  source: z.string().optional(),
+  notes: z.string().optional(),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -40,6 +49,14 @@ const USE_CASE_OPTIONS = [
 ];
 
 const CHANNEL_OPTIONS = ["Email", "Telegram", "SMS", "All of the above"];
+
+const CHAIN_OPTIONS = ["Solana", "Eclipse", "SVM L2", "EVM", "Other"];
+const TEAM_SIZE_OPTIONS = ["Just me", "2\u20135", "6\u201320", "21\u2013100", "100+"];
+const STAGE_OPTIONS = ["Idea", "In development", "Testnet", "Mainnet (early)", "Mainnet (live)"];
+const TIMELINE_OPTIONS = ["ASAP (1\u20132 weeks)", "1\u20133 months", "3\u20136 months", "No firm timeline"];
+const SETUP_OPTIONS = ["In-house email", "Telegram bot", "SMS provider", "Web3 notification service", "Not doing it yet"];
+const VOLUME_OPTIONS = ["Less than 10K", "10K\u2013100K", "100K\u20131M", "1M+", "Unsure"];
+const SOURCE_OPTIONS = ["Twitter / X", "GitHub", "Docs", "Friend / Colleague", "Conference", "Search", "Other"];
 
 function RadioCard({
   name,
@@ -95,6 +112,15 @@ export default function WaitlistForm() {
     useCase: "",
     useCaseOther: "",
     channel: "",
+    chain: "Solana",
+    teamSize: "",
+    stage: "",
+    timeline: "",
+    currentSetup: "",
+    volume: "",
+    socialLinks: "",
+    source: "",
+    notes: "",
   });
   const [errors, setErrors] = useState<Partial<Record<FieldName, string>>>({});
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
@@ -155,8 +181,16 @@ export default function WaitlistForm() {
           protocolName: form.protocolName,
           wallets: form.wallets,
           useCase,
-          useCaseOther: form.useCaseOther,
           channel: form.channel,
+          chain: form.chain,
+          teamSize: form.teamSize,
+          stage: form.stage,
+          timeline: form.timeline,
+          currentSetup: form.currentSetup,
+          volume: form.volume,
+          socialLinks: form.socialLinks,
+          source: form.source,
+          notes: form.notes,
         }),
       });
 
@@ -209,6 +243,40 @@ export default function WaitlistForm() {
       </p>
     ) : null;
   };
+
+  function RadioSection({
+    label,
+    icon,
+    field,
+    options,
+  }: {
+    label: string;
+    icon: React.ReactNode;
+    field: FieldName;
+    options: string[];
+  }) {
+    return (
+      <fieldset>
+        <legend className="text-sm font-semibold text-text-primary mb-3 flex items-center gap-2">
+          {icon}
+          {label}
+        </legend>
+        {fieldError(field)}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
+          {options.map((opt) => (
+            <RadioCard
+              key={opt}
+              name={field}
+              value={opt}
+              checked={form[field] === opt}
+              onChange={(val) => update(field, val)}
+              label={opt}
+            />
+          ))}
+        </div>
+      </fieldset>
+    );
+  }
 
   return (
     <form
@@ -307,25 +375,12 @@ export default function WaitlistForm() {
       </div>
 
       {/* ── Approximate Active Wallets ──────────────────────── */}
-      <fieldset>
-        <legend className="text-sm font-semibold text-text-primary mb-3 flex items-center gap-2">
-          <Hash size={14} className="text-teal" />
-          Approximate Active Wallets
-        </legend>
-        {fieldError("wallets")}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
-          {WALLET_OPTIONS.map((opt) => (
-            <RadioCard
-              key={opt}
-              name="wallets"
-              value={opt}
-              checked={form.wallets === opt}
-              onChange={(val) => update("wallets", val)}
-              label={opt}
-            />
-          ))}
-        </div>
-      </fieldset>
+      <RadioSection
+        label="Approximate Active Wallets"
+        icon={<Hash size={14} className="text-teal" />}
+        field="wallets"
+        options={WALLET_OPTIONS}
+      />
 
       {/* ── Primary Notification Use Case ───────────────────── */}
       <fieldset>
@@ -360,7 +415,7 @@ export default function WaitlistForm() {
                 type="text"
                 value={form.useCaseOther || ""}
                 onChange={(e) => update("useCaseOther", e.target.value)}
-                placeholder="Describe your use case…"
+                placeholder="Describe your use case\u2026"
                 className={`${inputBase} h-10 text-xs`}
               />
             </div>
@@ -368,26 +423,111 @@ export default function WaitlistForm() {
         </div>
       </fieldset>
 
-      {/* ── Preferred Channel ───────────────────────────────── */}
-      <fieldset>
-        <legend className="text-sm font-semibold text-text-primary mb-3 flex items-center gap-2">
-          <Send size={14} className="text-teal" />
-          Preferred Channel
-        </legend>
-        {fieldError("channel")}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
-          {CHANNEL_OPTIONS.map((opt) => (
-            <RadioCard
-              key={opt}
-              name="channel"
-              value={opt}
-              checked={form.channel === opt}
-              onChange={(val) => update("channel", val)}
-              label={opt}
-            />
-          ))}
+      {/* ── Divider — optional section ──────────────────────── */}
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-border" />
         </div>
-      </fieldset>
+        <div className="relative flex justify-center">
+          <span className="bg-bg-surface px-3 text-xs font-semibold text-text-muted uppercase tracking-widest flex items-center gap-1.5">
+            <Sparkles size={12} /> Additional info <span className="font-normal normal-case tracking-normal text-text-muted/60">(optional)</span>
+          </span>
+        </div>
+      </div>
+
+      {/* ── Target Chain ────────────────────────────────────── */}
+      <RadioSection
+        label="Target Chain"
+        icon={<Globe size={14} className="text-teal" />}
+        field="chain"
+        options={CHAIN_OPTIONS}
+      />
+
+      {/* ── Team Size ────────────────────────────────────────── */}
+      <RadioSection
+        label="Team Size"
+        icon={<Users size={14} className="text-teal" />}
+        field="teamSize"
+        options={TEAM_SIZE_OPTIONS}
+      />
+
+      {/* ── Protocol Stage ───────────────────────────────────── */}
+      <RadioSection
+        label="Protocol Stage"
+        icon={<Zap size={14} className="text-teal" />}
+        field="stage"
+        options={STAGE_OPTIONS}
+      />
+
+      {/* ── Integration Timeline ────────────────────────────── */}
+      <RadioSection
+        label="Integration Timeline"
+        icon={<Clock size={14} className="text-teal" />}
+        field="timeline"
+        options={TIMELINE_OPTIONS}
+      />
+
+      {/* ── Current Notification Setup ──────────────────────── */}
+      <RadioSection
+        label="Current Notification Setup"
+        icon={<Wrench size={14} className="text-teal" />}
+        field="currentSetup"
+        options={SETUP_OPTIONS}
+      />
+
+      {/* ── Monthly Notification Volume ─────────────────────── */}
+      <RadioSection
+        label="Monthly Notification Volume"
+        icon={<Activity size={14} className="text-teal" />}
+        field="volume"
+        options={VOLUME_OPTIONS}
+      />
+
+      {/* ── Social / GitHub ──────────────────────────────────── */}
+      <FormField id="socialLinks" label="Social / GitHub (for background check)" error={errors.socialLinks}>
+        <input
+          id="socialLinks"
+          name="socialLinks"
+          type="url"
+          autoComplete="url"
+          spellCheck={false}
+          value={form.socialLinks}
+          onChange={(e) => update("socialLinks", e.target.value)}
+          placeholder="https://github.com/your-protocol"
+          aria-invalid={errors.socialLinks ? "true" : undefined}
+          aria-describedby={errors.socialLinks ? "socialLinks-error" : undefined}
+          className={inputBase}
+        />
+      </FormField>
+
+      {/* ── How did you hear about us? ──────────────────────── */}
+      <RadioSection
+        label="How did you hear about us?"
+        icon={<Link2 size={14} className="text-teal" />}
+        field="source"
+        options={SOURCE_OPTIONS}
+      />
+
+      {/* ── Notes ────────────────────────────────────────────── */}
+      <FormField id="notes" label="Additional notes" error={errors.notes}>
+        <textarea
+          id="notes"
+          name="notes"
+          rows={3}
+          value={form.notes}
+          onChange={(e) => update("notes", e.target.value)}
+          placeholder="Anything else you'd like us to know\u2026"
+          className={`${inputBase} h-auto min-h-[80px] resize-y pt-2.5`}
+        />
+      </FormField>
+
+      {/* ── Preferred Channel ───────────────────────────────── */}
+      <RadioSection
+        label="Preferred Channel"
+        icon={<Send size={14} className="text-teal" />}
+        field="channel"
+        options={CHANNEL_OPTIONS}
+      />
 
       {/* ── Submit ──────────────────────────────────────────── */}
       {status === "error" && (
@@ -408,7 +548,7 @@ export default function WaitlistForm() {
       >
         {status === "submitting" ? (
           <span className="flex items-center justify-center gap-2">
-            <Loader2 size={18} className="animate-spin" /> Submitting…
+            <Loader2 size={18} className="animate-spin" /> Submitting\u2026
           </span>
         ) : (
           <span className="flex items-center justify-center gap-2">

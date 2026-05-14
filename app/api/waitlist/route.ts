@@ -2,7 +2,7 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY!);
 
-const META_FIELDS = [
+const ALL_FIELDS: { key: string; label: string }[] = [
   { key: "fullName", label: "Full Name" },
   { key: "workEmail", label: "Work Email" },
   { key: "role", label: "Role" },
@@ -11,7 +11,16 @@ const META_FIELDS = [
   { key: "wallets", label: "Active Wallets" },
   { key: "useCase", label: "Use Case" },
   { key: "channel", label: "Channel" },
-] as const;
+  { key: "chain", label: "Chain" },
+  { key: "teamSize", label: "Team Size" },
+  { key: "stage", label: "Stage" },
+  { key: "timeline", label: "Timeline" },
+  { key: "currentSetup", label: "Current Setup" },
+  { key: "volume", label: "Volume" },
+  { key: "socialLinks", label: "Social / GitHub" },
+  { key: "source", label: "Source" },
+  { key: "notes", label: "Notes" },
+];
 
 const BRAND_EMAIL_HTML = (body: Record<string, string>) => {
   const useCase =
@@ -19,13 +28,17 @@ const BRAND_EMAIL_HTML = (body: Record<string, string>) => {
       ? `Other: ${body.useCaseOther}`
       : body.useCase;
 
-  const rows = META_FIELDS.map(({ key, label }) => {
-    const value = key === "useCase" ? useCase : body[key] ?? "";
-    return `<tr>
-      <td style="padding:12px 18px;white-space:nowrap;vertical-align:top;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:#64748B;border-bottom:1px solid #E2E8F0;">${label}</td>
-      <td style="padding:12px 18px;vertical-align:top;font-size:14px;font-weight:600;color:#0F172A;border-bottom:1px solid #E2E8F0;text-align:right;word-break:break-word;">${value}</td>
-    </tr>`;
-  }).join("");
+  const rows = ALL_FIELDS
+    .map(({ key, label }) => {
+      const value = key === "useCase" ? useCase : body[key] ?? "";
+      if (!value) return "";
+      return `<tr>
+        <td style="padding:12px 18px;white-space:nowrap;vertical-align:top;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:#64748B;border-bottom:1px solid #E2E8F0;">${label}</td>
+        <td style="padding:12px 18px;vertical-align:top;font-size:14px;font-weight:600;color:#0F172A;border-bottom:1px solid #E2E8F0;text-align:right;word-break:break-word;">${value}</td>
+      </tr>`;
+    })
+    .filter(Boolean)
+    .join("");
 
   return `<!DOCTYPE html>
 <html lang="en">
