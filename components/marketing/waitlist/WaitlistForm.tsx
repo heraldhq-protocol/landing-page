@@ -6,9 +6,6 @@ import { Button } from "@/components/ui/button";
 import { CheckIcon as Check } from "@/components/ui/check";
 import { Loader2, Hash, Bell, Send } from "lucide-react";
 
-const FORM_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSfc9x2Dmbl4mXXS_7mArOqbEw0rVa1xgKovpF9AK80k5qMTeg/formResponse";
-
 const schema = z.object({
   fullName: z.string().min(1, "Full name is required"),
   workEmail: z.string().email("Enter a valid work email"),
@@ -41,16 +38,7 @@ const USE_CASE_OPTIONS = [
 
 const CHANNEL_OPTIONS = ["Email", "Telegram", "SMS", "All of the above"];
 
-const entryIds: Record<string, string> = {
-  fullName: "entry.665426303",
-  workEmail: "entry.242279822",
-  role: "entry.2000223748",
-  website: "entry.1070070356",
-  protocolName: "entry.1171760324",
-  wallets: "entry.1951953669",
-  useCase: "entry.21602620",
-  channel: "entry.107119755",
-};
+const API_URL = "/api/waitlist";
 
 function RadioCard({
   name,
@@ -111,15 +99,6 @@ export default function WaitlistForm() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
   const formRef = useRef<HTMLFormElement>(null);
-  const gformRef = useRef<HTMLFormElement>(null);
-  const hdFullName = useRef<HTMLInputElement>(null);
-  const hdWorkEmail = useRef<HTMLInputElement>(null);
-  const hdRole = useRef<HTMLInputElement>(null);
-  const hdWebsite = useRef<HTMLInputElement>(null);
-  const hdProtocolName = useRef<HTMLInputElement>(null);
-  const hdWallets = useRef<HTMLInputElement>(null);
-  const hdUseCase = useRef<HTMLInputElement>(null);
-  const hdChannel = useRef<HTMLInputElement>(null);
 
   const update = (field: FieldName, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -160,21 +139,30 @@ export default function WaitlistForm() {
 
     setStatus("submitting");
 
-    if (hdFullName.current) hdFullName.current.value = form.fullName;
-    if (hdWorkEmail.current) hdWorkEmail.current.value = form.workEmail;
-    if (hdRole.current) hdRole.current.value = form.role;
-    if (hdWebsite.current) hdWebsite.current.value = form.website;
-    if (hdProtocolName.current) hdProtocolName.current.value = form.protocolName;
-    if (hdWallets.current) hdWallets.current.value = form.wallets;
-    if (hdUseCase.current)
-      hdUseCase.current.value =
-        form.useCase === "Other:"
-          ? `Other: ${form.useCaseOther}`
-          : form.useCase;
-    if (hdChannel.current) hdChannel.current.value = form.channel;
+    const useCase =
+      form.useCase === "Other:" ? `Other: ${form.useCaseOther}` : form.useCase;
 
-    gformRef.current?.submit();
-    setStatus("success");
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: form.fullName,
+          workEmail: form.workEmail,
+          role: form.role,
+          website: form.website,
+          protocolName: form.protocolName,
+          wallets: form.wallets,
+          useCase,
+          channel: form.channel,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Server rejected");
+      setStatus("success");
+    } catch {
+      setStatus("error");
+    }
   };
 
   if (status === "success") {
@@ -221,30 +209,7 @@ export default function WaitlistForm() {
   };
 
   return (
-    <>
-      <iframe
-        name="hidden-gform-iframe"
-        className="hidden"
-        title="Google Form submission target"
-      />
-      <form
-        ref={gformRef}
-        action={FORM_URL}
-        method="POST"
-        target="hidden-gform-iframe"
-        className="hidden"
-        aria-hidden="true"
-      >
-        <input ref={hdFullName} type="hidden" name="entry.665426303" />
-        <input ref={hdWorkEmail} type="hidden" name="entry.242279822" />
-        <input ref={hdRole} type="hidden" name="entry.2000223748" />
-        <input ref={hdWebsite} type="hidden" name="entry.1070070356" />
-        <input ref={hdProtocolName} type="hidden" name="entry.1171760324" />
-        <input ref={hdWallets} type="hidden" name="entry.1951953669" />
-        <input ref={hdUseCase} type="hidden" name="entry.21602620" />
-        <input ref={hdChannel} type="hidden" name="entry.107119755" />
-      </form>
-      <form
+    <form
         ref={formRef}
         onSubmit={handleSubmit}
         noValidate
@@ -450,7 +415,6 @@ export default function WaitlistForm() {
         )}
       </Button>
     </form>
-    </>
   );
 }
 
