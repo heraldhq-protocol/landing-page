@@ -14,12 +14,13 @@ export function SyntaxHighlight({ code, language = "typescript" }: SyntaxHighlig
         <pre className="p-0 m-0 bg-transparent overflow-x-auto text-[13px] leading-relaxed font-mono">
           <code>
             {tokens.map((line, i) => {
-              const lineProps = getLineProps({ line, key: i });
+              const { key: _lk, style: lineStyle, ...lineProps } = getLineProps({ line, key: i });
               return (
-                <div key={i} {...lineProps} style={{ ...lineProps.style, display: "flex", background: "transparent" }}>
-                  {line.map((token, key) => (
-                    <span key={key} {...getTokenProps({ token, key })} />
-                  ))}
+                <div key={i} {...lineProps} style={{ ...lineStyle, display: "flex", background: "transparent" }}>
+                  {line.map((token, key) => {
+                    const { key: _tk, ...tokenProps } = getTokenProps({ token, key });
+                    return <span key={key} {...tokenProps} />;
+                  })}
                 </div>
               );
             })}

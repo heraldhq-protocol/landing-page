@@ -1,7 +1,6 @@
 export const IS_EARLY_ACCESS = true;
 
-export const WAITLIST_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSfc9x2Dmbl4mXXS_7mArOqbEw0rVa1xgKovpF9AK80k5qMTeg/viewform";
+export const WAITLIST_URL = "/waitlist";
 
 export const isExternal = (href: string) => href.startsWith("http");
 
