@@ -1,84 +1,127 @@
-const FORM_VIEW_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSfc9x2Dmbl4mXXS_7mArOqbEw0rVa1xgKovpF9AK80k5qMTeg/viewform";
+import { Resend } from "resend";
 
-const FORM_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSfc9x2Dmbl4mXXS_7mArOqbEw0rVa1xgKovpF9AK80k5qMTeg/formResponse";
+const resend = new Resend(process.env.RESEND_API_KEY!);
 
-const entryIds: Record<string, string> = {
-  fullName: "entry.665426303",
-  workEmail: "entry.242279822",
-  role: "entry.2000223748",
-  website: "entry.1070070356",
-  protocolName: "entry.1171760324",
-  wallets: "entry.1951953669",
-  useCase: "entry.21602620",
-  channel: "entry.107119755",
-};
+const BRAND_EMAIL_HTML = (rows: string) => `<!DOCTYPE html>
+<html lang="en" style="box-sizing:border-box;color-scheme:light dark;">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>New waitlist signup — Herald</title>
+<style>
+  * { box-sizing:border-box; }
+  body { margin:0; padding:0; background:#F8FAFC; color:#0F172A;
+    font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased; text-size-adjust:100%; }
+  .wrap { width:100%; background:#F8FAFC; padding:32px 16px; }
+  .container { max-width:600px; margin:0 auto; }
+  .header { padding:8px 4px 28px; }
+  .brand { display:flex; align-items:center; gap:10px; }
+  .brand-mark { width:32px; height:32px; background:#00C896; border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:16px; color:#fff; font-weight:700; }
+  .brand-name { font-family:'Syne',sans-serif; font-weight:700; font-size:15px; letter-spacing:-0.01em; color:#0F172A; }
+  .card { background:#FFFFFF; border:1px solid #E2E8F0; border-radius:8px; padding:36px 32px; }
+  .eyebrow { display:block; font-size:10px; text-transform:uppercase; letter-spacing:0.16em; font-weight:700; color:#00C896; margin:0 0 20px; }
+  .eyebrow .dot { width:6px; height:6px; border-radius:99px; background:#00C896; display:inline-block; vertical-align:middle; margin-right:6px; position:relative; top:-1px; }
+  .headline { font-family:'Syne',sans-serif; font-size:22px; font-weight:700; line-height:1.18; letter-spacing:-0.022em; color:#0F172A; margin:0 0 16px; }
+  .meta-wrap { margin-top:20px; }
+  .meta-row { display:flex; justify-content:space-between; gap:16px; padding:14px 0; border-top:1px solid #E2E8F0; font-size:13px; }
+  .meta-row:first-child { border-top:0; padding-top:0; }
+  .meta-key { color:#64748B; font-size:11px; text-transform:uppercase; letter-spacing:0.12em; font-weight:600; white-space:nowrap; }
+  .meta-val { color:#0F172A; font-weight:600; text-align:right; word-break:break-word; }
+  .footer { padding:28px 8px 8px; }
+  .footer-meta { font-size:12.5px; line-height:1.65; color:#64748B; margin:0; }
+  .footer-divider { height:1px; background:#E2E8F0; margin:20px 0 18px; border:0; }
+  .footer-brand { display:flex; align-items:center; gap:8px; font-size:12px; color:#64748B; flex-wrap:wrap; }
+  .footer-brand .dot-mark { width:20px; height:20px; background:#00C896; border-radius:5px; display:inline-flex; align-items:center; justify-content:center; font-size:10px; color:#fff; font-weight:700; }
+  .footer-brand strong { color:#475569; font-family:'Syne',sans-serif; font-weight:700; }
+  .footer-brand a { color:#64748B; text-decoration:none; }
+  .pipe { color:#CBD5E1; padding:0 4px; }
+  @media (max-width:600px) {
+    .card { padding:28px 22px; }
+  }
+</style>
+</head>
+<body style="margin:0;padding:0;background:#F8FAFC;color:#0F172A;font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;text-size-adjust:100%;">
+  <div class="wrap" style="width:100%;background:#F8FAFC;padding:32px 16px;">
+    <div class="container" style="max-width:600px;margin:0 auto;">
+      <div class="header" style="padding:8px 4px 28px;">
+        <div class="brand" style="display:flex;align-items:center;gap:10px;">
+          <span class="brand-mark" style="width:32px;height:32px;background:#00C896;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;font-size:16px;color:#fff;font-weight:700;">✦</span>
+          <span class="brand-name" style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px;letter-spacing:-0.01em;color:#0F172A;">Herald</span>
+        </div>
+      </div>
+      <div class="card" style="background:#FFFFFF;border:1px solid #E2E8F0;border-radius:8px;padding:36px 32px;">
+        <span class="eyebrow" style="display:block;font-size:10px;text-transform:uppercase;letter-spacing:0.16em;font-weight:700;color:#00C896;margin:0 0 20px;">
+          <span class="dot" style="width:6px;height:6px;border-radius:99px;background:#00C896;display:inline-block;vertical-align:middle;margin-right:6px;position:relative;top:-1px;"></span>New signup
+        </span>
+        <h1 class="headline" style="font-family:'Syne',sans-serif;font-size:22px;font-weight:700;line-height:1.18;letter-spacing:-0.022em;color:#0F172A;margin:0 0 16px;">Waitlist registration received</h1>
+        <div class="meta-wrap" style="margin-top:20px;">
+          ${rows}
+        </div>
+      </div>
+      <div class="footer" style="padding:28px 8px 8px;">
+        <hr class="footer-divider" style="height:1px;background:#E2E8F0;margin:20px 0 18px;border:0;">
+        <div class="footer-brand" style="display:flex;align-items:center;gap:8px;font-size:12px;color:#64748B;flex-wrap:wrap;">
+          <span class="dot-mark" style="width:20px;height:20px;background:#00C896;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700;">✦</span>
+          <strong style="color:#475569;font-family:'Syne',sans-serif;font-weight:700;">Herald</strong>
+          <span class="pipe" style="color:#CBD5E1;padding:0 4px;">|</span>
+          <span>Notification layer for Solana DeFi</span>
+          <span class="pipe" style="color:#CBD5E1;padding:0 4px;">|</span>
+          <a href="https://useherald.xyz" style="color:#64748B;text-decoration:none;">useherald.xyz</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`;
 
-const sentinelFields = [
-  "entry.1951953669_sentinel",
-  "entry.21602620_sentinel",
-  "entry.107119755_sentinel",
-];
+function MetaRow({ label, value, first }: { label: string; value: string; first: boolean }) {
+  return `<div class="meta-row${first ? "" : ""}" style="display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-top:${first ? "0" : "1px solid #E2E8F0"};font-size:13px;${first ? "padding-top:0" : ""}">
+    <span class="meta-key" style="color:#64748B;font-size:11px;text-transform:uppercase;letter-spacing:0.12em;font-weight:600;white-space:nowrap;">${label}</span>
+    <span class="meta-val" style="color:#0F172A;font-weight:600;text-align:right;word-break:break-word;">${value}</span>
+  </div>`;
+}
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    // 1. Fetch the form page to extract dynamic tokens
-    const formPage = await fetch(FORM_VIEW_URL);
-    const html = await formPage.text();
+    const useCase =
+      body.useCase === "Other:" && body.useCaseOther
+        ? `Other: ${body.useCaseOther}`
+        : body.useCase;
 
-    const fbzx = html.match(/name="fbzx" value="([^"]+)"/)?.[1];
-    const tag = html.match(/name="tag" value="([^"]+)"/)?.[1];
+    const fields: [string, string][] = [
+      ["Full Name", body.fullName],
+      ["Work Email", body.workEmail],
+      ["Role", body.role],
+      ["Protocol", body.protocolName],
+      ["Website", body.website],
+      ["Active Wallets", body.wallets],
+      ["Use Case", useCase],
+      ["Channel", body.channel],
+    ];
 
-    if (!fbzx || !tag) {
-      return Response.json(
-        { success: false, error: "Could not extract form tokens" },
-        { status: 500 }
-      );
-    }
+    const rows = fields
+      .map(([label, value], i) => MetaRow({ label, value, first: i === 0 }))
+      .join("");
 
-    // 2. Build submission params
-    const params = new URLSearchParams();
-
-    // Entry fields
-    for (const [key, entryId] of Object.entries(entryIds)) {
-      const value = body[key];
-      if (value) params.append(entryId, value);
-    }
-
-    // Sentinel fields (empty)
-    for (const sentinel of sentinelFields) {
-      params.append(sentinel, "");
-    }
-
-    // Required hidden fields
-    params.append("fvv", "1");
-    params.append("pageHistory", "0");
-    params.append("fbzx", fbzx);
-    params.append("tag", tag);
-    params.append("partialResponse", `[null,null,"${fbzx}"]`);
-    params.append("submissionTimestamp", "-1");
-
-    // 3. Submit to Google Forms
-    const response = await fetch(FORM_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: params,
+    const { error } = await resend.emails.send({
+      from: "waitlist@useherald.xyz",
+      to: ["hello@useherald.xyz"],
+      subject: `New waitlist signup: ${body.fullName} — ${body.protocolName}`,
+      html: BRAND_EMAIL_HTML(rows),
     });
 
-    if (!response.ok) {
-      return Response.json(
-        { success: false, error: "Google Forms rejected the submission" },
-        { status: 502 }
-      );
+    if (error) {
+      return Response.json({ success: false, error: error.message }, { status: 500 });
     }
 
     return Response.json({ success: true });
   } catch {
     return Response.json(
-      { success: false, error: "Failed to forward submission" },
+      { success: false, error: "Failed to send" },
       { status: 500 }
     );
   }

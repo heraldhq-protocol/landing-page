@@ -1,10 +1,13 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Link from "next/link";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { CheckIcon as Check } from "@/components/ui/check";
 import { Loader2, Hash, Bell, Send } from "lucide-react";
+
+const API_URL = "/api/waitlist";
 
 const schema = z.object({
   fullName: z.string().min(1, "Full name is required"),
@@ -37,8 +40,6 @@ const USE_CASE_OPTIONS = [
 ];
 
 const CHANNEL_OPTIONS = ["Email", "Telegram", "SMS", "All of the above"];
-
-const API_URL = "/api/waitlist";
 
 function RadioCard({
   name,
@@ -154,6 +155,7 @@ export default function WaitlistForm() {
           protocolName: form.protocolName,
           wallets: form.wallets,
           useCase,
+          useCaseOther: form.useCaseOther,
           channel: form.channel,
         }),
       });
@@ -172,17 +174,17 @@ export default function WaitlistForm() {
           <Check size={32} className="text-teal" />
         </div>
         <h3 className="text-2xl sm:text-3xl font-bold font-display text-text-primary mb-3">
-          You're on the list
+          You&apos;re on the list
         </h3>
         <p className="text-text-secondary text-base leading-relaxed max-w-sm mx-auto">
-          We'll reach out when early access opens. In the meantime, check out
+          We&apos;ll reach out when early access opens. In the meantime, check out
           our{" "}
-          <a
+          <Link
             href="/docs/quickstart"
             className="text-teal hover:text-teal/80 font-medium underline-offset-2 hover:underline transition-colors duration-100"
           >
             documentation
-          </a>{" "}
+          </Link>{" "}
           or{" "}
           <a
             href="https://github.com/heraldhq-protocol"
@@ -390,7 +392,7 @@ export default function WaitlistForm() {
       {/* ── Submit ──────────────────────────────────────────── */}
       {status === "error" && (
         <div className="p-4 rounded-xl bg-red-500/8 border border-red-500/20 text-sm text-red-400 text-center">
-          Couldn't submit the form. Please try again or email us directly at{" "}
+          Couldn&apos;t submit the form. Please try again or email us directly at{" "}
           <a
             href="mailto:hello@useherald.xyz"
             className="text-teal hover:underline font-medium"

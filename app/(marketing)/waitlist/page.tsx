@@ -29,7 +29,7 @@ export default function WaitlistPage() {
             Be among the first to <span className="text-teal">integrate Herald</span>
           </h1>
           <p className="text-lg md:text-xl text-text-secondary max-w-xl mx-auto leading-relaxed">
-            We're onboarding design partners now. Get early access to the
+            We&apos;re onboarding design partners now. Get early access to the
             privacy-first notification layer for Solana DeFi.
           </p>
 
