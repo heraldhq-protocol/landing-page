@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 import WaitlistForm from "@/components/marketing/waitlist/WaitlistForm";
+import DesignPartnerOffer from "@/components/marketing/waitlist/DesignPartnerOffer";
 
 export const metadata: Metadata = {
-  title: "Get Early Access — Herald Protocol",
+  title: "Design Partner Program — Herald Protocol",
   description:
-    "Join the waitlist for Herald's privacy-preserving notification layer for Solana DeFi. Early access for protocols.",
+    "Become a Herald Design Partner. Integrate the privacy-first notification layer for Solana DeFi for free in exchange for feedback and a case study.",
   openGraph: {
-    title: "Get Early Access — Herald Protocol",
+    title: "Design Partner Program — Herald Protocol",
     description:
-      "Join the waitlist for Herald's privacy-preserving notification layer for Solana DeFi.",
+      "Become a Herald Design Partner. Integrate the privacy-first notification layer for Solana DeFi for free.",
   },
 };
 
@@ -22,15 +23,16 @@ export default function WaitlistPage() {
 
         <div className="container mx-auto px-6">
           <div className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full border border-teal/15 bg-teal/5 text-teal text-[11px] font-bold tracking-widest uppercase">
-            <span className="w-1.5 h-1.5 rounded-full bg-teal animate-pulse" />
-            Early Access — Limited Spots
+            <span className="w-1.5 h-1.5 rounded-full bg-teal motion-safe:animate-pulse" />
+            Design Partner Program
           </div>
           <h1 className="text-[clamp(1.75rem,7cqi,4.5rem)] md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-4 text-text-primary font-display text-balance leading-[1.05]">
-            Be among the first to <span className="text-teal">integrate Herald</span>
+            Build with us. Become a <span className="text-teal">Herald Design Partner</span>
           </h1>
-          <p className="text-lg md:text-xl text-text-secondary max-w-xl mx-auto leading-relaxed">
-            We&apos;re onboarding design partners now. Get early access to the
-            privacy-first notification layer for Solana DeFi.
+          <p className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed">
+            A design partner is an early protocol who integrates Herald for free
+            in exchange for feedback, a published case study, and public
+            endorsement. You are our proof of value before we have revenue.
           </p>
 
           <div className="mt-8 sm:mt-10 flex flex-wrap items-center justify-center gap-x-6 sm:gap-x-8 gap-y-2.5 text-xs sm:text-sm text-text-muted">
@@ -50,11 +52,13 @@ export default function WaitlistPage() {
         </div>
       </section>
 
+      <DesignPartnerOffer />
+
       <section className="pb-32">
         <div className="container mx-auto px-6">
           <div className="text-center mb-10">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-text-muted">
-              Design Partner Application
+              Apply as a Design Partner
             </p>
           </div>
           <WaitlistForm />

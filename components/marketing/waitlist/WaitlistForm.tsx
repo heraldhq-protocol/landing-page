@@ -207,27 +207,27 @@ export default function WaitlistForm() {
         <div className="w-16 h-16 rounded-full bg-teal/10 border border-teal/25 flex items-center justify-center mx-auto mb-6">
           <Check size={32} className="text-teal" />
         </div>
-        <h3 className="text-2xl sm:text-3xl font-bold font-display text-text-primary mb-3">
-          You&apos;re on the list
-        </h3>
-        <p className="text-text-secondary text-base leading-relaxed max-w-sm mx-auto">
-          We&apos;ll reach out when early access opens. In the meantime, check out
-          our{" "}
-          <Link
-            href="/docs/quickstart"
-            className="text-teal hover:text-teal/80 font-medium underline-offset-2 hover:underline transition-colors duration-100"
-          >
-            documentation
-          </Link>{" "}
-          or{" "}
-          <a
-            href="https://github.com/heraldhq-protocol"
-            className="text-teal hover:text-teal/80 font-medium underline-offset-2 hover:underline transition-colors duration-100"
-          >
-            explore on GitHub
-          </a>
-          .
-        </p>
+          <h3 className="text-2xl sm:text-3xl font-bold font-display text-text-primary mb-3">
+            You&apos;re a Design Partner
+          </h3>
+          <p className="text-text-secondary text-base leading-relaxed max-w-sm mx-auto">
+            We&apos;ll reach out within 48 hours to schedule your onboarding call. In
+            the meantime, check out our{" "}
+            <Link
+              href="/docs/quickstart"
+              className="text-teal hover:text-teal/80 font-medium underline-offset-2 hover:underline transition-colors duration-100"
+            >
+              documentation
+            </Link>{" "}
+            or{" "}
+            <a
+              href="https://github.com/heraldhq-protocol"
+              className="text-teal hover:text-teal/80 font-medium underline-offset-2 hover:underline transition-colors duration-100"
+            >
+              explore on GitHub
+            </a>
+            .
+          </p>
       </div>
     );
   }
@@ -559,11 +559,11 @@ export default function WaitlistForm() {
       >
         {status === "submitting" ? (
           <span className="flex items-center justify-center gap-2">
-            <Loader2 size={18} className="animate-spin" /> Submitting\u2026
+            <Loader2 size={18} className="motion-safe:animate-spin" /> Submitting\u2026
           </span>
         ) : (
           <span className="flex items-center justify-center gap-2">
-            Get early access <Send size={16} />
+            Apply as a Design Partner <Send size={16} />
           </span>
         )}
       </Button>
