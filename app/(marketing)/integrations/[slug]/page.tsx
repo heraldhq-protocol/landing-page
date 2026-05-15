@@ -19,6 +19,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import { Metadata } from "next";
 import { EmptyState } from "@/components/ui/empty-state";
 import { SyntaxHighlight } from "@/components/ui/syntax-highlight";
+import { ogUrl } from "@/lib/og";
 
 const ICON_MAP: Record<string, React.ElementType> = {
   Globe, Monitor, Server, Layers, FileCode, Terminal, Zap, Bot,
@@ -43,6 +44,33 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: `Integrate Herald with ${fw.name} — ${fw.category}`,
     description: `Add zero-PII notifications to your ${fw.name} project. Install @herald-protocol/sdk, initialize the client, and start sending privacy-preserving alerts.`,
     keywords: [`${fw.name} notifications`, `${fw.name} Herald`, "Solana notifications", "Web3 privacy", fw.category],
+    openGraph: {
+      title: `Integrate with ${fw.name}`,
+      description: `Add zero-PII notifications to your ${fw.name} project. Install @herald-protocol/sdk and start sending privacy-preserving alerts.`,
+      images: [
+        {
+          url: ogUrl(
+            `Integrate with ${fw.name}`,
+            fw.category,
+            `Add zero-PII notifications to your ${fw.name} project in minutes.`
+          ),
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `Integrate Herald with ${fw.name} — ${fw.category}`,
+      description: `Add zero-PII notifications to your ${fw.name} project in minutes.`,
+      images: [
+        ogUrl(
+          `Integrate with ${fw.name}`,
+          fw.category,
+          `Add zero-PII notifications to your ${fw.name} project in minutes.`
+        ),
+      ],
+    },
   };
 }
 

@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import ErrorView from "@/components/marketing/shared/ErrorView";
 import { ShieldAlert } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Unauthorized | Herald",
+  description: "You do not have permission to access this page.",
+  robots: { index: false, follow: false },
+};
 
 export default function UnauthorizedPage() {
   return (

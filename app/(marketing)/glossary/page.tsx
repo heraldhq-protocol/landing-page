@@ -1,10 +1,38 @@
 import Link from "next/link";
 import { ArrowRight, BookOpen, Search } from "lucide-react";
 import { Metadata } from "next";
+import { ogUrl } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "DeFi & Privacy Glossary | Herald",
   description: "Understand the technical terms behind privacy-preserving notifications, ZK-proofs, and secure enclaves in the Herald ecosystem.",
+  openGraph: {
+    title: "DeFi & Privacy Glossary",
+    description: "Understand the technical terms behind privacy-preserving notifications, ZK-proofs, and secure enclaves in the Herald ecosystem.",
+    images: [
+      {
+        url: ogUrl(
+          "DeFi & Privacy",
+          "Protocol Glossary",
+          "Understand the technical terms behind privacy-preserving notifications, ZK-proofs, and secure enclaves in the Herald ecosystem."
+        ),
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "DeFi & Privacy Glossary | Herald",
+    description: "Understand the technical terms behind privacy-preserving notifications, ZK-proofs, and secure enclaves in the Herald ecosystem.",
+    images: [
+      ogUrl(
+        "DeFi & Privacy",
+        "Protocol Glossary",
+        "Understand the technical terms behind privacy-preserving notifications, ZK-proofs, and secure enclaves in the Herald ecosystem."
+      ),
+    ],
+  },
 };
 
 const TERMS = [

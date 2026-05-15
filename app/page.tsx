@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import HeroSection from "@/components/marketing/home/HeroSection";
 import DemoAnimation from "@/components/marketing/home/DemoAnimation";
 // import LogoMarquee from "@/components/marketing/home/LogoMarquee";
@@ -10,6 +11,42 @@ import PricingTable from "@/components/marketing/pricing/PricingTable";
 import FinalCTA from "@/components/marketing/home/FinalCTA";
 import NavBar from "@/components/marketing/shared/NavBar";
 import Footer from "@/components/marketing/shared/Footer";
+import { ogUrl } from "@/lib/og";
+
+export const metadata: Metadata = {
+  title: "Herald — Privacy-Preserving DeFi Notifications",
+  description:
+    "The notification layer for DeFi. Send email, Telegram, and SMS alerts to your users without ever storing their contact info. Built on Solana.",
+  openGraph: {
+    title: "Herald Protocol",
+    description:
+      "Privacy-preserving notifications for Solana DeFi. Send alerts without ever storing user contact info.",
+    images: [
+      {
+        url: ogUrl(
+          "Privacy-Preserving",
+          "DeFi Notifications",
+          "Send alerts to your users without ever storing their contact info. Built on Solana."
+        ),
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Herald — Privacy-Preserving DeFi Notifications",
+    description:
+      "Privacy-preserving notifications for Solana DeFi. Send alerts without ever storing user contact info.",
+    images: [
+      ogUrl(
+        "Privacy-Preserving",
+        "DeFi Notifications",
+        "Send alerts to your users without ever storing their contact info. Built on Solana."
+      ),
+    ],
+  },
+};
 
 export default function HomePage() {
   return (

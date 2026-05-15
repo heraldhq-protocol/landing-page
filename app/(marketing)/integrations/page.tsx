@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Metadata } from "next";
+import { ogUrl } from "@/lib/og";
 
 const ICON_MAP: Record<string, React.ElementType> = {
   Globe,
@@ -28,6 +29,33 @@ const ICON_MAP: Record<string, React.ElementType> = {
 export const metadata: Metadata = {
   title: "Framework Integrations | Herald",
   description: "Integrate Herald privacy-preserving notifications into your stack — Next.js, React, Express, NestJS, Hono, CLI, and more.",
+  openGraph: {
+    title: "Framework Integrations",
+    description: "Integrate Herald privacy-preserving notifications into your stack — Next.js, React, Express, NestJS, Hono, CLI, and more.",
+    images: [
+      {
+        url: ogUrl(
+          "One API",
+          "Any Framework",
+          "Integrate Herald privacy-preserving notifications into your stack — Next.js, React, Express, NestJS, Hono, CLI, and more."
+        ),
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Framework Integrations | Herald",
+    description: "Integrate Herald privacy-preserving notifications into your stack — Next.js, React, Express, NestJS, Hono, CLI, and more.",
+    images: [
+      ogUrl(
+        "One API",
+        "Any Framework",
+        "Integrate Herald privacy-preserving notifications into your stack — Next.js, React, Express, NestJS, Hono, CLI, and more."
+      ),
+    ],
+  },
 };
 
 export default function IntegrationsPage() {

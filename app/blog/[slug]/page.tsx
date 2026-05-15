@@ -1,9 +1,11 @@
 import { blogSource } from "@/lib/source";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { ArrowLeft, Calendar, User, Share2 } from "lucide-react";
 import Link from "next/link";
 import NavBar from "@/components/marketing/shared/NavBar";
 import Footer from "@/components/marketing/shared/Footer";
+import { ogUrl } from "@/lib/og";
 
 type BlogData = {
   title: string;
@@ -12,6 +14,45 @@ type BlogData = {
   author?: string;
   body: React.ComponentType;
 };
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const page = blogSource.getPage([slug]);
+  if (!page) return {};
+
+  const data = page.data as unknown as BlogData;
+  return {
+    title: `${data.title} | Herald Blog`,
+    description: data.description ?? "Read the latest from Herald.",
+    openGraph: {
+      title: data.title,
+      description: data.description ?? "Read the latest from Herald.",
+      images: [
+        {
+          url: ogUrl(
+            data.title,
+            "Herald Blog",
+            data.description ?? "Read the latest from Herald."
+          ),
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${data.title} | Herald Blog`,
+      description: data.description ?? "Read the latest from Herald.",
+      images: [
+        ogUrl(
+          data.title,
+          "Herald Blog",
+          data.description ?? "Read the latest from Herald."
+        ),
+      ],
+    },
+  };
+}
 
 export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

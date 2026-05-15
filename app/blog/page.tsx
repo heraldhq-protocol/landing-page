@@ -1,9 +1,46 @@
 import { blogSource } from "@/lib/source";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Calendar, User, BookOpen } from "lucide-react";
 import NavBar from "@/components/marketing/shared/NavBar";
 import Footer from "@/components/marketing/shared/Footer";
 import { EmptyState } from "@/components/ui/empty-state";
+import { ogUrl } from "@/lib/og";
+
+export const metadata: Metadata = {
+  title: "Blog | Herald",
+  description:
+    "Insights on DeFi privacy, zero-PII architecture, and product updates from the Herald team.",
+  openGraph: {
+    title: "Blog | Herald",
+    description:
+      "Insights on DeFi privacy, zero-PII architecture, and product updates from the Herald team.",
+    images: [
+      {
+        url: ogUrl(
+          "Herald Blog",
+          "Insights on DeFi Privacy",
+          "Thought leadership, technical deep-dives, and product updates from the Herald team."
+        ),
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Blog | Herald",
+    description:
+      "Insights on DeFi privacy, zero-PII architecture, and product updates from the Herald team.",
+    images: [
+      ogUrl(
+        "Herald Blog",
+        "Insights on DeFi Privacy",
+        "Thought leadership, technical deep-dives, and product updates from the Herald team."
+      ),
+    ],
+  },
+};
 
 // Custom frontmatter fields added via defineDocs schema extension
 type BlogData = {

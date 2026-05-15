@@ -18,10 +18,41 @@ import { KeyIcon as Key } from "@/components/ui/key";
 import { TerminalIcon as Terminal } from "@/components/ui/terminal";
 import ArchitectureDiagram from "@/components/marketing/security/ArchitectureDiagram";
 
+import { ogUrl } from "@/lib/og";
+
 export const metadata: Metadata = {
   title: "Security | Herald Protocol",
   description:
     "Herald's security-first architecture: zero-PII design, dual encryption, TEE isolation, and on-chain ZK receipts. All critical audit findings resolved.",
+  openGraph: {
+    title: "Security-First Architecture",
+    description:
+      "Herald's security-first architecture: zero-PII design, dual encryption, TEE isolation, and on-chain ZK receipts.",
+    images: [
+      {
+        url: ogUrl(
+          "Security-First",
+          "Zero-Trust Notifications",
+          "Zero-PII design, dual encryption, TEE isolation, and on-chain ZK receipts. All critical audit findings resolved."
+        ),
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Security | Herald Protocol",
+    description:
+      "Herald's security-first architecture: zero-PII design, dual encryption, TEE isolation, and on-chain ZK receipts.",
+    images: [
+      ogUrl(
+        "Security-First",
+        "Zero-Trust Notifications",
+        "Zero-PII design, dual encryption, TEE isolation, and on-chain ZK receipts. All critical audit findings resolved."
+      ),
+    ],
+  },
 };
 
 const AUDIT_FINDINGS = [

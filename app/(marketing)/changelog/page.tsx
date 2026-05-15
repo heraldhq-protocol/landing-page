@@ -2,11 +2,41 @@ import { Metadata } from "next";
 import { fetchAllChangelogs, CHANGELOG_REPOS, ChangelogEntry } from "@/lib/github-changelog";
 import { GitBranch, Calendar, ExternalLink, Package } from "lucide-react";
 import { Suspense } from "react";
+import { ogUrl } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Changelog | Herald Protocol",
   description:
     "Stay up to date with the latest features, security improvements, and SDK releases from the Herald protocol.",
+  openGraph: {
+    title: "Changelog",
+    description:
+      "Stay up to date with the latest features, security improvements, and SDK releases from the Herald protocol.",
+    images: [
+      {
+        url: ogUrl(
+          "Changelog",
+          "Latest Updates",
+          "Stay up to date with the latest features, security improvements, and SDK releases from the Herald protocol."
+        ),
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Changelog | Herald Protocol",
+    description:
+      "Stay up to date with the latest features, security improvements, and SDK releases from the Herald protocol.",
+    images: [
+      ogUrl(
+        "Changelog",
+        "Latest Updates",
+        "Stay up to date with the latest features, security improvements, and SDK releases from the Herald protocol."
+      ),
+    ],
+  },
 };
 
 function RepoBadge({

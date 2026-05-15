@@ -1,9 +1,46 @@
+import type { Metadata } from "next";
 import ProtocolHero from "@/components/marketing/protocol/ProtocolHero";
 import TheProblem from "@/components/marketing/protocol/TheProblem";
 import CodePreview from "@/components/marketing/home/CodePreview";
 import UseCasesGrid from "@/components/marketing/protocol/UseCasesGrid";
 import PricingTable from "@/components/marketing/pricing/PricingTable";
 import FinalCTA from "@/components/marketing/home/FinalCTA";
+import { ogUrl } from "@/lib/og";
+
+export const metadata: Metadata = {
+  title: "For Protocols | Herald",
+  description:
+    "Integrate privacy-preserving notifications into your Solana protocol. One API call, zero PII, 5-minute setup.",
+  openGraph: {
+    title: "For Protocols",
+    description:
+      "Integrate privacy-preserving notifications into your Solana protocol. One API call, zero PII, 5-minute setup.",
+    images: [
+      {
+        url: ogUrl(
+          "For Protocols",
+          "Zero-PII Notifications",
+          "One API call, zero PII, 5-minute setup. Alert your users without ever storing their contact data."
+        ),
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "For Protocols | Herald",
+    description:
+      "Integrate privacy-preserving notifications into your Solana protocol. One API call, zero PII, 5-minute setup.",
+    images: [
+      ogUrl(
+        "For Protocols",
+        "Zero-PII Notifications",
+        "One API call, zero PII, 5-minute setup. Alert your users without ever storing their contact data."
+      ),
+    ],
+  },
+};
 
 export default function ForProtocolsPage() {
   return (

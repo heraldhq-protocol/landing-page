@@ -40,12 +40,19 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Herald",
     url: "https://useherald.xyz",
-    images: ["/api/og"],
+    images: [
+      {
+        url: "/api/og?title=Privacy-Preserving&subtitle=DeFi+Notifications&description=Send+alerts+to+your+users+without+ever+storing+their+contact+info.+Built+on+Solana.",
+        width: 1200,
+        height: 630,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    site: "@useheraldxyz",
-    creator: "@useheraldxyz",
+    site: "@useheraldmail",
+    creator: "@useheraldmail",
+    images: "/api/og?title=Privacy-Preserving&subtitle=DeFi+Notifications&description=Send+alerts+to+your+users+without+ever+storing+their+contact+info.+Built+on+Solana.",
   },
   robots: { index: true, follow: true },
 };

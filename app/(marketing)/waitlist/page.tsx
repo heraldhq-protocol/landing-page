@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import WaitlistForm from "@/components/marketing/waitlist/WaitlistForm";
 import DesignPartnerOffer from "@/components/marketing/waitlist/DesignPartnerOffer";
+import { ogUrl } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Design Partner Program — Herald Protocol",
@@ -10,6 +11,30 @@ export const metadata: Metadata = {
     title: "Design Partner Program — Herald Protocol",
     description:
       "Become a Herald Design Partner. Integrate the privacy-first notification layer for Solana DeFi for free.",
+    images: [
+      {
+        url: ogUrl(
+          "Design Partner Program",
+          "Build with Us",
+          "Become a Herald Design Partner. Integrate for free in exchange for feedback and a case study."
+        ),
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Design Partner Program — Herald Protocol",
+    description:
+      "Become a Herald Design Partner. Integrate the privacy-first notification layer for Solana DeFi for free.",
+    images: [
+      ogUrl(
+        "Design Partner Program",
+        "Build with Us",
+        "Become a Herald Design Partner. Integrate for free in exchange for feedback and a case study."
+      ),
+    ],
   },
 };
 
