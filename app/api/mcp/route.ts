@@ -41,13 +41,13 @@ const TOOLS = [
   },
   {
     name: "get_integration_example",
-    description: "Copy-paste code for Herald integration patterns: backend, serverless, webhook, batch, or registration-check.",
+    description: "Copy-paste code for Herald integration patterns: backend, serverless, webhook, batch, registration-check, broadcast, or subscribe.",
     inputSchema: {
       type: "object",
       properties: {
         pattern: {
           type: "string",
-          enum: ["backend", "serverless", "webhook", "batch", "registration-check"],
+          enum: ["backend", "serverless", "webhook", "batch", "registration-check", "broadcast", "subscribe"],
           description: "Integration pattern name",
         },
       },
@@ -132,6 +132,8 @@ const EXAMPLES: Record<string, string> = {
   webhook: `## Webhook Receiver with Signature Verification\n\n\`\`\`typescript\nimport { createHmac, timingSafeEqual } from "node:crypto";\n\nfunction verifySignature(payload: string, header: string, secret: string) {\n  const [ts, sig] = header.split(",").map(s => s.split("=")[1]);\n  const expected = createHmac("sha256", secret)\n    .update(\`\${ts}.\${payload}\`).digest("hex");\n  return timingSafeEqual(Buffer.from(sig), Buffer.from(expected));\n}\n\n// In your webhook handler:\n// 1. Get raw payload text\n// 2. Get X-Herald-Signature header\n// 3. Call verifySignature(payload, signatureHeader, process.env.HERALD_WEBHOOK_SECRET!)\n// 4. Return 401 if invalid, 200 if valid\n\`\`\``,
   batch: `## Batch Sending\n\n\`\`\`typescript\nimport { Herald } from "@herald-protocol/sdk";\n\nconst herald = new Herald({ apiKey: process.env.HERALD_API_KEY! });\n\nasync function sendBatch(wallets: string[], subject: string, body: string) {\n  for (let i = 0; i < wallets.length; i += 100) {\n    const chunk = wallets.slice(i, i + 100);\n    const result = await herald.notifyBatch({\n      notifications: chunk.map(wallet => ({\n        wallet, subject, body,\n        category: "governance" as const,\n        idempotencyKey: crypto.randomUUID(),\n      })),\n    });\n    console.log(\`Batch \${i/100 + 1}: \${result.count} queued\`);\n  }\n}\n\`\`\``,
   "registration-check": `## React Registration Check Component\n\n\`\`\`typescript\n"use client";\nimport { useWallet } from "@solana/wallet-adapter-react";\nimport { ReadClient } from "@herald-protocol/sdk";\nimport { useEffect, useState } from "react";\n\nexport function NotificationSettings() {\n  const { publicKey } = useWallet();\n  const [registered, setRegistered] = useState<boolean | null>(null);\n\n  useEffect(() => {\n    if (!publicKey) return;\n    new ReadClient({ cluster: "mainnet-beta" })\n      .isRegistered(publicKey.toBase58())\n      .then(setRegistered);\n  }, [publicKey]);\n\n  if (!publicKey) return <p>Connect wallet</p>;\n  if (registered === null) return <p>Checking...</p>;\n  if (registered) return <p>Notifications active</p>;\n\n  return <a href="https://notify.useherald.xyz/register" target="_blank">Enable Notifications</a>;\n}\n\`\`\``,
+  broadcast: `## Broadcast to All Subscribers\n\nBroadcast sends a single notification to every wallet subscribed to your protocol.\nRequires Growth tier or above.\n\n\`\`\`typescript\nimport { Herald } from "@herald-protocol/sdk";\n\nconst herald = new Herald({ apiKey: process.env.HERALD_API_KEY! });\n\n// Send to every subscriber\nconst result = await herald.broadcast({\n  subject: "Governance Vote: Protocol Upgrade v2",\n  body: "A governance proposal to upgrade the protocol is live. Vote before May 24.",\n  category: "governance",\n  receipt: true,\n});\n\nconsole.log(\`Queued \${result.queued_count} / \${result.total_subscribers} subscribers\`);\nconsole.log(\`Estimated delivery: \${result.estimated_delivery_s}s\`);\n\`\`\`\n\n### Audience sources\nSubscribers are added via:\n- **Join link**: \`https://notify.useherald.xyz/join/{protocolId}\`\n- **SDK subscribe()**: Called from your app when a user opts in\n- **Automatic backfill**: Wallets that previously received a notification from you`,
+  subscribe: `## Managing Subscriptions\n\nAdd or remove wallets from your protocol's audience.\n\n\`\`\`typescript\nimport { Herald } from "@herald-protocol/sdk";\n\nconst herald = new Herald({ apiKey: process.env.HERALD_API_KEY! });\n\n// Subscribe a wallet (idempotent — safe to call on every login)\nawait herald.subscribe({\n  walletAddress: "7xR4mKp2nQ...",\n  channels: ["email"], // optional, defaults to ["email"]\n});\n\n// Unsubscribe a wallet\nawait herald.unsubscribe("7xR4mKp2nQ...");\n\n// Check if a wallet is subscribed\nconst status = await herald.checkSubscription("7xR4mKp2nQ...");\n// { subscribed: true, channels: ["email"], subscribedAt: "2026-05-17T..." }\n\`\`\`\n\n### Share a join link (no SDK needed)\nDrop this in your docs, Discord, or UI — no SDK integration required:\n\`https://notify.useherald.xyz/join/{protocolId}\``,
 };
 
 function json(

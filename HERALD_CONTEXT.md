@@ -101,6 +101,33 @@ await herald.notifyBatch({
 // Max 100 per batch
 ```
 
+### Audience & Broadcast
+
+Protocols maintain a subscriber audience. Users join via:
+- **Join link**: `https://notify.useherald.xyz/join/{protocolId}`
+- **SDK `subscribe()`**: Called from your app after a user opts in
+- **Automatic backfill**: Wallets that previously received a notification
+
+```typescript
+// Add a wallet to your audience
+await herald.subscribe({ walletAddress: '7xR4mKp2nQ...', channels: ['email'] });
+
+// Remove from audience
+await herald.unsubscribe('7xR4mKp2nQ...');
+
+// Check if subscribed
+const status = await herald.checkSubscription('7xR4mKp2nQ...');
+// { subscribed: true, channels: ['email'], subscribedAt: '...' }
+
+// Broadcast to all subscribers (Growth tier+)
+const result = await herald.broadcast({
+  subject: 'Governance Alert',
+  body: 'A new proposal is live. Vote before May 24.',
+  category: 'governance',
+});
+// result.broadcast_id, result.queued_count, result.total_subscribers
+```
+
 ### Checking Registration
 
 ```typescript
@@ -151,14 +178,20 @@ Base URL: `https://api.useherald.xyz`
 |---|---|---|
 | `POST` | `/v1/notify` | Send a notification |
 | `POST` | `/v1/notify/batch` | Batch send (max 100) |
+| `POST` | `/v1/notify/broadcast` | Broadcast to all subscribers (Growth+) |
 | `GET` | `/v1/notifications/:id` | Get notification status |
 | `GET` | `/v1/notifications` | List notifications (paginated) |
+| `POST` | `/v1/subscriptions` | Subscribe a wallet to your protocol |
+| `DELETE` | `/v1/subscriptions` | Unsubscribe a wallet |
+| `GET` | `/v1/subscriptions/:wallet` | Check subscription status |
 | `POST` | `/v1/webhooks` | Register webhook |
 | `GET` | `/v1/webhooks` | List webhooks |
 | `PATCH` | `/v1/webhooks/:id` | Update webhook |
 | `DELETE` | `/v1/webhooks/:id` | Delete webhook |
 | `GET` | `/v1/analytics` | Delivery analytics |
 | `GET` | `/v1/usage` | Current usage vs quota |
+| `GET` | `/v1/audience` | Audience analytics (subscribers, sources, trend) |
+| `GET` | `/v1/engagement` | Engagement metrics (open/click/unsubscribe rates) |
 | `GET` | `/v1/billing/status` | Subscription status |
 | `POST` | `/v1/preview` | Preview notification rendering |
 | `GET` | `/health` | Health check (no auth) |

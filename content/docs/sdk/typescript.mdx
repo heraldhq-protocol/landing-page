@@ -56,15 +56,22 @@ const canSend = await readClient.checkProtocolCanSend(protocolPubkey);
 
 ### 3. `Herald` (Gateway Client)
 **Use for**: Protocols sending notifications via our API.
-- Send messages to wallets.
-- Check messaging quotas.
-- Verify delivery status.
+- Send messages to individual wallets.
+- Broadcast to all your subscribers at once.
+- Manage your subscriber audience.
+- Check messaging quotas and delivery status.
 
 ```typescript
 import { Herald } from '@herald-protocol/sdk';
 
 const herald = new Herald({ apiKey: 'hrld_live_...' });
 await herald.notify({ wallet: '...', subject: '...' });
+
+// Broadcast to all subscribers
+await herald.broadcast({ subject: 'Governance Alert', body: '...', category: 'governance' });
+
+// Manage subscriptions
+await herald.subscribe({ walletAddress: '...' });
 ```
 
 ### 4. `NotificationKeyClient`
@@ -120,6 +127,55 @@ await channelClient.registerSms({
   encryptedPhone: encryptedPhone,
 });
 ```
+
+---
+
+## Audience & Broadcast
+
+Protocols can build a subscriber list (audience) and broadcast notifications to all of them with a single API call.
+
+### Building your audience
+
+Users are added to your audience in three ways:
+
+1. **Join link** — Share `https://notify.useherald.xyz/join/{protocolId}`. Users connect their wallet and opt in via one click.
+2. **SDK** — Call `herald.subscribe()` after the user signs a transaction in your app.
+3. **Automatic backfill** — Any wallet that already received a notification from you is counted in your audience.
+
+### Subscribing a wallet
+
+```typescript
+// Subscribe a wallet to your protocol's notification list
+await herald.subscribe({
+  walletAddress: '7xR4mKp2nQ...',
+  channels: ['email', 'telegram'], // optional, defaults to ['email']
+});
+
+// Unsubscribe a wallet
+await herald.unsubscribe('7xR4mKp2nQ...');
+
+// Check subscription status
+const status = await herald.checkSubscription('7xR4mKp2nQ...');
+// { subscribed: true, channels: ['email'], subscribedAt: '2026-05-17T...' }
+```
+
+### Broadcasting to all subscribers
+
+```typescript
+const result = await herald.broadcast({
+  subject: 'Governance Vote: Protocol Upgrade v2',
+  body: 'A governance proposal to upgrade the protocol is live. Vote before May 24.',
+  category: 'governance',
+  receipt: true, // write ZK receipts (optional)
+});
+
+console.log(result.broadcast_id);        // batch ID
+console.log(result.queued_count);         // notifications enqueued
+console.log(result.total_subscribers);   // active subscriber count
+console.log(result.estimated_delivery_s); // estimated seconds to complete
+```
+
+Broadcast requires **Growth tier** or above.
 
 ---
 
