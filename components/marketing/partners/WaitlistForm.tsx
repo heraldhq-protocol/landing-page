@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { CheckIcon as Check } from "@/components/ui/check";
 import { Loader2, Hash, Bell, Send, Globe, Users, Clock, Wrench, Activity, Link2, MessageSquare, Zap, Sparkles } from "lucide-react";
 
-const API_URL = "/api/waitlist";
+const API_URL = "/api/partners";
 
 const schema = z.object({
   fullName: z.string().min(1, "Full name is required"),
@@ -559,7 +559,7 @@ export default function WaitlistForm() {
       >
         {status === "submitting" ? (
           <span className="flex items-center justify-center gap-2">
-            <Loader2 size={18} className="motion-safe:animate-spin" /> Submitting\u2026
+            <Loader2 size={18} className="motion-safe:animate-spin" /> Submitting…
           </span>
         ) : (
           <span className="flex items-center justify-center gap-2">

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Minus } from "lucide-react";
 import { CheckIcon as Check } from "@/components/ui/check";
 import { ZapIcon as Zap } from "@/components/ui/zap";
-import { PRICING_SPEC_CTA, IS_EARLY_ACCESS, WAITLIST_URL, isExternal } from "@/lib/cta-config";
+import { PRICING_SPEC_CTA, IS_EARLY_ACCESS, PARTNERS_URL, isExternal } from "@/lib/cta-config";
 
 const MONTHLY_TIERS = [
   {
@@ -229,7 +229,7 @@ export default function PricingSpecSheet({ billingPeriod = "monthly" }: PricingS
                 }`}
               >
                 <Link
-                  href={IS_EARLY_ACCESS ? WAITLIST_URL : "#"}
+                  href={IS_EARLY_ACCESS ? PARTNERS_URL : "#"}
                   {...(IS_EARLY_ACCESS ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                   className={`block w-full py-3.5 font-bold text-[10px] uppercase tracking-widest transition-all rounded-lg border text-center ${
                     tier.id === activeTier

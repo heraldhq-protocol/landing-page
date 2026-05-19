@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import WaitlistForm from "@/components/marketing/waitlist/WaitlistForm";
-import DesignPartnerOffer from "@/components/marketing/waitlist/DesignPartnerOffer";
+import WaitlistForm from "@/components/marketing/partners/WaitlistForm";
+import DesignPartnerOffer from "@/components/marketing/partners/DesignPartnerOffer";
 import { ogUrl } from "@/lib/og";
 
 export const metadata: Metadata = {

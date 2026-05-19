@@ -46,7 +46,7 @@ const BRAND_EMAIL_HTML = (body: Record<string, string>) => {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<title>New waitlist signup — Herald</title>
+<title>New partner signup — Herald</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root { color-scheme:light dark; }
@@ -87,7 +87,7 @@ const BRAND_EMAIL_HTML = (body: Record<string, string>) => {
             <img src="https://herald-storage-bucket.s3.eu-north-1.amazonaws.com/herald-logo.svg" width="32" height="32" alt="Herald">
             <span class="brand-name" style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px;letter-spacing:-0.01em;color:#0F172A;">Herald</span>
           </div>
-          <span class="protocol-tag" style="font-size:10px;text-transform:uppercase;letter-spacing:0.16em;color:#64748B;font-weight:700;">Waitlist</span>
+          <span class="protocol-tag" style="font-size:10px;text-transform:uppercase;letter-spacing:0.16em;color:#64748B;font-weight:700;">Partners</span>
         </div>
       </div>
       <div class="card" style="background:#FFFFFF;border:1px solid #E2E8F0;border-radius:8px;padding:32px;">
@@ -97,7 +97,7 @@ const BRAND_EMAIL_HTML = (body: Record<string, string>) => {
         </div>
         <h1 class="headline" style="font-family:'Syne',sans-serif;font-size:24px;font-weight:700;line-height:1.2;letter-spacing:-0.022em;color:#0F172A;margin:0 0 10px;">${body.fullName}</h1>
         <p class="body-text" style="font-size:15px;line-height:1.6;color:#475569;margin:0 0 24px;font-weight:400;">
-          New waitlist registration from <strong>${body.protocolName}</strong>. Details below.
+          New partner registration from <strong>${body.protocolName}</strong>. Details below.
         </p>
         <table class="meta" style="width:100%;border-collapse:collapse;font-size:14px;">
           <tbody>${rows}</tbody>
@@ -125,10 +125,10 @@ export async function POST(request: Request) {
     const body = await request.json();
 
     const { error } = await resend.emails.send({
-      from: "waitlist@useherald.xyz",
+      from: "partners@useherald.xyz",
       to: ["hello@useherald.xyz"],
       bcc: ["herald.admin@gmail.com"],
-      subject: `New waitlist signup: ${body.fullName} — ${body.protocolName}`,
+      subject: `New partner signup: ${body.fullName} — ${body.protocolName}`,
       html: BRAND_EMAIL_HTML(body),
     });
 
