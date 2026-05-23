@@ -1,17 +1,19 @@
 ---
 title: TypeScript SDK
-description: The official @herald-protocol/sdk for interacting with the Herald Registry.
+description: The official @herald-protocol/sdk for interacting with the Herald Registry and Notification Gateway.
 ---
 
 # TypeScript SDK
 
-The `@herald-protocol/sdk` is the easiest way to integrate privacy-preserving notifications into your app. It provides high-level abstractions for registration, identity lookups, channel management, E2E encryption, and sending notifications.
+The `@herald-protocol/sdk` is the easiest way to integrate privacy-preserving notifications into your app. It provides high-level abstractions for registration, identity lookups, channel management, E2E encryption, sending notifications, webhooks, analytics, and scheduled sends.
 
 ## Installation
 
 ```bash
 npm install @herald-protocol/sdk
 ```
+
+---
 
 ## The Five Clients
 
@@ -55,23 +57,30 @@ const canSend = await readClient.checkProtocolCanSend(protocolPubkey);
 ```
 
 ### 3. `Herald` (Gateway Client)
-**Use for**: Protocols sending notifications via our API.
-- Send messages to individual wallets.
-- Broadcast to all your subscribers at once.
-- Manage your subscriber audience.
-- Check messaging quotas and delivery status.
+**Use for**: Protocols sending notifications via the Herald API.
+- Send messages to individual wallets or in bulk.
+- Broadcast to all your subscribers.
+- Schedule one-time and recurring notifications.
+- Manage webhooks, email templates, and analytics.
+- Track ZK on-chain receipt status.
 
 ```typescript
 import { Herald } from '@herald-protocol/sdk';
 
 const herald = new Herald({ apiKey: 'hrld_live_...' });
-await herald.notify({ wallet: '...', subject: '...' });
 
-// Broadcast to all subscribers
-await herald.broadcast({ subject: 'Governance Alert', body: '...', category: 'governance' });
+// Send a single notification
+const result = await herald.notify({
+  wallet: '7xR4mKp2nQ...',
+  subject: 'Liquidation Warning',
+  body: 'Your health factor dropped to 1.03.',
+  category: 'defi',
+  receipt: true,
+});
 
-// Manage subscriptions
-await herald.subscribe({ walletAddress: '...' });
+console.log(result.notificationId);    // UUID
+console.log(result.status);            // 'queued'
+console.log(result.receiptTx);         // null — populated after on-chain write
 ```
 
 ### 4. `NotificationKeyClient`
@@ -130,9 +139,111 @@ await channelClient.registerSms({
 
 ---
 
-## Audience & Broadcast
+## Sending Notifications
 
-Protocols can build a subscriber list (audience) and broadcast notifications to all of them with a single API call.
+### Single notification
+
+```typescript
+const result = await herald.notify({
+  wallet: '7xR4mKp2nQ...',
+  subject: 'Position at risk',
+  body: 'Your health factor on MarginFi is 1.03.',
+  category: 'defi',            // 'defi' | 'governance' | 'system' | 'marketing' | 'security'
+  priority: 'critical',        // 'normal' | 'important' | 'critical' — critical adds SMS fallback
+  preferredChannel: 'telegram', // optional channel hint
+  receipt: true,               // write ZK proof of delivery on-chain
+  idempotencyKey: `liq_${wallet}_${Date.now()}`,
+});
+
+console.log(result.notificationId);     // UUID
+console.log(result.status);             // 'queued' | 'opted_out' | 'duplicate' | 'failed'
+console.log(result.recipientRegistered); // boolean | null
+console.log(result.estimatedDeliveryMs); // number
+console.log(result.deliveryChannel);     // 'email' | 'telegram' | 'sms' | null
+```
+
+### Bulk notification (up to 100 wallets)
+
+```typescript
+const result = await herald.notifyBulk({
+  wallets: ['7xR4...', '9yG2...', 'Kp3n...'],
+  subject: 'Governance Proposal Live',
+  body: 'Vote on proposal #42 before it closes.',
+  category: 'governance',
+  receipt: true,
+  idempotencyPrefix: 'prop42',  // each wallet gets 'prop42:{wallet}'
+});
+
+// result.results is a NotifyResult[] in the same order as wallets
+result.results.forEach((r, i) => {
+  console.log(`Wallet ${i}: ${r.status}`);
+});
+```
+
+### Preview before sending
+
+```typescript
+const preview = await herald.preview({
+  wallet: '7xR4mKp2nQ...',
+  subject: 'Your weekly summary',
+  body: '## Summary\n\nHere are your stats...',
+  category: 'defi',
+  templateId: 'tmpl_xxx',
+});
+
+console.log(preview.renderedHtml);   // full HTML email
+console.log(preview.telegramText);   // Telegram markdown
+console.log(preview.smsText);        // plain-text SMS
+```
+
+---
+
+## Delivery Status & ZK Receipts
+
+### Check notification status
+
+```typescript
+const status = await herald.getStatus(notificationId);
+
+console.log(status.status);               // 'delivered' | 'queued' | 'failed' ...
+console.log(status.deliveredAt);          // ISO datetime or null
+console.log(status.receiptStatus);        // 'pending' | 'confirmed' | 'failed' | 'disabled'
+console.log(status.receiptTx);            // Solana tx signature, once confirmed
+console.log(status.receiptFailureReason); // human-readable error if receiptStatus is 'failed'
+console.log(status.writeReceipt);         // whether a receipt was requested
+```
+
+The `receiptStatus` lifecycle:
+
+| Value | Meaning |
+| :--- | :--- |
+| `pending` | Notification delivered — receipt not yet written on-chain |
+| `confirmed` | ZK receipt landed on Solana (`receiptTx` is populated) |
+| `failed` | On-chain write failed — check `receiptFailureReason` |
+| `disabled` | Receipt was not requested for this notification |
+
+### Poll until delivered
+
+```typescript
+// Waits up to 30s, polling every 2s
+const final = await herald.waitForDelivery(notificationId, 30_000, 2_000);
+console.log(final.status);        // 'delivered' | 'failed' | 'opted_out' | 'blocked'
+console.log(final.receiptStatus); // 'confirmed' once the on-chain write lands
+```
+
+### List notifications
+
+```typescript
+const { data, total, page } = await herald.listNotifications({ page: 1, limit: 50 });
+
+data.forEach((n) => {
+  console.log(n.notification_id, n.status, n.receipt_status);
+});
+```
+
+---
+
+## Audience & Broadcast
 
 ### Building your audience
 
@@ -142,10 +253,10 @@ Users are added to your audience in three ways:
 2. **SDK** — Call `herald.subscribe()` after the user signs a transaction in your app.
 3. **Automatic backfill** — Any wallet that already received a notification from you is counted in your audience.
 
-### Subscribing a wallet
+### Managing subscriptions
 
 ```typescript
-// Subscribe a wallet to your protocol's notification list
+// Subscribe a wallet
 await herald.subscribe({
   walletAddress: '7xR4mKp2nQ...',
   channels: ['email', 'telegram'], // optional, defaults to ['email']
@@ -166,7 +277,7 @@ const result = await herald.broadcast({
   subject: 'Governance Vote: Protocol Upgrade v2',
   body: 'A governance proposal to upgrade the protocol is live. Vote before May 24.',
   category: 'governance',
-  receipt: true, // write ZK receipts (optional)
+  receipt: false, // receipts default to false for broadcasts
 });
 
 console.log(result.broadcast_id);        // batch ID
@@ -179,9 +290,210 @@ Broadcast requires **Growth tier** or above.
 
 ---
 
-## Encryption Utilities
+## Scheduled Notifications
 
-The SDK exposes low-level encryption helpers for custom integrations.
+### One-time scheduled send
+
+```typescript
+const schedule = await herald.scheduleOnce({
+  wallet: '7xR4mKp2nQ...',
+  subject: 'Your staking rewards are ready',
+  body: 'You have 12.4 SOL in unclaimed staking rewards.',
+  category: 'defi',
+  scheduledFor: '2026-06-01T09:00:00Z', // ISO 8601
+  timezone: 'America/New_York',
+});
+
+console.log(schedule.id);        // schedule ID
+console.log(schedule.status);    // 'PENDING'
+console.log(schedule.nextRunAt); // when it will fire
+```
+
+### Recurring notifications via cron
+
+```typescript
+const recurring = await herald.scheduleRecurring({
+  wallet: '7xR4mKp2nQ...',
+  subject: 'Weekly portfolio summary',
+  body: 'Here is your weekly DeFi activity report.',
+  category: 'defi',
+  cronExpr: '0 9 * * 1', // every Monday at 09:00 UTC
+  timezone: 'UTC',
+});
+```
+
+### Managing schedules
+
+```typescript
+// List all scheduled notifications
+const { items, total } = await herald.listScheduled({ page: 1, limit: 50 });
+
+// Cancel a schedule
+await herald.cancelScheduled(schedule.id);
+// { cancelled: true }
+```
+
+---
+
+## Webhooks
+
+### Registering an endpoint
+
+```typescript
+const webhook = await herald.createWebhook({
+  url: 'https://myprotocol.com/webhooks/herald',
+  events: ['notification.delivered', 'notification.failed', 'notification.bounced'],
+});
+
+// The secret is shown ONCE — store it securely
+console.log(webhook.secret); // 'whsec_xxx...'
+console.log(webhook.id);     // 'wh_01HX...'
+```
+
+### Managing webhooks
+
+```typescript
+// List all registered endpoints
+const webhooks = await herald.listWebhooks();
+
+// Update events or URL
+await herald.updateWebhook(webhook.id, {
+  events: ['notification.delivered'],
+  isActive: true,
+});
+
+// Send a test event to verify connectivity
+await herald.testWebhook(webhook.id);
+
+// Remove an endpoint
+await herald.deleteWebhook(webhook.id);
+```
+
+### Verifying signatures (static method)
+
+```typescript
+import { Herald } from '@herald-protocol/sdk';
+
+// In your webhook handler:
+const isValid = await Herald.verifyWebhookSignature(
+  rawBody,                              // string | Buffer
+  request.headers['x-herald-signature'], // 't=...,v1=...'
+  process.env.HERALD_WEBHOOK_SECRET!,
+);
+
+if (!isValid) return new Response('Unauthorized', { status: 401 });
+```
+
+---
+
+## Email Templates
+
+Custom templates require **Growth tier** or above.
+
+```typescript
+// Create a template
+const { templateId } = await herald.createEmailTemplate({
+  name: 'Liquidation Alert',
+  category: 'defi',
+  subjectTemplate: 'Your {{protocol}} position is at risk',
+  htmlSource: '<h1>Alert</h1><p>Health factor: {{healthFactor}}</p>',
+  textSource: 'Health factor: {{healthFactor}}',
+  heraldFooter: 'minimal',
+});
+
+// Use it when sending
+await herald.notify({
+  wallet: '...',
+  subject: 'Position at risk',
+  body: '...',
+  templateId,
+  templateVariables: { protocol: 'MarginFi', healthFactor: '1.03' },
+});
+
+// List templates
+const { data } = await herald.listEmailTemplates();
+
+// Update (creates a new version)
+await herald.updateEmailTemplate(templateId, {
+  htmlSource: '<h1>Updated Alert</h1>...',
+});
+
+// Remove a template
+await herald.deleteEmailTemplate(templateId);
+```
+
+---
+
+## Analytics
+
+### Delivery analytics
+
+```typescript
+const analytics = await herald.getAnalytics('30d'); // '7d' | '30d' | '90d'
+
+console.log(analytics.total_sends);    // 4521
+console.log(analytics.delivery_rate);  // 0.993 (99.3%)
+console.log(analytics.bounce_rate);    // 0.002
+console.log(analytics.breakdown);      // { delivered, failed, opted_out, bounced }
+```
+
+### Engagement metrics
+
+```typescript
+const engagement = await herald.getEngagement({
+  startDate: '2026-05-01',
+  endDate: '2026-05-31',
+});
+
+console.log(engagement.openRate);        // percentage as decimal
+console.log(engagement.clickRate);
+console.log(engagement.unsubscribeRate);
+```
+
+### Audience insights
+
+```typescript
+const audience = await herald.getAudience();
+
+console.log(audience.totalRegistered);           // total Herald-registered wallets
+console.log(audience.broadcastableSubscribers);  // opted-in to your protocol
+console.log(audience.channelCoverage);           // { email: 92, telegram: 41, sms: 12 }
+console.log(audience.registrationTrend);         // [{ date, count }]
+```
+
+### Protocol info & quota
+
+```typescript
+const protocol = await herald.getProtocol();
+console.log(protocol.tier);               // 0-3 (Developer → Enterprise)
+console.log(protocol.tier_name);          // 'Growth'
+console.log(protocol.sends_this_period);  // usage counter
+console.log(protocol.subscription_expires_at);
+
+// Current period usage
+const usage = await herald.getUsage();
+console.log(usage.remaining);     // sends left this period
+console.log(usage.overageEnabled); // whether overages are allowed
+```
+
+### API request log
+
+```typescript
+const log = await herald.getRequestLog({
+  page: 1,
+  limit: 50,
+  statusCode: 400,      // filter by HTTP status (optional)
+  endpoint: '/v1/notify', // filter by path substring (optional)
+});
+
+log.items.forEach((req) => {
+  console.log(req.method, req.endpoint, req.statusCode, req.latencyMs + 'ms');
+});
+```
+
+---
+
+## Encryption Utilities
 
 ```typescript
 import {
@@ -208,10 +520,7 @@ const x25519Pubkey = deriveX25519FromEd25519(ed25519Pubkey);
 ```typescript
 import { findIdentityPda, findProtocolPda, deriveAllIdentityAddresses } from '@herald-protocol/sdk';
 
-// Find the identity PDA for a wallet
 const [identityPda] = findIdentityPda(userPublicKey, programId);
-
-// Find the protocol PDA
 const [protocolPda] = findProtocolPda(protocolPubkey, programId);
 ```
 
@@ -219,23 +528,25 @@ const [protocolPda] = findProtocolPda(protocolPubkey, programId);
 
 ## Error Handling
 
-The SDK uses semantic error codes to help you debug quickly.
-
 ```typescript
-import { isHeraldErrorCode } from '@herald-protocol/sdk';
+import { HeraldError } from '@herald-protocol/sdk';
 
 try {
-  await herald.notify(...)
+  await herald.notify({ ... });
 } catch (e) {
-  if (isHeraldErrorCode(e, 'INSUFFICIENT_QUOTA')) {
-    console.error("Please top up your messaging credits.");
+  if (e instanceof HeraldError) {
+    console.error(e.status);  // HTTP status
+    console.error(e.code);    // e.g. 'INSUFFICIENT_QUOTA'
+    console.error(e.message); // human-readable
   }
 }
 ```
 
+---
+
 ## Sub-modules
 
-- **`@herald-protocol/sdk/billing`**: Manage subscriptions and Helio payments.
-- **`@herald-protocol/sdk/channels`**: Advanced configuration for Telegram and SMS.
-- **`@herald-protocol/sdk/encryption`**: Low-level encryption utilities.
-- **`@herald-protocol/sdk/events`**: Real-time event streaming with `HeraldEventListener`.
+- **`@herald-protocol/sdk/billing`** — Manage subscriptions and Helio payments.
+- **`@herald-protocol/sdk/channels`** — Advanced configuration for Telegram and SMS.
+- **`@herald-protocol/sdk/encryption`** — Low-level encryption utilities.
+- **`@herald-protocol/sdk/events`** — Real-time event streaming with `HeraldEventListener`.

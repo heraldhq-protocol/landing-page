@@ -1,69 +1,129 @@
 ---
 title: Webhooks
-description: Receive real-time push notifications of delivery results and ZK-attestation events.
+description: Receive real-time push notifications of delivery results and ZK-receipt events.
 ---
 
-Herald provides outbound webhooks to notify your backend when a notification has been successfully delivered or when a ZK-receipt has been minted on-chain.
+Herald sends outbound webhooks to your backend when a notification is delivered, bounced, or fails — and when ZK receipts land on-chain.
 
-### Endpoint Configuration
+## Registering an Endpoint
 
-Webhooks are configured via the Herald Dashboard. Every webhook event includes a signature in the header for verification.
+### Via SDK (recommended)
 
-```bash
-# Example Header
-X-Herald-Signature: t=161454...,v1=9c...
+```typescript
+import { Herald } from "@herald-protocol/sdk";
+
+const herald = new Herald({ apiKey: process.env.HERALD_API_KEY! });
+
+const webhook = await herald.createWebhook({
+  url: "https://myprotocol.com/webhooks/herald",
+  events: ["notification.delivered", "notification.failed", "notification.bounced"],
+});
+
+// The secret is shown ONCE — store it immediately
+console.log(webhook.secret); // 'whsec_xxx...'
+console.log(webhook.id);     // 'wh_01HX...'
 ```
 
-### Event Types
-
-| Event | Trigger |
-| :--- | :--- |
-| `notification.delivered` | The message has been successfully handed off to the provider (SES/TG/SMS). |
-| `notification.bounced` | The email bounced back (hard or soft bounce). |
-| `notification.failed` | Delivery failed after all retry attempts. |
-| `receipt.minted` | The ZK-proof of delivery has been written to the Solana blockchain. |
-| `user.registered` | A new user has mapped their public key to a contact channel. |
-| `quota.exceeded` | The protocol has exceeded its monthly messaging quota. |
-
-### Payload Example
-
-```json
-{
-  "id": "evt_01HX4...",
-  "type": "notification.delivered",
-  "created": 1614547200,
-  "data": {
-    "notification_id": "hrld_xxx",
-    "wallet": "7xR4mKp2nQ...",
-    "channel": "telegram",
-    "deliveredAt": "2026-04-25T12:00:00Z",
-    "receiptTx": "5xK9mP..."
-  }
-}
-```
-
-### Managing Webhooks
-
-Webhooks can be managed via the REST API or the [Herald Dashboard](https://app.useherald.xyz).
+### Via REST API
 
 ```bash
-# Register a new webhook
 curl -X POST https://api.useherald.xyz/v1/webhooks \
   -H "Authorization: Bearer hrld_live_xxx" \
   -H "Content-Type: application/json" \
   -d '{
     "url": "https://myprotocol.com/webhooks/herald",
-    "events": ["notification.delivered", "receipt.minted"]
+    "events": ["notification.delivered", "notification.failed", "notification.bounced"]
   }'
-
-# List all webhooks
-curl -X GET https://api.useherald.xyz/v1/webhooks \
-  -H "Authorization: Bearer hrld_live_xxx"
 ```
 
-### Security
+---
 
-We recommend verifying the `X-Herald-Signature` header using your webhook secret to ensure the event originated from Herald's Nitro Enclave.
+## Managing Webhooks
+
+```typescript
+// List all registered endpoints
+const webhooks = await herald.listWebhooks();
+
+// Update events or URL
+await herald.updateWebhook(webhook.id, {
+  events: ["notification.delivered"],
+  isActive: true,
+});
+
+// Send a test event to verify connectivity
+await herald.testWebhook(webhook.id);
+
+// Remove an endpoint
+await herald.deleteWebhook(webhook.id);
+```
+
+---
+
+## Event Types
+
+| Event | Trigger |
+| :--- | :--- |
+| `notification.delivered` | Message handed off to the provider (SES / Telegram / SMS). |
+| `notification.bounced` | Email bounced (hard or soft). |
+| `notification.failed` | Delivery failed after all retry attempts. |
+| `receipt.confirmed` | ZK proof of delivery written to Solana (`receipt_tx` populated). |
+| `quota.exceeded` | Protocol exceeded its monthly messaging quota. |
+
+---
+
+## Payload Shape
+
+All webhook events share the same envelope:
+
+```json
+{
+  "id": "evt_01HX4...",
+  "type": "notification.delivered",
+  "created": 1716000000,
+  "data": {
+    "notification_id": "01HWXYZ...",
+    "wallet": "7xR4mKp2nQ...",
+    "channel": "telegram",
+    "delivered_at": "2026-05-17T12:34:56Z"
+  }
+}
+```
+
+For `receipt.confirmed` events, `data` also includes:
+
+```json
+{
+  "receipt_tx": "5xK9mPqR...",
+  "confirmed_at": "2026-05-17T12:35:10Z"
+}
+```
+
+---
+
+## Signature Verification
+
+Every webhook request includes an `x-herald-signature` header:
+
+```
+x-herald-signature: t=1716000000,v1=9c3f...
+```
+
+### Via SDK (recommended)
+
+```typescript
+import { Herald } from "@herald-protocol/sdk";
+
+// In your webhook handler:
+const isValid = await Herald.verifyWebhookSignature(
+  rawBody,                                        // string | Buffer
+  request.headers["x-herald-signature"],          // 't=...,v1=...'
+  process.env.HERALD_WEBHOOK_SECRET!,
+);
+
+if (!isValid) return new Response("Unauthorized", { status: 401 });
+```
+
+### Manual verification
 
 ```typescript
 import { createHmac, timingSafeEqual } from "node:crypto";
@@ -73,34 +133,66 @@ function verifyWebhookSignature(
   signatureHeader: string,
   secret: string
 ): boolean {
-  const [timestamp, signature] = signatureHeader
-    .split(",")
-    .map((s) => s.split("=")[1]);
+  const parts = signatureHeader.split(",");
+  const timestamp = parts[0]?.split("=")[1] ?? "";
+  const signature = parts[1]?.split("=")[1] ?? "";
 
   const signedPayload = `${timestamp}.${payload}`;
-  const expectedSig = createHmac("sha256", secret)
+  const expected = createHmac("sha256", secret)
     .update(signedPayload)
     .digest("hex");
 
-  return timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSig));
+  return timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
 }
+```
 
-// Usage in your webhook handler
+---
+
+## Full Next.js Handler Example
+
+```typescript
+// app/api/webhooks/herald/route.ts
+import { NextResponse } from "next/server";
+import { Herald } from "@herald-protocol/sdk";
+
 export async function POST(request: Request) {
   const payload = await request.text();
-  const sig = request.headers.get("X-Herald-Signature") ?? "";
-  const isValid = verifyWebhookSignature(
+  const sig = request.headers.get("x-herald-signature") ?? "";
+
+  const isValid = await Herald.verifyWebhookSignature(
     payload,
     sig,
     process.env.HERALD_WEBHOOK_SECRET!
   );
 
-  if (!isValid) return new Response("Unauthorized", { status: 401 });
+  if (!isValid) {
+    return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
+  }
 
   const event = JSON.parse(payload);
-  // handle event...
-  return new Response("OK", { status: 200 });
+
+  switch (event.type) {
+    case "notification.delivered":
+      console.log(`Delivered: ${event.data.notification_id} via ${event.data.channel}`);
+      break;
+    case "notification.bounced":
+      console.warn(`Bounced: ${event.data.notification_id}`);
+      break;
+    case "notification.failed":
+      console.error(`Failed: ${event.data.notification_id}`);
+      break;
+    case "receipt.confirmed":
+      console.log(`ZK receipt on-chain: ${event.data.receipt_tx}`);
+      break;
+    case "quota.exceeded":
+      console.error("Monthly quota exceeded — upgrade your tier!");
+      break;
+  }
+
+  return NextResponse.json({ received: true });
 }
 ```
 
-**Note**: Your webhook secret (`whsec_xxx`) is returned when you register a webhook endpoint. Store it securely and never expose it in client-side code.
+---
+
+**Note**: Your webhook secret (`whsec_xxx`) is returned when you register an endpoint and never shown again. Store it in an environment variable and never expose it in client-side code.

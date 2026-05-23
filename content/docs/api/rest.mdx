@@ -15,9 +15,11 @@ All requests (except `/health`) must include a Bearer token in the `Authorizatio
 Authorization: Bearer hrld_live_your_key_here
 ```
 
-## Endpoints
+---
 
-### 1. Send Notification
+## Notifications
+
+### Send Notification
 `POST /v1/notify`
 
 Queues a notification for a specific wallet address.
@@ -26,24 +28,52 @@ Queues a notification for a specific wallet address.
 ```json
 {
   "wallet": "7xR4mKp2nQ...",
-  "subject": "Hello World",
-  "body": "Your notification content here.",
+  "subject": "Liquidation Warning",
+  "body": "Your health factor dropped to 1.03.",
   "category": "defi",
-  "idempotencyKey": "unique-uuid"
+  "priority": "critical",
+  "preferredChannel": "telegram",
+  "receipt": true,
+  "idempotencyKey": "liq_7xR4_1716000000000"
 }
 ```
+
+| Field | Type | Required | Description |
+| :--- | :--- | :--- | :--- |
+| `wallet` | string | Yes | Solana wallet address |
+| `subject` | string | Yes | Notification subject line |
+| `body` | string | Yes | Notification body (Markdown supported) |
+| `category` | string | Yes | `defi` \| `governance` \| `system` \| `marketing` \| `security` |
+| `priority` | string | No | `normal` \| `important` \| `critical` — `critical` adds SMS fallback |
+| `preferredChannel` | string | No | `email` \| `telegram` \| `sms` — hint only |
+| `receipt` | boolean | No | Write ZK proof of delivery on-chain (default `false`) |
+| `templateId` | string | No | Email template ID (Growth tier+) |
+| `templateVariables` | object | No | Variables to inject into the template |
+| `idempotencyKey` | string | No | Prevents duplicate sends |
 
 **Response (202 Accepted):**
 ```json
 {
-  "notificationId": "ulid_01H..."
+  "notificationId": "01HWXYZ...",
+  "status": "queued",
+  "recipientRegistered": true,
+  "estimatedDeliveryMs": 3200,
+  "deliveryChannel": "telegram",
+  "environment": "production"
 }
 ```
 
+| Field | Description |
+| :--- | :--- |
+| `status` | `queued` \| `opted_out` \| `duplicate` \| `failed` |
+| `recipientRegistered` | Whether the wallet is registered with Herald |
+| `estimatedDeliveryMs` | Estimated time to delivery in milliseconds |
+| `deliveryChannel` | Channel selected for delivery |
+
 ---
 
-### 2. Batch Notification
-`POST /v1/notify/batch`
+### Bulk Notification
+`POST /v1/notify/bulk`
 
 Send up to 100 notifications in a single request.
 
@@ -51,8 +81,22 @@ Send up to 100 notifications in a single request.
 ```json
 {
   "notifications": [
-    { "wallet": "0x1...", "subject": "Update 1", "body": "..." },
-    { "wallet": "0x2...", "subject": "Update 2", "body": "..." }
+    {
+      "wallet": "7xR4mKp2nQ...",
+      "subject": "Governance Proposal Live",
+      "body": "Vote on proposal #42 before it closes.",
+      "category": "governance",
+      "receipt": true,
+      "idempotencyKey": "prop42:7xR4mKp2nQ"
+    },
+    {
+      "wallet": "9yG2nRp4xQ...",
+      "subject": "Governance Proposal Live",
+      "body": "Vote on proposal #42 before it closes.",
+      "category": "governance",
+      "receipt": true,
+      "idempotencyKey": "prop42:9yG2nRp4xQ"
+    }
   ]
 }
 ```
@@ -60,54 +104,60 @@ Send up to 100 notifications in a single request.
 **Response (202 Accepted):**
 ```json
 {
-  "batchId": "ulid_batch_...",
-  "count": 2
+  "results": [
+    {
+      "notificationId": "01HWXYZ...",
+      "status": "queued",
+      "recipientRegistered": true,
+      "estimatedDeliveryMs": 3200,
+      "deliveryChannel": "email"
+    },
+    {
+      "notificationId": "01HWYZA...",
+      "status": "opted_out",
+      "recipientRegistered": true,
+      "estimatedDeliveryMs": null,
+      "deliveryChannel": null
+    }
+  ]
 }
 ```
 
+Results are returned in the same order as the input `notifications` array.
+
 ---
 
-### 3. Get Status
+### Get Notification Status
 `GET /v1/notifications/:id`
 
-Retrieves the current status of a notification.
+Retrieves the current delivery and receipt status of a notification.
 
 **Response (200 OK):**
 ```json
 {
-  "id": "ulid_01H...",
+  "notification_id": "01HWXYZ...",
+  "wallet": "7xR4mKp2nQ...",
+  "subject": "Liquidation Warning",
   "status": "delivered",
-  "channel": "email",
-  "deliveredAt": "2024-04-12T20:00:00Z",
-  "receiptTx": "solana_signature_..."
+  "delivery_channel": "telegram",
+  "delivered_at": "2026-05-17T12:34:56Z",
+  "created_at": "2026-05-17T12:34:50Z",
+  "write_receipt": true,
+  "receipt_status": "confirmed",
+  "receipt_tx": "5xK9mPqR...",
+  "receipt_failure_reason": null,
+  "last_receipt_attempt_at": "2026-05-17T12:35:10Z"
 }
 ```
 
----
+**`receipt_status` values:**
 
-## Rate Limits
-
-| Tier | Requests/sec | Monthly Limit |
-| :--- | :--- | :--- |
-| **Developer** | 2 | 1,000 |
-| **Growth** | 20 | 50,000 |
-| **Scale** | 100 | 250,000 |
-| **Enterprise** | 500 | 1,000,000 |
-
-*Rates are enforced based on the API key provided. Check your usage via `GET /v1/usage`.*
-
----
-
-## Additional Endpoints
-
-### Health Check
-`GET /health`
-
-No authentication required. Returns the service health status.
-
-```json
-{ "status": "ok", "timestamp": "2026-04-25T12:00:00Z" }
-```
+| Value | Meaning |
+| :--- | :--- |
+| `pending` | Notification delivered — ZK receipt not yet written on-chain |
+| `confirmed` | Receipt landed on Solana (`receipt_tx` is populated) |
+| `failed` | On-chain write failed — see `receipt_failure_reason` |
+| `disabled` | Receipt was not requested for this notification |
 
 ---
 
@@ -117,40 +167,155 @@ No authentication required. Returns the service health status.
 Returns paginated notifications for the authenticated protocol.
 
 **Query Parameters:**
-- `limit` (optional, default 20, max 100)
-- `offset` (optional, default 0)
+- `page` (optional, default `1`)
+- `limit` (optional, default `20`, max `100`)
 
 **Response (200 OK):**
 ```json
 {
-  "notifications": [
+  "data": [
     {
-      "id": "ulid_01H...",
+      "notification_id": "01HWXYZ...",
       "wallet": "7xR4mKp2nQ...",
+      "subject": "Liquidation Warning",
       "status": "delivered",
-      "channel": "email",
-      "createdAt": "2024-04-12T20:00:00Z"
+      "delivery_channel": "email",
+      "receipt_status": "confirmed",
+      "receipt_tx": "5xK9mP...",
+      "created_at": "2026-05-17T12:34:56Z"
     }
   ],
   "total": 142,
-  "hasMore": true
+  "page": 1
 }
 ```
 
 ---
 
-### Webhooks
+### Preview Notification
+`POST /v1/preview`
 
-#### Register Webhook
+Render how a notification will look before sending. Useful for template testing.
+
+**Request Body:**
+```json
+{
+  "wallet": "7xR4mKp2nQ...",
+  "subject": "Your weekly summary",
+  "body": "## Summary\n\nHere are your stats...",
+  "category": "defi",
+  "templateId": "tmpl_xxx"
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "renderedHtml": "<html>...</html>",
+  "telegramText": "*Your weekly summary*\n\nHere are your stats...",
+  "smsText": "Your weekly summary: Here are your stats..."
+}
+```
+
+---
+
+## Schedules
+
+### Schedule One-Time Send
+`POST /v1/schedule`
+
+**Request Body:**
+```json
+{
+  "wallet": "7xR4mKp2nQ...",
+  "subject": "Your staking rewards are ready",
+  "body": "You have 12.4 SOL in unclaimed staking rewards.",
+  "category": "defi",
+  "scheduledFor": "2026-06-01T09:00:00Z",
+  "timezone": "America/New_York"
+}
+```
+
+**Response (201 Created):**
+```json
+{
+  "id": "sched_01H...",
+  "status": "PENDING",
+  "nextRunAt": "2026-06-01T13:00:00Z"
+}
+```
+
+---
+
+### Schedule Recurring (Cron)
+`POST /v1/schedule/cron`
+
+**Request Body:**
+```json
+{
+  "wallet": "7xR4mKp2nQ...",
+  "subject": "Weekly portfolio summary",
+  "body": "Here is your weekly DeFi activity report.",
+  "category": "defi",
+  "cronExpr": "0 9 * * 1",
+  "timezone": "UTC"
+}
+```
+
+**Response (201 Created):**
+```json
+{
+  "id": "sched_01H...",
+  "status": "PENDING",
+  "nextRunAt": "2026-05-26T09:00:00Z"
+}
+```
+
+---
+
+### List Schedules
+`GET /v1/schedule`
+
+**Query Parameters:** `page`, `limit`
+
+**Response (200 OK):**
+```json
+{
+  "items": [
+    {
+      "id": "sched_01H...",
+      "wallet": "7xR4mKp2nQ...",
+      "subject": "Weekly portfolio summary",
+      "status": "PENDING",
+      "nextRunAt": "2026-05-26T09:00:00Z"
+    }
+  ],
+  "total": 3
+}
+```
+
+---
+
+### Cancel Schedule
+`DELETE /v1/schedule/:id`
+
+**Response (200 OK):**
+```json
+{ "cancelled": true }
+```
+
+---
+
+## Webhooks
+
+### Register Webhook
 `POST /v1/webhooks`
-
-Register a URL to receive delivery event notifications.
 
 **Request Body:**
 ```json
 {
   "url": "https://myprotocol.com/webhooks/herald",
-  "events": ["notification.delivered", "receipt.minted"]
+  "events": ["notification.delivered", "notification.failed", "notification.bounced"]
 }
 ```
 
@@ -159,104 +324,367 @@ Register a URL to receive delivery event notifications.
 {
   "id": "wh_01HX...",
   "url": "https://myprotocol.com/webhooks/herald",
-  "secret": "whsec_xxx"
+  "events": ["notification.delivered", "notification.failed", "notification.bounced"],
+  "isActive": true,
+  "secret": "whsec_xxx..."
 }
 ```
 
-#### List Webhooks
-`GET /v1/webhooks`
-
-Returns all registered webhooks for the protocol.
-
-#### Update Webhook
-`PATCH /v1/webhooks/:id`
-
-Update webhook URL or event subscriptions.
-
-#### Delete Webhook
-`DELETE /v1/webhooks/:id`
-
-Remove a webhook endpoint.
+The `secret` is shown **once** — store it immediately.
 
 ---
 
-### Analytics
+### List Webhooks
+`GET /v1/webhooks`
+
+**Response (200 OK):**
+```json
+[
+  {
+    "id": "wh_01HX...",
+    "url": "https://myprotocol.com/webhooks/herald",
+    "events": ["notification.delivered"],
+    "isActive": true
+  }
+]
+```
+
+---
+
+### Update Webhook
+`PATCH /v1/webhooks/:id`
+
+**Request Body:**
+```json
+{
+  "events": ["notification.delivered", "notification.bounced"],
+  "isActive": true
+}
+```
+
+**Response (200 OK):** Updated webhook object.
+
+---
+
+### Test Webhook
+`POST /v1/webhooks/:id/test`
+
+Sends a synthetic `notification.delivered` event to verify connectivity.
+
+**Response (200 OK):**
+```json
+{ "sent": true }
+```
+
+---
+
+### Delete Webhook
+`DELETE /v1/webhooks/:id`
+
+**Response (204 No Content)**
+
+---
+
+## Email Templates
+
+Custom templates require **Growth tier** or above.
+
+### Create Template
+`POST /v1/templates/email`
+
+**Request Body:**
+```json
+{
+  "name": "Liquidation Alert",
+  "category": "defi",
+  "subjectTemplate": "Your {{protocol}} position is at risk",
+  "htmlSource": "<h1>Alert</h1><p>Health factor: {{healthFactor}}</p>",
+  "textSource": "Health factor: {{healthFactor}}",
+  "heraldFooter": "minimal"
+}
+```
+
+**Response (201 Created):**
+```json
+{ "templateId": "tmpl_01HX..." }
+```
+
+---
+
+### List Templates
+`GET /v1/templates/email`
+
+**Response (200 OK):**
+```json
+{
+  "data": [
+    {
+      "id": "tmpl_01HX...",
+      "name": "Liquidation Alert",
+      "category": "defi",
+      "createdAt": "2026-05-01T00:00:00Z"
+    }
+  ]
+}
+```
+
+---
+
+### Get Template
+`GET /v1/templates/email/:id`
+
+---
+
+### Update Template
+`PUT /v1/templates/email/:id`
+
+Creates a new version of the template.
+
+---
+
+### Delete Template
+`DELETE /v1/templates/email/:id`
+
+**Response (204 No Content)**
+
+---
+
+## Analytics
+
+### Delivery Analytics
 `GET /v1/analytics`
 
-Returns delivery analytics for the authenticated protocol.
-
 **Query Parameters:**
-- `period` (optional: `7d`, `30d`, `90d`, default `30d`)
+- `period` — `7d` | `30d` | `90d` (default `30d`)
 
 **Response (200 OK):**
 ```json
 {
   "period": "30d",
-  "totalSent": 4521,
-  "totalDelivered": 4489,
-  "deliveryRate": 99.3,
-  "byChannel": {
-    "email": 3200,
-    "telegram": 1289
+  "total_sends": 4521,
+  "delivery_rate": 0.993,
+  "bounce_rate": 0.002,
+  "breakdown": {
+    "delivered": 4489,
+    "failed": 14,
+    "opted_out": 12,
+    "bounced": 6
   }
 }
 ```
 
 ---
 
+### Engagement Metrics
+`GET /v1/engagement`
+
+**Query Parameters:** `startDate`, `endDate` (ISO 8601 dates)
+
+**Response (200 OK):**
+```json
+{
+  "openRate": 0.412,
+  "clickRate": 0.089,
+  "unsubscribeRate": 0.003
+}
+```
+
+---
+
+### Audience Insights
+`GET /v1/audience`
+
+**Response (200 OK):**
+```json
+{
+  "totalRegistered": 18420,
+  "broadcastableSubscribers": 4200,
+  "channelCoverage": {
+    "email": 92,
+    "telegram": 41,
+    "sms": 12
+  },
+  "registrationTrend": [
+    { "date": "2026-05-01", "count": 42 },
+    { "date": "2026-05-02", "count": 67 }
+  ]
+}
+```
+
+---
+
+### Protocol Info
+`GET /v1/protocols/me`
+
+**Response (200 OK):**
+```json
+{
+  "id": "proto_01HX...",
+  "name": "My Protocol",
+  "tier": 1,
+  "tier_name": "Growth",
+  "sends_this_period": 12450,
+  "subscription_expires_at": "2026-06-01T00:00:00Z"
+}
+```
+
+| `tier` | Name |
+| :--- | :--- |
+| `0` | Developer |
+| `1` | Growth |
+| `2` | Scale |
+| `3` | Enterprise |
+
+---
+
 ### Usage
 `GET /v1/usage`
 
-Returns current usage vs. quota for the billing period.
-
 **Response (200 OK):**
 ```json
 {
-  "tier": "growth",
-  "limit": 50000,
-  "used": 12450,
+  "tier": 1,
+  "usage": 12450,
   "remaining": 37550,
-  "resetsAt": "2026-05-25T00:00:00Z"
+  "overageEnabled": false,
+  "resetsAt": "2026-06-01T00:00:00Z"
 }
 ```
 
 ---
 
-### Billing Status
-`GET /v1/billing/status`
+### API Request Log
+`GET /v1/requests`
 
-Returns current subscription tier and payment status.
+**Query Parameters:**
+- `page` (default `1`)
+- `limit` (default `50`, max `100`)
+- `statusCode` — filter by HTTP status (optional)
+- `endpoint` — filter by path substring (optional)
 
 **Response (200 OK):**
 ```json
 {
-  "tier": "growth",
-  "status": "active",
-  "subscriptionExpiresAt": "2026-05-25T00:00:00Z",
-  "helioCheckoutUrl": "https://helio.xyz/checkout/..."
+  "items": [
+    {
+      "method": "POST",
+      "endpoint": "/v1/notify",
+      "statusCode": 202,
+      "latencyMs": 84,
+      "timestamp": "2026-05-17T12:34:56Z"
+    }
+  ],
+  "total": 320,
+  "page": 1
 }
 ```
 
 ---
 
-### Preview
-`POST /v1/preview`
+## Subscriptions
 
-Preview how a notification will be rendered before sending. Useful for testing templates.
+### Subscribe Wallet
+`POST /v1/subscriptions`
+
+```json
+{
+  "walletAddress": "7xR4mKp2nQ...",
+  "channels": ["email", "telegram"]
+}
+```
+
+### Check Subscription
+`GET /v1/subscriptions/:wallet`
+
+```json
+{
+  "subscribed": true,
+  "channels": ["email"],
+  "subscribedAt": "2026-05-01T00:00:00Z"
+}
+```
+
+### Unsubscribe Wallet
+`DELETE /v1/subscriptions/:wallet`
+
+---
+
+## Broadcast
+`POST /v1/broadcast`
+
+Requires **Growth tier** or above.
 
 **Request Body:**
 ```json
 {
-  "subject": "Test Alert",
-  "body": "This is a preview of your notification.",
-  "category": "defi"
+  "subject": "Governance Vote: Protocol Upgrade v2",
+  "body": "A governance proposal is live. Vote before May 24.",
+  "category": "governance",
+  "receipt": false
 }
 ```
 
-**Response (200 OK):**
+**Response (202 Accepted):**
 ```json
 {
-  "renderedHtml": "<html>...</html>",
-  "renderedText": "Test Alert\n\nThis is a preview..."
+  "broadcast_id": "bcast_01H...",
+  "queued_count": 4200,
+  "total_subscribers": 4200,
+  "estimated_delivery_s": 120
 }
 ```
+
+---
+
+## Health Check
+`GET /health`
+
+No authentication required.
+
+```json
+{ "status": "ok", "timestamp": "2026-05-17T12:00:00Z" }
+```
+
+---
+
+## Rate Limits
+
+| Tier | Requests/sec | Monthly Sends |
+| :--- | :--- | :--- |
+| **Developer** | 2 | 1,000 |
+| **Growth** | 20 | 50,000 |
+| **Scale** | 100 | 250,000 |
+| **Enterprise** | 500 | 1,000,000 |
+
+Rate limit headers are included in every response:
+```
+X-RateLimit-Limit: 20
+X-RateLimit-Remaining: 19
+X-RateLimit-Reset: 1716000060
+```
+
+---
+
+## Error Responses
+
+All errors follow a consistent shape:
+
+```json
+{
+  "statusCode": 400,
+  "error": "Bad Request",
+  "message": "wallet is required",
+  "code": "VALIDATION_ERROR"
+}
+```
+
+Common error codes:
+
+| Code | HTTP | Description |
+| :--- | :--- | :--- |
+| `INVALID_API_KEY` | 401 | Missing or malformed API key |
+| `INSUFFICIENT_QUOTA` | 402 | Monthly send limit reached |
+| `WALLET_NOT_REGISTERED` | 404 | Wallet has no Herald identity |
+| `DUPLICATE_IDEMPOTENCY_KEY` | 409 | Notification already sent with this key |
+| `RATE_LIMIT_EXCEEDED` | 429 | Too many requests |
+| `TEMPLATE_NOT_FOUND` | 404 | Template ID does not exist |

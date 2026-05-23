@@ -12,23 +12,18 @@ A complete Express.js server that monitors DeFi positions and sends liquidation 
 ```typescript
 import "dotenv/config";
 import express from "express";
-import { Herald, ReadClient } from "@herald-protocol/sdk";
+import { Herald, ReadClient, HeraldError } from "@herald-protocol/sdk";
 
 const app = express();
 app.use(express.json());
 
-const herald = new Herald({
-  apiKey: process.env.HERALD_API_KEY!,        // hrld_live_...
-  environment: process.env.HERALD_ENV ?? "production",
-});
-
+const herald = new Herald({ apiKey: process.env.HERALD_API_KEY! });
 const readClient = new ReadClient({ cluster: "mainnet-beta" });
 
-// Check if user can receive notifications before sending
 async function sendLiquidationAlert(wallet: string, healthFactor: number) {
   const isRegistered = await readClient.isRegistered(wallet);
   if (!isRegistered) {
-    console.log(`Wallet ${wallet} not registered. Skipping.`);
+    console.log(`Wallet ${wallet} not registered — skipping.`);
     return null;
   }
 
@@ -37,24 +32,26 @@ async function sendLiquidationAlert(wallet: string, healthFactor: number) {
     subject: "Liquidation Warning",
     body: `Your position health factor dropped to ${healthFactor.toFixed(2)}.`,
     category: "defi",
+    priority: "critical",
+    receipt: true,
     idempotencyKey: `liq_${wallet}_${Date.now()}`,
   });
 }
 
-// Example endpoint: your liquidation bot POSTs here
 app.post("/alert", async (req, res) => {
   const { wallet, healthFactor } = req.body;
   try {
     const result = await sendLiquidationAlert(wallet, healthFactor);
     if (!result) return res.json({ status: "skipped", reason: "unregistered" });
-    res.json({ status: "queued", notificationId: result.notificationId });
+    res.json({ status: result.status, notificationId: result.notificationId });
   } catch (e) {
-    console.error("Failed to send alert:", e);
+    if (e instanceof HeraldError) {
+      return res.status(e.status).json({ error: e.code, message: e.message });
+    }
     res.status(500).json({ error: "delivery_failed" });
   }
 });
 
-// Check delivery status endpoint
 app.get("/status/:notificationId", async (req, res) => {
   const status = await herald.getStatus(req.params.notificationId);
   res.json(status);
@@ -72,24 +69,18 @@ Trigger notifications from a Next.js app using Route Handlers.
 ```typescript
 // app/api/notify/route.ts
 import { NextResponse } from "next/server";
-import { Herald } from "@herald-protocol/sdk";
+import { Herald, HeraldError } from "@herald-protocol/sdk";
 
-const herald = new Herald({
-  apiKey: process.env.HERALD_API_KEY!,
-  environment: "production",
-});
+const herald = new Herald({ apiKey: process.env.HERALD_API_KEY! });
 
 export async function POST(request: Request) {
+  const { wallet, subject, body, category } = await request.json();
+
+  if (!wallet || !subject || !body) {
+    return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+  }
+
   try {
-    const { wallet, subject, body, category } = await request.json();
-
-    if (!wallet || !subject || !body) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
-    }
-
     const result = await herald.notify({
       wallet,
       subject,
@@ -99,93 +90,212 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json(
-      { notificationId: result.notificationId },
+      { notificationId: result.notificationId, status: result.status },
       { status: 202 }
     );
   } catch (e) {
-    const message = e instanceof Error ? e.message : "unknown error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    if (e instanceof HeraldError) {
+      return NextResponse.json({ error: e.code, message: e.message }, { status: e.status });
+    }
+    return NextResponse.json({ error: "internal_error" }, { status: 500 });
   }
 }
 ```
 
 ---
 
-## 3. Batch Airdrop Notifications
+## 3. Bulk Notifications
 
-Send notifications to multiple users efficiently.
+Send to many wallets at once using `notifyBulk`. The SDK maps your wallet list to individual notification objects internally.
 
 ```typescript
 import { Herald } from "@herald-protocol/sdk";
 
 const herald = new Herald({ apiKey: process.env.HERALD_API_KEY! });
 
-interface UserAlert {
-  wallet: string;
-  subject: string;
-  body: string;
-}
+async function notifyGovernanceVoters(wallets: string[], proposalId: number) {
+  // notifyBulk handles up to 100 wallets per call
+  for (let i = 0; i < wallets.length; i += 100) {
+    const chunk = wallets.slice(i, i + 100);
 
-async function sendBatchAlerts(alerts: UserAlert[]) {
-  // Process in chunks of 100 (API limit)
-  for (let i = 0; i < alerts.length; i += 100) {
-    const chunk = alerts.slice(i, i + 100);
-    const batch = chunk.map((a) => ({
-      wallet: a.wallet,
-      subject: a.subject,
-      body: a.body,
-      category: "governance" as const,
-      idempotencyKey: crypto.randomUUID(),
-    }));
+    const result = await herald.notifyBulk({
+      wallets: chunk,
+      subject: `Governance Proposal #${proposalId} Live`,
+      body: `Vote on proposal #${proposalId} before it closes.`,
+      category: "governance",
+      receipt: true,
+      idempotencyPrefix: `prop${proposalId}`, // each wallet gets `prop42:{wallet}`
+    });
 
-    try {
-      const result = await herald.notifyBatch({ notifications: batch });
-      console.log(
-        `Batch ${i / 100 + 1}: ${result.count} notifications queued`
-      );
-    } catch (e) {
-      console.error(`Batch ${i / 100 + 1} failed:`, e);
-    }
+    result.results.forEach((r, idx) => {
+      console.log(`Wallet ${chunk[idx]}: ${r.status}`);
+    });
   }
 }
-
-// Usage
-sendBatchAlerts([
-  { wallet: "7xR4...", subject: "Proposal Passed", body: "Vote #42 passed." },
-  { wallet: "9yG2...", subject: "Proposal Passed", body: "Vote #42 passed." },
-]);
 ```
 
 ---
 
-## 4. Webhook Receiver with Signature Verification
+## 4. Receipt Status Polling
+
+Wait for a ZK receipt to land on-chain after sending a critical notification.
+
+```typescript
+import { Herald } from "@herald-protocol/sdk";
+
+const herald = new Herald({ apiKey: process.env.HERALD_API_KEY! });
+
+async function sendAndConfirmReceipt(wallet: string) {
+  const result = await herald.notify({
+    wallet,
+    subject: "Security Alert",
+    body: "Unusual activity detected on your account.",
+    category: "security",
+    priority: "critical",
+    receipt: true,
+    idempotencyKey: `sec_${wallet}_${Date.now()}`,
+  });
+
+  console.log(`Queued: ${result.notificationId}`);
+
+  // Wait up to 60s for delivery, polling every 3s
+  const delivered = await herald.waitForDelivery(result.notificationId, 60_000, 3_000);
+  console.log(`Delivery status: ${delivered.status}`);
+
+  if (delivered.receiptStatus === "confirmed") {
+    console.log(`ZK receipt on-chain: ${delivered.receiptTx}`);
+  } else if (delivered.receiptStatus === "failed") {
+    console.warn(`Receipt failed: ${delivered.receiptFailureReason}`);
+  }
+}
+```
+
+---
+
+## 5. Scheduled Notifications
+
+Send a one-time reminder and a weekly recurring digest.
+
+```typescript
+import { Herald } from "@herald-protocol/sdk";
+
+const herald = new Herald({ apiKey: process.env.HERALD_API_KEY! });
+
+// One-time: notify at a specific time
+const oneTime = await herald.scheduleOnce({
+  wallet: "7xR4mKp2nQ...",
+  subject: "Staking rewards ready",
+  body: "You have 12.4 SOL in unclaimed staking rewards.",
+  category: "defi",
+  scheduledFor: "2026-06-01T09:00:00Z",
+  timezone: "America/New_York",
+});
+
+console.log(`Scheduled ${oneTime.id} — fires at ${oneTime.nextRunAt}`);
+
+// Recurring: every Monday at 09:00 UTC
+const weekly = await herald.scheduleRecurring({
+  wallet: "7xR4mKp2nQ...",
+  subject: "Weekly portfolio summary",
+  body: "Here is your weekly DeFi activity report.",
+  category: "defi",
+  cronExpr: "0 9 * * 1",
+  timezone: "UTC",
+});
+
+console.log(`Recurring ${weekly.id} — next run: ${weekly.nextRunAt}`);
+
+// Cancel a schedule
+await herald.cancelScheduled(oneTime.id);
+```
+
+---
+
+## 6. Broadcast to All Subscribers
+
+Announce a governance vote to your entire subscriber list.
+
+```typescript
+import { Herald } from "@herald-protocol/sdk";
+
+const herald = new Herald({ apiKey: process.env.HERALD_API_KEY! });
+
+const result = await herald.broadcast({
+  subject: "Governance Vote: Protocol Upgrade v2",
+  body: "A governance proposal to upgrade the protocol is live. Vote before May 24.",
+  category: "governance",
+  receipt: false,
+});
+
+console.log(`Broadcast ${result.broadcast_id}`);
+console.log(`Enqueued ${result.queued_count} / ${result.total_subscribers} subscribers`);
+console.log(`Estimated delivery: ${result.estimated_delivery_s}s`);
+```
+
+Broadcast requires **Growth tier** or above.
+
+---
+
+## 7. Email Templates
+
+Create a reusable template with dynamic variables, then send it.
+
+```typescript
+import { Herald } from "@herald-protocol/sdk";
+
+const herald = new Herald({ apiKey: process.env.HERALD_API_KEY! });
+
+// Create the template once
+const { templateId } = await herald.createEmailTemplate({
+  name: "Liquidation Alert",
+  category: "defi",
+  subjectTemplate: "Your {{protocol}} position is at risk",
+  htmlSource: `
+    <h1>Position Alert</h1>
+    <p>Your health factor on <strong>{{protocol}}</strong> dropped to <strong>{{healthFactor}}</strong>.</p>
+    <a href="{{dashboardUrl}}">Manage Position →</a>
+  `,
+  textSource: "Health factor on {{protocol}}: {{healthFactor}}. Manage: {{dashboardUrl}}",
+  heraldFooter: "minimal",
+});
+
+// Use it when sending
+await herald.notify({
+  wallet: "7xR4mKp2nQ...",
+  subject: "Position at risk",
+  body: "Your health factor is critically low.",
+  category: "defi",
+  templateId,
+  templateVariables: {
+    protocol: "MarginFi",
+    healthFactor: "1.03",
+    dashboardUrl: "https://app.marginfi.com",
+  },
+});
+```
+
+---
+
+## 8. Webhook Receiver with Signature Verification
+
+Use the SDK's built-in `verifyWebhookSignature` static method.
 
 ```typescript
 // app/api/webhooks/herald/route.ts
 import { NextResponse } from "next/server";
-import { createHmac, timingSafeEqual } from "node:crypto";
-
-function verifySignature(
-  payload: string,
-  signatureHeader: string,
-  secret: string
-): boolean {
-  const parts = signatureHeader.split(",");
-  const timestamp = parts[0]?.split("=")[1] ?? "";
-  const signature = parts[1]?.split("=")[1] ?? "";
-  const signedPayload = `${timestamp}.${payload}`;
-  const expected = createHmac("sha256", secret)
-    .update(signedPayload)
-    .digest("hex");
-  return timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
-}
+import { Herald } from "@herald-protocol/sdk";
 
 export async function POST(request: Request) {
   const payload = await request.text();
-  const sig = request.headers.get("X-Herald-Signature") ?? "";
-  const secret = process.env.HERALD_WEBHOOK_SECRET!;
+  const sig = request.headers.get("x-herald-signature") ?? "";
 
-  if (!verifySignature(payload, sig, secret)) {
+  const isValid = await Herald.verifyWebhookSignature(
+    payload,
+    sig,
+    process.env.HERALD_WEBHOOK_SECRET!
+  );
+
+  if (!isValid) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
   }
 
@@ -193,10 +303,13 @@ export async function POST(request: Request) {
 
   switch (event.type) {
     case "notification.delivered":
-      console.log(`Delivered: ${event.data.notification_id}`);
+      console.log(`Delivered: ${event.data.notification_id} via ${event.data.channel}`);
       break;
     case "notification.bounced":
       console.warn(`Bounced: ${event.data.notification_id}`);
+      break;
+    case "notification.failed":
+      console.error(`Failed: ${event.data.notification_id}`);
       break;
     case "quota.exceeded":
       console.error("Monthly quota exceeded — upgrade tier!");
@@ -209,13 +322,49 @@ export async function POST(request: Request) {
 
 ---
 
-## 5. React User Registration Check
+## 9. Registering and Managing Webhooks via SDK
 
-Frontend component to check registration and prompt users.
+```typescript
+import { Herald } from "@herald-protocol/sdk";
+
+const herald = new Herald({ apiKey: process.env.HERALD_API_KEY! });
+
+// Register an endpoint
+const webhook = await herald.createWebhook({
+  url: "https://myprotocol.com/webhooks/herald",
+  events: ["notification.delivered", "notification.failed", "notification.bounced"],
+});
+
+// Store this immediately — shown only once
+console.log(`Webhook secret: ${webhook.secret}`);
+console.log(`Webhook ID: ${webhook.id}`);
+
+// Verify connectivity
+await herald.testWebhook(webhook.id);
+
+// Update event subscriptions
+await herald.updateWebhook(webhook.id, {
+  events: ["notification.delivered", "notification.bounced"],
+  isActive: true,
+});
+
+// List all endpoints
+const all = await herald.listWebhooks();
+console.log(`${all.length} webhook(s) registered`);
+
+// Remove when done
+await herald.deleteWebhook(webhook.id);
+```
+
+---
+
+## 10. React User Registration Check
+
+Frontend component to check wallet registration status.
 
 ```typescript
 "use client";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { ReadClient } from "@herald-protocol/sdk";
 import { useEffect, useState } from "react";
 
@@ -238,7 +387,7 @@ export function NotificationSettings() {
         <p>Notifications are active for this wallet.</p>
       ) : (
         <a
-          href={`https://notify.useherald.xyz/register?wallet=${publicKey.toBase58()}`}
+          href={`https://notify.useherald.xyz/join?wallet=${publicKey.toBase58()}`}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -250,8 +399,11 @@ export function NotificationSettings() {
 }
 ```
 
+---
+
 ## Next Steps
 
+- [TypeScript SDK Reference](/docs/sdk/typescript) — full SDK documentation.
+- [REST API Reference](/docs/api/rest) — direct HTTP endpoints.
+- [Webhooks](/docs/webhooks) — event types and signature verification.
 - [Production Checklist](/docs/guides/production-checklist) — go-to-market readiness.
-- [REST API Reference](/docs/api/rest) — all available endpoints.
-- [Troubleshooting](/docs/guides/troubleshooting) — common errors and fixes.
