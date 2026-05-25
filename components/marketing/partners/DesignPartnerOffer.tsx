@@ -6,7 +6,11 @@ import { CheckIcon as Check } from "@/components/ui/check";
 const OFFER_ITEMS = [
   {
     title: "Free Growth tier",
-    desc: "$99/mo value — full access for 6 months, not just sandbox",
+    desc: "$99/mo value — full access for 1 month, not just sandbox",
+  },
+  {
+    title: "6 months 30% discount",
+    desc: "30% off all paid plans for 6 months after your trial ends.",
   },
   {
     title: "Direct founder access",
@@ -18,7 +22,7 @@ const OFFER_ITEMS = [
   },
   {
     title: "Design Partner badge",
-    desc: '"Herald Design Partner" badge for your site and ours — signals technical leadership.',
+    desc: '"Herald Design Partner" badge for your site and yours — signals technical leadership.',
   },
 ];
 
@@ -82,8 +86,8 @@ export default function DesignPartnerOffer() {
               <span className="text-teal">Direct influence.</span>
             </h3>
             <p className="text-text-secondary mb-8 text-base leading-relaxed max-w-sm">
-              Real value, not sandbox access. You get the full Growth tier and a
-              seat at our roadmap table.
+              Real value, not sandbox access. One month free on Growth, then
+              30% off for 6 months — plus a seat at our roadmap table.
             </p>
 
             <ul className="space-y-4">
