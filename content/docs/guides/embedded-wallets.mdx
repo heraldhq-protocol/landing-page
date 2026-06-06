@@ -1,0 +1,219 @@
+---
+title: Embedded Wallets & Privy
+description: Learn how to embed the Herald User Portal inside your dApp using Privy or other app-scoped wallets.
+---
+
+# Embedded Wallets & Privy
+
+Many modern Solana dApps use embedded wallet providers like **Privy**, **Dynamic**, or **Web3Auth** to sign up users with their email or Google accounts. 
+
+Because these embedded wallets are scoped to a specific application, users cannot connect them to external websites like `notify.useherald.xyz`. 
+
+To solve this, Herald allows you to **embed the User Portal directly inside your application via an iframe** and delegate wallet connection and signatures to your host app over a secure `postMessage` protocol.
+
+---
+
+## 1. How It Works
+
+```mermaid
+sequenceDiagram
+    participant PartnerApp as Host App (Drift/Mango)
+    participant Privy as Privy Wallet
+    participant Herald as Herald Iframe
+    
+    PartnerApp->>Herald: Mount iframe with ?embed=true
+    Note over Herald: Portal detects iframe &<br/>loads IframeWalletAdapter
+    Herald->>PartnerApp: postMessage: connect
+    PartnerApp->>Privy: Get user public key
+    Privy-->>PartnerApp: PublicKey (7xR4m...)
+    PartnerApp->>Herald: postMessage: connect_response
+    Note over Herald: Wizard proceeds to Email/Preferences
+    Herald->>PartnerApp: postMessage: signTransaction (base58)
+    PartnerApp->>Privy: signTransaction(tx)
+    Privy-->>PartnerApp: Signed Transaction
+    PartnerApp->>Herald: postMessage: signTransaction_response
+```
+
+---
+
+## 2. postMessage Protocol Specification
+
+When embedded, the Herald Portal communicates using `window.parent.postMessage`. All requests sent from the iframe have the following format:
+
+```typescript
+interface HeraldRequest {
+  source: "HERALD_PORTAL_IFRAME";
+  requestId: string; // Unique ID to correlate requests and responses
+  action: "connect" | "disconnect" | "signTransaction" | "signMessage";
+  params: {
+    transaction?: string; // bs58-encoded transaction (only for signTransaction)
+    isVersioned?: boolean; // whether transaction is a VersionedTransaction
+    message?: string; // bs58-encoded message string (only for signMessage)
+  };
+}
+```
+
+Your host application must listen for these requests, perform the necessary action using the Privy wallet, and reply back to the iframe using:
+
+```typescript
+interface HeraldResponse {
+  target: "HERALD_PORTAL_IFRAME";
+  requestId: string; // Matches the request's requestId
+  result?: any; // Action result (string or object)
+  error?: string; // Error message if the action failed/declined
+}
+```
+
+---
+
+## 3. Host Application Implementation
+
+Here is a complete, clean React hook implementation you can drop into your host dApp (e.g. next to your Privy wallet provider). It handles the message events, executes signatures via Privy's Solana wallet, and replies to the iframe:
+
+```tsx
+import { useEffect, useRef } from "react";
+import { useSolanaWallet } from "@privy-io/react-auth/solana"; // Privy's Solana hook
+import bs58 from "bs58";
+
+export function useHeraldIframeListener() {
+  const { wallet } = useSolanaWallet();
+  const walletRef = useRef(wallet);
+  walletRef.current = wallet;
+
+  useEffect(() => {
+    const handleMessage = async (event: MessageEvent) => {
+      const data = event.data;
+      if (!data || data.source !== "HERALD_PORTAL_IFRAME") return;
+
+      // Security: Validate message origin matches the official Herald portal domain
+      if (event.origin !== "https://notify.useherald.xyz") return;
+
+      const { action, params, requestId } = data;
+      const currentWallet = walletRef.current;
+
+      const reply = (result: any = null, error: string | null = null) => {
+        if (event.source) {
+          (event.source as Window).postMessage(
+            {
+              target: "HERALD_PORTAL_IFRAME",
+              requestId,
+              result,
+              error,
+            },
+            event.origin // Security: Reply specifically to the verified origin of the iframe
+          );
+        }
+      };
+
+      try {
+        if (!currentWallet) {
+          throw new Error("No wallet connected in the host application");
+        }
+
+        switch (action) {
+          case "connect": {
+            // Send back the user's public key
+            reply(currentWallet.address);
+            break;
+          }
+
+          case "signTransaction": {
+            const { transaction: serializedBase58, isVersioned } = params;
+            if (!serializedBase58) throw new Error("Missing transaction payload");
+
+            // 1. Decode transaction bytes
+            const txBytes = bs58.decode(serializedBase58);
+
+            // 2. Sign transaction via Privy
+            // Privy's Solana wallet adapter matches the standard signTransaction interface
+            const signedTxBytes = await currentWallet.signTransaction(txBytes);
+
+            // 3. Send back the signed base58 bytes
+            reply({ signedTransaction: bs58.encode(signedTxBytes) });
+            break;
+          }
+
+          case "signMessage": {
+            const { message: messageBase58 } = params;
+            if (!messageBase58) throw new Error("Missing message payload");
+
+            const messageBytes = bs58.decode(messageBase58);
+            const signatureBytes = await currentWallet.signMessage(messageBytes);
+
+            reply({ signature: bs58.encode(signatureBytes) });
+            break;
+          }
+
+          case "disconnect": {
+            reply(true);
+            break;
+          }
+
+          default:
+            reply(null, `Unsupported iframe action: ${action}`);
+        }
+      } catch (err: any) {
+        console.error("Herald iframe adapter error:", err);
+        reply(null, err.message || "Failed to process request");
+      }
+    };
+
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
+}
+```
+
+### Rendering the Iframe
+
+Inside your settings page or notification modal, mount the Herald User Portal with the `embed=true` query parameter:
+
+```tsx
+export function HeraldSettingsWidget({ protocolId }: { protocolId: string }) {
+  // Activate Privy message listener
+  useHeraldIframeListener();
+
+  // Get the current origin dynamically in the browser (or hardcode your host URL)
+  const hostOrigin = typeof window !== "undefined" ? window.location.origin : "";
+
+  return (
+    <div className="w-full h-[600px] border border-border rounded-2xl overflow-hidden bg-card">
+      <iframe
+        id="herald-portal-iframe"
+        src={`https://notify.useherald.xyz/register?embed=true&protocolId=${protocolId}&parentOrigin=${encodeURIComponent(hostOrigin)}`}
+        className="w-full h-full border-none"
+        title="Herald Notification Preferences"
+        allow="clipboard-write" // Allows copy-to-clipboard inside iframe
+      />
+    </div>
+  );
+}
+```
+
+---
+
+## 4. Registration Completion Event
+
+When the user completes the registration or sign-in flow successfully, the Herald Portal posts a message back to the host window with the action `"onRegistrationComplete"`. 
+
+This enables your host app to close the preferences modal or update its local UI state:
+
+```typescript
+interface RegistrationCompleteResponse {
+  source: "HERALD_PORTAL_IFRAME";
+  action: "onRegistrationComplete";
+  params: {
+    txSignature: string; // The Solana transaction signature (or "already-registered")
+    alreadyRegistered: boolean; // Whether the user was already registered
+  };
+}
+```
+
+You can listen for this event in your message handler:
+
+```typescript
+if (action === "onRegistrationComplete") {
+  console.log("User subscription successful:", params.txSignature);
+  // Close the preferences modal or update local application state
+}
+```
