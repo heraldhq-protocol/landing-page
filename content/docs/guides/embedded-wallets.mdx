@@ -15,24 +15,7 @@ To solve this, Herald allows you to **embed the User Portal directly inside your
 
 ## 1. How It Works
 
-```mermaid
-sequenceDiagram
-    participant PartnerApp as Host App (Drift/Mango)
-    participant Privy as Privy Wallet
-    participant Herald as Herald Iframe
-    
-    PartnerApp->>Herald: Mount iframe with ?embed=true
-    Note over Herald: Portal detects iframe &<br/>loads IframeWalletAdapter
-    Herald->>PartnerApp: postMessage: connect
-    PartnerApp->>Privy: Get user public key
-    Privy-->>PartnerApp: PublicKey (7xR4m...)
-    PartnerApp->>Herald: postMessage: connect_response
-    Note over Herald: Wizard proceeds to Email/Preferences
-    Herald->>PartnerApp: postMessage: signTransaction (base58)
-    PartnerApp->>Privy: signTransaction(tx)
-    Privy-->>PartnerApp: Signed Transaction
-    PartnerApp->>Herald: postMessage: signTransaction_response
-```
+![Embedded Wallet Sequence Flow](/images/embedded-wallet-flow.png)
 
 ---
 
