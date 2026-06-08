@@ -49,13 +49,61 @@ interface HeraldResponse {
 
 ---
 
-## 3. Host Application Implementation
+## 3. Integration Methods
 
-Here is a complete, clean React hook implementation you can drop into your host dApp (e.g. next to your Privy wallet provider). It handles the message events, executes signatures via Privy's Solana wallet, and replies to the iframe:
+You can integrate the Herald embedded iframe using either our official React SDK helper exports (recommended) or write a custom manual integration.
+
+### Option A: Using the React SDK (Recommended)
+
+If you are using React or Next.js, our official SDK provides out-of-the-box components and hooks that handle the protocol communication, address validation, and wallet state updates automatically.
+
+#### 1. Install the SDK
+```bash
+npm install @herald-protocol/sdk
+```
+
+#### 2. Implement the Widget
+Import `HeraldIframe` and the `useHeraldIframeListener` hook. Pass your host dApp's active wallet state (e.g. from Privy, Dynamic, or standard wallet adapters) into the listener.
 
 ```tsx
-import { useEffect, useRef } from "react";
 import { useSolanaWallet } from "@privy-io/react-auth/solana"; // Privy's Solana hook
+import { HeraldIframe, useHeraldIframeListener } from "@herald-protocol/sdk/react";
+
+export function HeraldSettingsWidget({ protocolId }: { protocolId: string }) {
+  const { wallet } = useSolanaWallet();
+
+  // 1. Automatically handles all 'connect', 'signTransaction', and 'signMessage' iframe requests.
+  // It also automatically propagates wallet changes (switches or disconnects) from the host into the iframe.
+  useHeraldIframeListener({
+    wallet,
+    onRegistrationComplete: (txSignature, alreadyRegistered) => {
+      console.log(`Successfully subscribed! Tx: ${txSignature}. Already registered: ${alreadyRegistered}`);
+      // e.g., Close your settings modal, show success toasts, etc.
+    }
+  });
+
+  // 2. Render the iframe safely with optimal styling
+  return (
+    <div className="w-full h-[600px] border border-border rounded-2xl overflow-hidden bg-card">
+      <HeraldIframe protocolId={protocolId} />
+    </div>
+  );
+}
+```
+
+---
+
+### Option B: Manual Integration (Custom / Non-React Apps)
+
+If you are not using React or need a custom implementation, you can write the event listener and iframe manually.
+
+#### 1. Create a Custom Message Listener Hook
+Here is the manual hook implementation that includes robust address validations and watches for host-side wallet state changes to broadcast them into the iframe:
+
+```typescript
+import { useEffect, useRef } from "react";
+import { useSolanaWallet } from "@privy-io/react-auth/solana";
+import { PublicKey } from "@solana/web3.js";
 import bs58 from "bs58";
 
 export function useHeraldIframeListener() {
@@ -63,13 +111,46 @@ export function useHeraldIframeListener() {
   const walletRef = useRef(wallet);
   walletRef.current = wallet;
 
+  const pubkey = wallet?.address || 
+    (typeof wallet?.publicKey === 'string' ? wallet?.publicKey : wallet?.publicKey?.toBase58());
+
+  // Broadcast host wallet switches/disconnects to the embedded iframe(s)
+  useEffect(() => {
+    const notifyIframesOfWalletChange = () => {
+      const iframes = document.querySelectorAll("iframe");
+      iframes.forEach((iframe) => {
+        try {
+          const iframeUrl = new URL(iframe.src);
+          // Match official Herald portal domain or localhost for testing
+          if (iframeUrl.origin === "https://notify.useherald.xyz" || iframeUrl.origin === "http://localhost:3000") {
+            if (pubkey) {
+              iframe.contentWindow?.postMessage(
+                { source: "HERALD_HOST_APPLICATION", action: "hostWalletSwitch", params: { address: pubkey } },
+                iframeUrl.origin
+              );
+            } else {
+              iframe.contentWindow?.postMessage(
+                { source: "HERALD_HOST_APPLICATION", action: "hostDisconnect" },
+                iframeUrl.origin
+              );
+            }
+          }
+        } catch {
+          // Ignore cross-origin / parsing errors
+        }
+      });
+    };
+
+    notifyIframesOfWalletChange();
+  }, [pubkey]);
+
   useEffect(() => {
     const handleMessage = async (event: MessageEvent) => {
       const data = event.data;
       if (!data || data.source !== "HERALD_PORTAL_IFRAME") return;
 
-      // Security: Validate message origin matches the official Herald portal domain
-      if (event.origin !== "https://notify.useherald.xyz") return;
+      // Security: Validate message origin
+      if (event.origin !== "https://notify.useherald.xyz" && event.origin !== "http://localhost:3000") return;
 
       const { action, params, requestId } = data;
       const currentWallet = walletRef.current;
@@ -77,41 +158,44 @@ export function useHeraldIframeListener() {
       const reply = (result: any = null, error: string | null = null) => {
         if (event.source) {
           (event.source as Window).postMessage(
-            {
-              target: "HERALD_PORTAL_IFRAME",
-              requestId,
-              result,
-              error,
-            },
-            event.origin // Security: Reply specifically to the verified origin of the iframe
+            { target: "HERALD_PORTAL_IFRAME", requestId, result, error },
+            event.origin
           );
         }
       };
 
       try {
+        if (action === "onRegistrationComplete") {
+          console.log("Subscription complete:", params.txSignature);
+          return;
+        }
+
         if (!currentWallet) {
           throw new Error("No wallet connected in the host application");
         }
 
         switch (action) {
           case "connect": {
-            // Send back the user's public key
-            reply(currentWallet.address);
+            const address = currentWallet.address;
+            if (!address) throw new Error("Wallet public key is not available");
+            
+            // Validate address is a Solana public key (cross-chain safeguard)
+            try {
+              new PublicKey(address);
+            } catch {
+              throw new Error(`Invalid Solana address: ${address}. Please switch to a Solana account.`);
+            }
+            
+            reply(address);
             break;
           }
 
           case "signTransaction": {
-            const { transaction: serializedBase58, isVersioned } = params;
+            const { transaction: serializedBase58 } = params;
             if (!serializedBase58) throw new Error("Missing transaction payload");
 
-            // 1. Decode transaction bytes
             const txBytes = bs58.decode(serializedBase58);
-
-            // 2. Sign transaction via Privy
-            // Privy's Solana wallet adapter matches the standard signTransaction interface
             const signedTxBytes = await currentWallet.signTransaction(txBytes);
-
-            // 3. Send back the signed base58 bytes
             reply({ signedTransaction: bs58.encode(signedTxBytes) });
             break;
           }
@@ -122,7 +206,6 @@ export function useHeraldIframeListener() {
 
             const messageBytes = bs58.decode(messageBase58);
             const signatureBytes = await currentWallet.signMessage(messageBytes);
-
             reply({ signature: bs58.encode(signatureBytes) });
             break;
           }
@@ -133,7 +216,7 @@ export function useHeraldIframeListener() {
           }
 
           default:
-            reply(null, `Unsupported iframe action: ${action}`);
+            reply(null, `Unsupported action: ${action}`);
         }
       } catch (err: any) {
         console.error("Herald iframe adapter error:", err);
@@ -147,16 +230,15 @@ export function useHeraldIframeListener() {
 }
 ```
 
-### Rendering the Iframe
-
-Inside your settings page or notification modal, mount the Herald User Portal with the `embed=true` query parameter:
+#### 2. Render the Iframe
+Render the iframe element with query parameters `embed=true`, `protocolId`, and `parentOrigin`. Be sure to set `allow="clipboard-write"` to enable secure copying functions inside the Portal.
 
 ```tsx
 export function HeraldSettingsWidget({ protocolId }: { protocolId: string }) {
   // Activate Privy message listener
   useHeraldIframeListener();
 
-  // Get the current origin dynamically in the browser (or hardcode your host URL)
+  // Get the current origin dynamically in the browser
   const hostOrigin = typeof window !== "undefined" ? window.location.origin : "";
 
   return (
@@ -166,7 +248,7 @@ export function HeraldSettingsWidget({ protocolId }: { protocolId: string }) {
         src={`https://notify.useherald.xyz/register?embed=true&protocolId=${protocolId}&parentOrigin=${encodeURIComponent(hostOrigin)}`}
         className="w-full h-full border-none"
         title="Herald Notification Preferences"
-        allow="clipboard-write" // Allows copy-to-clipboard inside iframe
+        allow="clipboard-write"
       />
     </div>
   );
@@ -177,9 +259,7 @@ export function HeraldSettingsWidget({ protocolId }: { protocolId: string }) {
 
 ## 4. Registration Completion Event
 
-When the user completes the registration or sign-in flow successfully, the Herald Portal posts a message back to the host window with the action `"onRegistrationComplete"`. 
-
-This enables your host app to close the preferences modal or update its local UI state:
+When the user completes registration or signs in, the Herald Portal posts an unsolicited `"onRegistrationComplete"` action back to the host window:
 
 ```typescript
 interface RegistrationCompleteResponse {
@@ -191,12 +271,5 @@ interface RegistrationCompleteResponse {
   };
 }
 ```
+You can listen for this event in your manual hook or pass `onRegistrationComplete` directly to the `useHeraldIframeListener` SDK hook.
 
-You can listen for this event in your message handler:
-
-```typescript
-if (action === "onRegistrationComplete") {
-  console.log("User subscription successful:", params.txSignature);
-  // Close the preferences modal or update local application state
-}
-```
