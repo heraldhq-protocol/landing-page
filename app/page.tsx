@@ -8,6 +8,7 @@ import FeatureGrid from "@/components/marketing/home/FeatureGrid";
 import CodePreview from "@/components/marketing/home/CodePreview";
 import PricingTable from "@/components/marketing/pricing/PricingTable";
 // import BlogStrip from "@/components/marketing/home/BlogStrip";
+import OrynthSection from "@/components/marketing/home/OrynthSection";
 import FinalCTA from "@/components/marketing/home/FinalCTA";
 import NavBar from "@/components/marketing/shared/NavBar";
 import Footer from "@/components/marketing/shared/Footer";
@@ -77,6 +78,9 @@ export default function HomePage() {
         <PricingTable />
       </section>
       {/* <BlogStrip /> */}
+      <section id="community">
+        <OrynthSection />
+      </section>
       <FinalCTA />
       <Footer />
     </div>
