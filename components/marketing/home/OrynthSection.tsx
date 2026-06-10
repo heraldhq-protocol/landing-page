@@ -1,10 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon as ArrowRight } from "@/components/ui/arrow-right";
+import { Copy, Check } from "lucide-react";
 
 const ORYNTH_URL = "https://orynth.dev/projects/herald-protocol";
+const CONTRACT_ADDRESS = "3ifTB4CtomDdMtMPNVaVZ6ViT8oUXenk9qZbrY4KMory";
+const EXPLORER_URL = `https://solscan.io/token/${CONTRACT_ADDRESS}`;
 
 const BELIEVER_BENEFITS = [
   {
@@ -20,6 +24,40 @@ const BELIEVER_BENEFITS = [
     benefit: "Private channel with direct access to the founders",
   },
 ];
+
+function CopyCAButton() {
+  const [copied, setCopied] = useState(false);
+
+  function handleCopy() {
+    navigator.clipboard.writeText(CONTRACT_ADDRESS).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
+
+  return (
+    <div className="flex items-center gap-2 p-3 rounded-xl bg-bg-elevated border border-border group hover:border-teal/30 transition-all duration-300">
+      <a
+        href={EXPLORER_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex-1 min-w-0"
+        title="View on Solscan"
+      >
+        <span className="font-mono text-xs text-text-secondary truncate block hover:text-teal transition-colors duration-200">
+          {CONTRACT_ADDRESS}
+        </span>
+      </a>
+      <button
+        onClick={handleCopy}
+        aria-label="Copy contract address"
+        className="shrink-0 w-7 h-7 flex items-center justify-center rounded-lg hover:bg-teal/10 text-text-muted hover:text-teal transition-all duration-200"
+      >
+        {copied ? <Check size={14} className="text-teal" /> : <Copy size={14} />}
+      </button>
+    </div>
+  );
+}
 
 export default function OrynthSection() {
   return (
@@ -43,6 +81,24 @@ export default function OrynthSection() {
             in products they believe in. Herald is listed — join the community
             shaping what gets built.
           </p>
+
+          {/* Contract address — center stage, under headline */}
+          <div className="mt-8 inline-flex flex-col items-center gap-2">
+            <span className="text-xs font-bold uppercase tracking-[0.18em] text-text-muted">
+              Official Contract Address
+            </span>
+            <div className="w-full max-w-sm">
+              <CopyCAButton />
+            </div>
+            <a
+              href={EXPLORER_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-text-muted hover:text-teal transition-colors duration-200"
+            >
+              Verify on Solscan ↗
+            </a>
+          </div>
         </div>
 
         {/* Badge + benefits */}
