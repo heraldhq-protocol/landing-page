@@ -9,6 +9,12 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowRightIcon as ArrowRight } from "@/components/ui/arrow-right";
 import { NetworkSolana } from "@web3icons/react";
 import { HERO_PROTOCOL_CTA, isExternal } from "@/lib/cta-config";
+import LiquidEther from "@/components/ui/liquid-ether";
+
+// Herald brand palette (from globals.css): teal monochrome — teal, teal-dim,
+// bg-surface. The third stop dissolves the fluid into the page so only teal
+// "veins" glow, keeping the hero on-brand and the headline legible.
+const LIQUID_COLORS = ["#00C896", "#007A5C", "#0A1628"];
 
 const STATS = [
   { label: "API response", value: "< 200ms" },
@@ -38,6 +44,23 @@ export default function HeroSection() {
       ref={container}
       className="relative pt-28 pb-16 sm:pt-36 sm:pb-20 lg:pt-48 lg:pb-32 overflow-hidden flex flex-col items-center text-center"
     >
+      {/* Liquid ether fluid background - brand-tinted, subtle */}
+      <div className="absolute inset-0 -z-20 pointer-events-none motion-reduce:hidden opacity-50">
+        <LiquidEther
+          colors={LIQUID_COLORS}
+          autoDemo
+          autoSpeed={0.35}
+          autoIntensity={1.6}
+          mouseForce={14}
+          cursorSize={90}
+          resolution={0.4}
+          className="h-full w-full"
+        />
+      </div>
+
+      {/* Legibility scrim over the fluid */}
+      <div className="absolute inset-0 -z-10 bg-bg-base/60 pointer-events-none" />
+
       {/* Background glow - duotone centered */}
       <div className="absolute top-[10%] left-[20%] w-[60%] h-[60%] -z-10 bg-teal/15 blur-[120px] rounded-full mix-blend-screen pointer-events-none" />
       <div className="absolute top-[20%] right-[20%] w-[50%] h-[50%] -z-10 bg-purple-500/10 blur-[120px] rounded-full mix-blend-screen pointer-events-none" />
