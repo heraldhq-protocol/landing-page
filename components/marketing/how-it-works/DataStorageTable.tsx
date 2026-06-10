@@ -18,7 +18,7 @@ export default function DataStorageTable() {
     <section className="py-24 bg-bg-base border-t border-border/30">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-extrabold font-display text-text-primary mb-4">What we handle. What we don't.</h2>
+          <h2 className="text-3xl md:text-4xl font-bold font-display text-text-primary mb-4">What we handle. What we don't.</h2>
           <p className="text-text-secondary max-w-xl mx-auto">Herald is designed to handle minimal data. Here's a technical breakdown of our storage and visibility model.</p>
         </div>
 

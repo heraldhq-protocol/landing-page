@@ -9,7 +9,7 @@ export default function FinalCTA() {
       <div className="absolute inset-0 bg-app-glow opacity-30 pointer-events-none" />
       
       <div className="container mx-auto px-6 text-center relative z-10">
-        <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-6 text-text-primary font-display">
+        <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6 text-text-primary font-display">
           Ready to join the privacy-first layer?
         </h2>
         

@@ -10,7 +10,7 @@ export default function PricingHero({ billingPeriod, onChange }: PricingHeroProp
     <section className="pt-32 pb-8 md:pt-48 md:pb-12 text-center relative overflow-hidden">
       <div className="absolute inset-0 -z-10 bg-app-glow opacity-30" />
       <div className="container mx-auto px-6">
-        <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight mb-6 text-text-primary font-display">
+        <h1 className="text-4xl md:text-7xl font-bold tracking-tight mb-6 text-text-primary font-display">
           Simple. <span className="text-teal">Transparent.</span> <br />
           Built for scale.
         </h1>

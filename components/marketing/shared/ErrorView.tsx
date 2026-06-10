@@ -36,7 +36,7 @@ export default function ErrorView({ icon, code, title, message, action }: ErrorV
                 System Code: {code}
               </span>
             )}
-            <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tighter font-display leading-tight">
+            <h1 className="text-4xl sm:text-5xl font-bold tracking-tighter font-display leading-tight">
               {title}
             </h1>
             <p className="text-gray-400 font-medium text-lg max-w-md mx-auto leading-relaxed">

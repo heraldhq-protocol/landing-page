@@ -59,7 +59,7 @@ export default function DesignPartnerOffer() {
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-text-muted mb-4">
             The Design Partner Program
           </p>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-display text-text-primary text-balance">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-text-primary text-balance">
             What you get.{" "}
             <span className="text-teal">What we ask.</span>
           </h2>
@@ -81,7 +81,7 @@ export default function DesignPartnerOffer() {
               </span>
             </div>
 
-            <h3 className="text-2xl sm:text-3xl font-extrabold font-display text-text-primary mb-3 leading-tight">
+            <h3 className="text-2xl sm:text-3xl font-bold font-display text-text-primary mb-3 leading-tight">
               Free access.{" "}
               <span className="text-teal">Direct influence.</span>
             </h3>
@@ -127,7 +127,7 @@ export default function DesignPartnerOffer() {
               </span>
             </div>
 
-            <h3 className="text-2xl sm:text-3xl font-extrabold font-display text-text-primary mb-3 leading-tight">
+            <h3 className="text-2xl sm:text-3xl font-bold font-display text-text-primary mb-3 leading-tight">
               A few hours.{" "}
               <span className="text-amber">Huge impact.</span>
             </h3>

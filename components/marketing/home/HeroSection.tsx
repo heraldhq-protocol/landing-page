@@ -61,7 +61,7 @@ export default function HeroSection() {
         </div>
 
         {/* Headline */}
-        <h1 className="hero-title font-display text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] mb-6 text-balance">
+        <h1 className="hero-title font-display text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-6 text-balance">
           <span className="text-text-primary">The notification</span>{" "}
           <span className="text-text-primary">layer for DeFi.</span>{" "}
           <span className="text-teal text-glow">Privacy-first.</span>

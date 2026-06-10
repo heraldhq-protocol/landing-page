@@ -19,7 +19,7 @@ export default function BlogStrip() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
           <div className="max-w-2xl">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-teal mb-4">Latest Insights</p>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-display leading-tight">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display leading-tight">
               Stay ahead in <span className="text-teal">DeFi Privacy.</span>
             </h2>
           </div>

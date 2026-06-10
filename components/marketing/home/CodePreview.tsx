@@ -98,7 +98,7 @@ export default function CodePreview() {
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-text-muted mb-4">
               Developer experience
             </p>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-display text-text-primary leading-tight mb-5">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-text-primary leading-tight mb-5">
               Integrate in <span className="text-teal">minutes,</span>
               <br />
               not days.

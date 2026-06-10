@@ -140,7 +140,7 @@ export default function NavBar() {
                   <Link
                     href={link.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="text-4xl font-display font-extrabold text-text-secondary hover:text-teal transition-colors"
+                    className="text-2xl font-display font-semibold text-text-secondary hover:text-teal transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -154,7 +154,7 @@ export default function NavBar() {
                 <Link
                   href="/for-protocols"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-4xl font-display font-extrabold text-teal transition-colors mt-6 pt-6 border-t border-border/50"
+                  className="text-2xl font-display font-semibold text-teal transition-colors mt-6 pt-6 border-t border-border/50"
                 >
                   For Protocols
                 </Link>
@@ -167,7 +167,7 @@ export default function NavBar() {
               transition={{ delay: 0.05 * (navLinks.length + 2), type: "spring", stiffness: 300, damping: 30 }}
               className="mt-12 flex flex-col gap-4"
             >
-              <Button asChild className="w-full bg-teal text-bg-base font-bold h-14 rounded-2xl shadow-[0_0_30px_rgba(0,200,150,0.2)] text-lg">
+              <Button asChild className="w-full bg-teal text-bg-base font-bold h-12 rounded-2xl shadow-[0_0_30px_rgba(0,200,150,0.2)] text-base">
                 <Link href="https://notify.useherald.xyz/register" onClick={() => setMobileMenuOpen(false)}>
                   Register your wallet →
                 </Link>

@@ -1,14 +1,14 @@
 import { RootProvider } from "fumadocs-ui/provider/next";
 import type { Metadata } from "next";
-import { Syne, DM_Sans, Geist_Mono } from "next/font/google";
+import { Instrument_Sans, DM_Sans, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import JsonLd from "@/components/seo/JsonLd";
 import "./globals.css";
 
-const syne = Syne({
+const instrumentSans = Instrument_Sans({
   subsets: ["latin"],
   variable: "--font-display",
-  weight: ["400", "600", "700", "800"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -65,7 +65,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body
-        className={`${syne.variable} ${dmSans.variable} ${geistMono.variable} antialiased`}
+        className={`${instrumentSans.variable} ${dmSans.variable} ${geistMono.variable} antialiased`}
       >
         <JsonLd 
           data={{

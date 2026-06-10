@@ -72,7 +72,7 @@ export default function OrynthSection() {
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-text-muted mb-4">
             Community · Early Believers
           </p>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-display text-text-primary text-balance mb-5">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-text-primary text-balance mb-5">
             Herald is live on{" "}
             <span className="text-teal">Orynth</span>
           </h2>

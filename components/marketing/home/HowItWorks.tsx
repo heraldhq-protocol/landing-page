@@ -82,7 +82,7 @@ export default function HowItWorks() {
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-teal mb-4">
               How it works
             </p>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-display text-text-primary leading-tight mb-5 text-balance">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-text-primary leading-tight mb-5 text-balance">
               Transparent by design.{" "}
               <br className="hidden lg:block"/>
               <span className="text-teal">Private by default.</span>
@@ -138,7 +138,7 @@ export default function HowItWorks() {
                          </div>
                        </div>
                        
-                       <h3 className="text-2xl md:text-3xl font-extrabold text-text-primary mb-4 font-display leading-tight">
+                       <h3 className="text-2xl md:text-3xl font-bold text-text-primary mb-4 font-display leading-tight">
                          {step.title}
                        </h3>
                        <p className="text-text-secondary md:text-lg leading-relaxed max-w-lg">

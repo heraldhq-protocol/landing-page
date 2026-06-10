@@ -206,7 +206,7 @@ export default function UseCasesGrid() {
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-text-muted mb-5">
             Use cases
           </p>
-          <h2 className="text-4xl xl:text-5xl font-extrabold font-display leading-tight mb-6">
+          <h2 className="text-4xl xl:text-5xl font-bold font-display leading-tight mb-6">
             Versatile APIs
             <br />
             <span className="text-text-muted">for any protocol.</span>
@@ -271,7 +271,7 @@ export default function UseCasesGrid() {
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-text-muted mb-4">
             Use cases
           </p>
-          <h2 className="text-3xl font-extrabold font-display leading-tight mb-4">
+          <h2 className="text-3xl font-bold font-display leading-tight mb-4">
             Versatile APIs
             <br />
             <span className="text-text-muted">for any protocol.</span>

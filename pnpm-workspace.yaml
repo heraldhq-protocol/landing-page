@@ -11,5 +11,3 @@ ignoredBuiltDependencies:
 onlyBuiltDependencies:
   - esbuild
   - msw
-
-storeDir: C:\Users\user\AppData\Local\pnpm\store\v10
