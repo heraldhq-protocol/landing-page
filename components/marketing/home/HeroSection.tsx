@@ -43,7 +43,7 @@ export default function HeroSection() {
   return (
     <section
       ref={container}
-      className="relative pt-28 pb-16 sm:pt-36 sm:pb-20 lg:pt-48 lg:pb-32 overflow-hidden flex flex-col items-center text-center"
+      className="relative -mx-4 pt-28 pb-16 sm:pt-36 sm:pb-20 lg:pt-48 lg:pb-32 overflow-hidden flex flex-col items-center text-center"
     >
       {/* Liquid ether fluid — full-bleed, full-strength (ReactBits demo
           settings). Listeners bind to window, so the canvas stays

@@ -1,5 +1,3 @@
-import { Minus } from "lucide-react";
-import { CheckIcon as Check } from "@/components/ui/check";
 import { ZapIcon as Zap } from "@/components/ui/zap";
 import { ArrowRightIcon as ArrowRight } from "@/components/ui/arrow-right";
 import { Button } from "@/components/ui/button";
@@ -12,88 +10,48 @@ const TIERS = [
     price: 0,
     sends: "1,000",
     overage: null,
+    inherits: null,
     description: "For building and testing your integration.",
     badge: null,
     highlighted: false,
     cta: "Start for free",
     ctaHref: "https://app.useherald.xyz/register",
-    features: [
-      { text: "1,000 sends / month", available: true },
-      { text: "Email delivery", available: true },
-      { text: "Sandbox environment", available: true },
-      { text: "1 API key", available: true },
-      { text: "ZK receipts", available: true },
-      { text: "Telegram & SMS", available: false },
-      { text: "Webhooks", available: false },
-      { text: "Team members", available: false },
-      { text: "SLA guarantee", available: false },
-    ],
   },
   {
     name: "Growth",
     price: 99,
     sends: "50,000",
     overage: "$0.002",
+    inherits: "Developer",
     description: "For protocols with an active user base.",
     badge: "Most popular",
     highlighted: true,
     cta: "Get started",
     ctaHref: "https://app.useherald.xyz/register?tier=growth",
-    features: [
-      { text: "50,000 sends / month", available: true },
-      { text: "Email, Telegram & SMS", available: true },
-      { text: "Sandbox + Live environments", available: true },
-      { text: "5 API keys", available: true },
-      { text: "ZK receipts", available: true },
-      { text: "Webhooks", available: true },
-      { text: "3 team members", available: true },
-      { text: "99.9% uptime SLA", available: true },
-      { text: "Dedicated CSM", available: false },
-    ],
   },
   {
     name: "Scale",
     price: 299,
     sends: "250,000",
     overage: "$0.0015",
+    inherits: "Growth",
     description: "For high-volume protocols and growing teams.",
     badge: null,
     highlighted: false,
     cta: "Get started",
     ctaHref: "https://app.useherald.xyz/register?tier=scale",
-    features: [
-      { text: "250,000 sends / month", available: true },
-      { text: "Email, Telegram & SMS", available: true },
-      { text: "Sandbox + Live environments", available: true },
-      { text: "Unlimited API keys", available: true },
-      { text: "ZK receipts", available: true },
-      { text: "Webhooks + custom retry", available: true },
-      { text: "10 team members", available: true },
-      { text: "99.9% uptime SLA", available: true },
-      { text: "Custom DKIM domain", available: true },
-    ],
   },
   {
     name: "Enterprise",
     price: null,
     sends: "1M+",
     overage: "Custom",
+    inherits: "Scale",
     description: "Custom volume, SLAs, and dedicated support.",
     badge: null,
     highlighted: false,
     cta: "Talk to us",
     ctaHref: "mailto:hello@herald.xyz",
-    features: [
-      { text: "Custom send volume", available: true },
-      { text: "Email, Telegram & SMS", available: true },
-      { text: "Dedicated environments", available: true },
-      { text: "Unlimited API keys", available: true },
-      { text: "ZK receipts + audit export", available: true },
-      { text: "Webhooks + custom retry", available: true },
-      { text: "Unlimited team members", available: true },
-      { text: "99.99% uptime SLA", available: true },
-      { text: "Dedicated CSM + Slack", available: true },
-    ],
   },
 ];
 
@@ -120,11 +78,11 @@ export default function PricingTable() {
         </div>
 
         {/* ── Tier cards ─────────────────────────────────────────────── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
           {TIERS.map((tier) => (
             <div
               key={tier.name}
-              className={`relative flex flex-col rounded-2xl border transition-all duration-300 overflow-hidden hover:-translate-y-2 hover:shadow-2xl hover:shadow-teal/10 ${
+              className={`relative flex flex-col h-full rounded-2xl border transition-all duration-300 overflow-hidden hover:-translate-y-2 hover:shadow-2xl hover:shadow-teal/10 ${
                 tier.highlighted
                   ? "bg-bg-elevated border-teal/50 shadow-[0_0_60px_rgba(20,184,166,0.15)] ring-1 ring-teal/30"
                   : "bg-bg-surface border-border hover:border-border-2"
@@ -138,7 +96,7 @@ export default function PricingTable() {
               {/* Card header */}
               <div className="p-7 pb-6">
                 {/* Tier name + badge */}
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-4 h-6">
                   <span
                     className={`text-sm font-bold font-display ${tier.highlighted ? "text-teal" : "text-text-primary"}`}
                   >
@@ -152,41 +110,24 @@ export default function PricingTable() {
                 </div>
 
                 {/* Price */}
-                <div className="mb-3">
+                <div className="mb-4 h-10 flex items-baseline gap-1">
                   {tier.price !== null ? (
-                    <div className="flex items-baseline gap-1">
+                    <>
                       <span className="text-4xl font-black font-display text-text-primary">
                         ${tier.price}
                       </span>
                       <span className="text-text-muted text-sm font-mono">
                         /mo
                       </span>
-                    </div>
+                    </>
                   ) : (
-                    <div className="text-4xl font-black font-display text-text-primary">
+                    <span className="text-4xl font-black font-display text-text-primary">
                       Custom
-                    </div>
+                    </span>
                   )}
                 </div>
 
-                {/* Sends included */}
-                <div className="flex items-center gap-1.5 mb-4">
-                   <Zap size={14} className="text-teal shrink-0" />
-                  <span className="text-sm font-semibold text-teal font-mono">
-                    {tier.sends} sends / month
-                  </span>
-                </div>
-
-                {/* Overage */}
-                {tier.overage && (
-                  <p className="text-xs text-text-muted font-mono mb-4">
-                    {tier.overage === "Custom"
-                      ? "Custom overage pricing"
-                      : `${tier.overage} / send after limit`}
-                  </p>
-                )}
-
-                <p className="text-sm text-text-muted leading-relaxed">
+                <p className="text-sm text-text-muted leading-relaxed min-h-[2.5rem]">
                   {tier.description}
                 </p>
               </div>
@@ -194,35 +135,53 @@ export default function PricingTable() {
               {/* Divider */}
               <div className="mx-7 h-px bg-border/50" />
 
-              {/* Features */}
-              <div className="p-7 flex-1">
-                <ul className="space-y-3">
-                  {tier.features.map((f) => (
-                    <li
-                      key={f.text}
-                      className="flex items-center gap-3 text-sm"
-                    >
-                      {f.available ? (
-                        <div className="shrink-0 w-4 h-4 rounded-full bg-teal/10 border border-teal/25 flex items-center justify-center">
-                           <Check size={10} className="text-teal" />
-                        </div>
-                      ) : (
-                        <div className="shrink-0 w-4 h-4 rounded-full bg-border/50 flex items-center justify-center">
-                           <Minus size={10} className="text-text-muted" />
-                        </div>
-                      )}
-                      <span
-                        className={
-                          f.available
-                            ? "text-text-secondary"
-                            : "text-text-muted/60"
-                        }
-                      >
-                        {f.text}
+              {/* Spec block — the two numbers devs actually compare */}
+              <div className="p-7 flex-1 flex flex-col">
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <Zap size={14} className="text-teal shrink-0" />
+                      <span className="text-lg font-bold text-text-primary font-mono leading-none">
+                        {tier.sends}
                       </span>
-                    </li>
-                  ))}
-                </ul>
+                    </div>
+                    <span className="text-xs text-text-muted pl-[22px]">
+                      sends / month
+                    </span>
+                  </div>
+
+                  <div>
+                    <div className="text-lg font-bold text-text-primary font-mono leading-none mb-1">
+                      {tier.overage === null
+                        ? "—"
+                        : tier.overage === "Custom"
+                          ? "Custom"
+                          : tier.overage}
+                    </div>
+                    <span className="text-xs text-text-muted">
+                      {tier.overage === null
+                        ? "no overage on free tier"
+                        : tier.overage === "Custom"
+                          ? "volume-based rate"
+                          : "/ send over limit"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Cumulative continuity — carries the deferred detail */}
+                <p className="mt-6 text-xs text-text-secondary">
+                  {tier.inherits ? (
+                    <>
+                      Everything in{" "}
+                      <span className="text-teal font-semibold">
+                        {tier.inherits}
+                      </span>
+                      , plus more channels, seats &amp; SLA.
+                    </>
+                  ) : (
+                    <>Email delivery, sandbox &amp; ZK receipts included.</>
+                  )}
+                </p>
               </div>
 
               {/* CTA */}
