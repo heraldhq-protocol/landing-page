@@ -4,7 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon as ArrowRight } from "@/components/ui/arrow-right";
-import { Copy, Check } from "lucide-react";
+import { UserIcon as User } from "@/components/ui/user";
+import { Copy, Check, Crown, MessageSquare, ArrowUpRight } from "lucide-react";
 
 const ORYNTH_URL = "https://orynth.dev/projects/herald-protocol";
 const CONTRACT_ADDRESS = "3ifTB4CtomDdMtMPNVaVZ6ViT8oUXenk9qZbrY4KMory";
@@ -14,14 +15,17 @@ const BELIEVER_BENEFITS = [
   {
     tier: "Any holder",
     benefit: "Early access to the Herald user portal",
+    icon: User,
   },
   {
     tier: "Top 50 holders",
     benefit: "Priority notification slot + Early Believer badge on the portal",
+    icon: Crown,
   },
   {
     tier: "Active traders",
     benefit: "Private channel with direct access to the founders",
+    icon: MessageSquare,
   },
 ];
 
@@ -64,7 +68,6 @@ export default function OrynthSection() {
     <section className="py-16 sm:py-24 relative overflow-hidden border-t border-border/30">
       {/* Ambient background */}
       <div className="absolute inset-0 bg-linear-to-br from-bg-base via-bg-surface/20 to-bg-base pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-teal/4 blur-3xl rounded-full pointer-events-none" />
 
       <div className="container mx-auto px-6 relative">
         {/* Section label + headline */}
@@ -104,49 +107,44 @@ export default function OrynthSection() {
         {/* Badge + benefits */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center max-w-5xl mx-auto">
           {/* Badge card */}
-          <div className="group relative p-8 rounded-3xl bg-bg-surface border border-border overflow-hidden hover:border-teal/30 hover:-translate-y-1 hover:shadow-2xl hover:shadow-teal/10 transition-all duration-500">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-teal/5 blur-3xl rounded-full pointer-events-none group-hover:opacity-150 transition-opacity duration-700" />
-
-            <div className="relative flex flex-col items-center gap-5">
-              {/* Primary (upvotes) badge */}
-              <a
-                href={ORYNTH_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:scale-105 transition-transform duration-300"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="https://orynth.dev/api/badge/herald-protocol?theme=dark&style=default"
-                  alt="Featured on Orynth"
-                  width={260}
-                  height={80}
-                  className="rounded-xl"
-                />
-              </a>
-
-              {/* Minimal badge */}
-              <a
-                href={ORYNTH_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="opacity-60 hover:opacity-100 hover:scale-105 transition-all duration-300"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="https://orynth.dev/api/badge/herald-protocol?theme=dark&style=minimal"
-                  alt="Listed on Orynth"
-                  width={152}
-                  height={48}
-                  className="rounded-lg"
-                />
-              </a>
-
-              <p className="text-xs text-text-muted text-center max-w-[200px]">
-                Live upvote count · Updates automatically
-              </p>
+          <a
+            href={ORYNTH_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative flex flex-col p-8 rounded-3xl bg-bg-surface border border-border overflow-hidden hover:border-teal/40 hover:-translate-y-1 hover:shadow-2xl hover:shadow-teal/10 transition-all duration-500"
+          >
+            {/* Card header: live status + outbound affordance */}
+            <div className="flex items-center justify-between mb-6">
+              <span className="inline-flex items-center gap-2 text-xs font-mono text-text-muted">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-teal opacity-60 animate-ping" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-teal" />
+                </span>
+                Live on Orynth
+              </span>
+              <ArrowUpRight
+                size={18}
+                className="text-text-muted group-hover:text-teal group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all duration-300"
+              />
             </div>
-          </div>
+
+            {/* The badge — single, framed, the focal artifact */}
+            <div className="relative rounded-2xl bg-bg-base border border-border p-4 sm:p-5 flex items-center justify-center group-hover:border-teal/20 transition-colors duration-500">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="https://orynth.dev/api/badge/herald-protocol?theme=dark&style=default"
+                alt="Featured on Orynth — live upvote count"
+                width={260}
+                height={80}
+                className="rounded-xl max-w-full h-auto"
+              />
+            </div>
+
+            <p className="mt-5 text-sm text-text-secondary leading-relaxed">
+              Real-time upvote count from the Orynth community.{" "}
+              <span className="text-text-muted">Updates automatically.</span>
+            </p>
+          </a>
 
           {/* Benefits */}
           <div className="flex flex-col gap-3">
@@ -154,24 +152,27 @@ export default function OrynthSection() {
               Early believer benefits
             </p>
 
-            {BELIEVER_BENEFITS.map((item, i) => (
-              <div
-                key={i}
-                className="flex items-start gap-4 p-4 rounded-xl bg-bg-elevated border border-border hover:border-teal/25 transition-all duration-300"
-              >
-                <div className="mt-0.5 w-6 h-6 rounded-full bg-teal/10 border border-teal/25 flex items-center justify-center shrink-0">
-                  <span className="text-teal text-[10px] font-bold">{i + 1}</span>
-                </div>
-                <div>
-                  <div className="text-xs font-bold text-teal uppercase tracking-wide mb-0.5">
-                    {item.tier}
+            {BELIEVER_BENEFITS.map((item) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={item.tier}
+                  className="group/benefit flex items-start gap-4 p-4 rounded-xl bg-bg-elevated border border-border hover:border-teal/25 hover:bg-bg-elevated/80 transition-all duration-300"
+                >
+                  <div className="mt-0.5 w-9 h-9 rounded-xl bg-teal/10 border border-teal/20 flex items-center justify-center shrink-0 group-hover/benefit:bg-teal/15 transition-colors duration-300">
+                    <Icon size={16} className="text-teal" />
                   </div>
-                  <div className="text-sm text-text-secondary leading-relaxed">
-                    {item.benefit}
+                  <div>
+                    <div className="text-xs font-bold text-teal uppercase tracking-wide mb-0.5">
+                      {item.tier}
+                    </div>
+                    <div className="text-sm text-text-secondary leading-relaxed">
+                      {item.benefit}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
 
             <Button
               asChild

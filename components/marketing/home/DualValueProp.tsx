@@ -35,8 +35,8 @@ export default function DualValueProp() {
             Two audiences. One infrastructure.
           </p>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-text-primary text-balance">
-            Built for protocols.{" "}
-            <span className="text-teal">Trusted by users.</span>
+            Built for <span className="text-purple">protocols.</span>{" "}
+            Trusted by <span className="text-teal">users.</span>
           </h2>
         </div>
 
