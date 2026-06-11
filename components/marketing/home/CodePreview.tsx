@@ -99,7 +99,7 @@ export default function CodePreview() {
               Developer experience
             </p>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-text-primary leading-tight mb-5">
-              Integrate in <span className="text-teal">minutes,</span>
+              Integrate in minutes,
               <br />
               not days.
             </h2>
@@ -153,9 +153,6 @@ export default function CodePreview() {
 
           {/* ── Right — code block ──────────────────────────────────── */}
           <div className="relative group min-w-0 w-full max-w-[calc(100vw-3rem)] md:max-w-none">
-            {/* Glow */}
-            <div className="absolute -inset-1 bg-linear-to-r from-teal/15 to-purple/15 rounded-2xl blur-xl opacity-0 xl:group-hover:opacity-100 transition-opacity duration-700" />
-
             <div className="relative bg-[#011627] border border-[#1D3B53] rounded-2xl overflow-hidden shadow-2xl flex flex-col min-h-[320px] sm:min-h-0">
               {/* Window chrome */}
               <div className="flex items-center justify-between px-4 py-3 border-b border-[#1D3B53] bg-[#01111D] shrink-0">

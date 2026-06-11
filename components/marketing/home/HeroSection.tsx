@@ -11,10 +11,11 @@ import { NetworkSolana } from "@web3icons/react";
 import { HERO_PROTOCOL_CTA, isExternal } from "@/lib/cta-config";
 import LiquidEther from "@/components/ui/liquid-ether";
 
-// Herald brand palette (from globals.css): teal monochrome — teal, teal-dim,
-// bg-surface. The third stop dissolves the fluid into the page so only teal
-// "veins" glow, keeping the hero on-brand and the headline legible.
-const LIQUID_COLORS = ["#00C896", "#007A5C", "#0A1628"];
+// Teal remap of the ReactBits demo palette. The demo ships
+// [#5227FF vivid, #FF9FFC light highlight, #B497CF muted mid] — a
+// vivid / light / muted tri-tone. Same tonal structure, teal hue:
+// vivid teal, pale aquamarine highlight, muted sea-green.
+const LIQUID_COLORS = ["#00C896", "#7FFFE0", "#3FA98C"];
 
 const STATS = [
   { label: "API response", value: "< 200ms" },
@@ -44,33 +45,46 @@ export default function HeroSection() {
       ref={container}
       className="relative pt-28 pb-16 sm:pt-36 sm:pb-20 lg:pt-48 lg:pb-32 overflow-hidden flex flex-col items-center text-center"
     >
-      {/* Liquid ether fluid background - brand-tinted, subtle */}
-      <div className="absolute inset-0 -z-20 pointer-events-none motion-reduce:hidden opacity-50">
+      {/* Liquid ether fluid — full-bleed, full-strength (ReactBits demo
+          settings). Listeners bind to window, so the canvas stays
+          pointer-events-none and CTAs remain clickable while the fluid
+          still reacts to the cursor across the whole hero. */}
+      <div className="absolute inset-0 -z-20 pointer-events-none motion-reduce:hidden">
         <LiquidEther
           colors={LIQUID_COLORS}
           autoDemo
-          autoSpeed={0.35}
-          autoIntensity={1.6}
-          mouseForce={14}
-          cursorSize={90}
-          resolution={0.4}
+          autoSpeed={0.5}
+          autoIntensity={2.2}
+          mouseForce={20}
+          cursorSize={100}
+          resolution={0.5}
+          takeoverDuration={0.25}
+          autoResumeDelay={1000}
+          BFECC
           className="h-full w-full"
         />
       </div>
 
-      {/* Legibility scrim over the fluid */}
-      <div className="absolute inset-0 -z-10 bg-bg-base/60 pointer-events-none" />
+      {/* Reduced-motion fallback: a static teal glow so the hero never
+          renders flat for users who opt out of animation. */}
+      <div className="absolute inset-0 -z-20 hidden motion-reduce:block pointer-events-none">
+        <div className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[70%] h-[55%] bg-teal/15 blur-[120px] rounded-full" />
+      </div>
 
-      {/* Background glow - duotone centered */}
-      <div className="absolute top-[10%] left-[20%] w-[60%] h-[60%] -z-10 bg-teal/15 blur-[120px] rounded-full mix-blend-screen pointer-events-none" />
-      <div className="absolute top-[20%] right-[20%] w-[50%] h-[50%] -z-10 bg-purple-500/10 blur-[120px] rounded-full mix-blend-screen pointer-events-none" />
-      <div className="absolute inset-0 -z-10 bg-app-glow opacity-60" />
+      {/* Localized legibility vignette — darkens behind the text only, so
+          the fluid stays vivid at the edges (the demo look) while the
+          headline keeps contrast. */}
+      <div
+        className="absolute inset-0 -z-10 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(60% 50% at 50% 42%, color-mix(in srgb, var(--bg-base) 78%, transparent) 0%, color-mix(in srgb, var(--bg-base) 45%, transparent) 45%, transparent 75%)",
+        }}
+      />
 
-      {/* Subtle grid texture */}
-      <div className="absolute inset-0 -z-10 bg-grid opacity-[0.03]" />
-
-      {/* Radial fade at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 -z-10 bg-linear-to-t from-bg-base to-transparent" />
+      {/* Edge fades so the fluid dissolves into the page top and bottom. */}
+      <div className="absolute inset-x-0 top-0 h-24 -z-10 bg-linear-to-b from-bg-base to-transparent pointer-events-none" />
+      <div className="absolute inset-x-0 bottom-0 h-40 -z-10 bg-linear-to-t from-bg-base to-transparent pointer-events-none" />
 
       <div className="container mx-auto px-6 relative z-10 w-full max-w-4xl flex flex-col items-center">
         {/* Badge */}
@@ -91,7 +105,7 @@ export default function HeroSection() {
         </h1>
 
         {/* Sub */}
-        <p className="hero-sub text-lg md:text-xl text-text-secondary leading-relaxed max-w-2xl mx-auto mb-10 text-balance">
+        <p className="hero-sub text-lg md:text-xl text-text-secondary leading-relaxed max-w-2xl mx-auto mb-10 text-balance [text-shadow:0_1px_12px_rgba(4,12,24,0.6)]">
           Protocols alert users via email, Telegram, and SMS —{" "}
           <span className="text-text-primary font-medium">
             without ever learning their contact info.

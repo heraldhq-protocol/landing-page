@@ -64,7 +64,6 @@ export default function OrynthSection() {
     <section className="py-16 sm:py-24 relative overflow-hidden border-t border-border/30">
       {/* Ambient background */}
       <div className="absolute inset-0 bg-linear-to-br from-bg-base via-bg-surface/20 to-bg-base pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-teal/4 blur-3xl rounded-full pointer-events-none" />
 
       <div className="container mx-auto px-6 relative">
         {/* Section label + headline */}
@@ -105,8 +104,6 @@ export default function OrynthSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center max-w-5xl mx-auto">
           {/* Badge card */}
           <div className="group relative p-8 rounded-3xl bg-bg-surface border border-border overflow-hidden hover:border-teal/30 hover:-translate-y-1 hover:shadow-2xl hover:shadow-teal/10 transition-all duration-500">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-teal/5 blur-3xl rounded-full pointer-events-none group-hover:opacity-150 transition-opacity duration-700" />
-
             <div className="relative flex flex-col items-center gap-5">
               {/* Primary (upvotes) badge */}
               <a
