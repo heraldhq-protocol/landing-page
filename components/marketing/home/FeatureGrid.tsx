@@ -165,7 +165,7 @@ export default function FeatureGrid() {
         </div>
 
         {/* ── Table-stakes: compact, hairline-separated spec strip ────── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px rounded-3xl overflow-hidden bg-border/60 border border-border">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px rounded-3xl overflow-hidden bg-border border border-border">
           {SUPPORTING.map((f) => {
             const Icon = f.icon;
             const isGlobe = f.title === "Global scale";

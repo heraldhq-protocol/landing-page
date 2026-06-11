@@ -211,7 +211,7 @@ export default function ValidationPage() {
                   <CheckCircle className="text-teal" size={32} />
                 </div>
                 <h2 className="text-3xl font-bold font-display text-text-primary mb-2">
-                  Verdict: GO ✅
+                  Verdict: GO
                 </h2>
                 <p className="text-text-muted mb-6">
                   Confidence: <strong className="text-teal">0.75 (Medium-High)</strong>
@@ -569,7 +569,7 @@ export default function ValidationPage() {
                         {item.feature}
                       </span>
                       <BadgePill
-                        text={item.needed ? "Needs Solana ✅" : "No ✅"}
+                        text={item.needed ? "Needs Solana" : "No"}
                         variant={item.needed ? "success" : "info"}
                       />
                     </div>

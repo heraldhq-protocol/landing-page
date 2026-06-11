@@ -4,7 +4,7 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Mail } from "lucide-react";
+import { Mail, TriangleAlert } from "lucide-react";
 import { BellIcon as Bell } from "@/components/ui/bell";
 import { ShieldCheckIcon as ShieldCheck } from "@/components/ui/shield-check";
 import { SendIcon as Send } from "@/components/ui/send";
@@ -125,7 +125,10 @@ export default function DemoAnimation() {
                       </div>
                    </div>
                    <div className="bg-slate-200/50 dark:bg-white/5 rounded-xl p-3">
-                      <p className="text-[11px] font-bold text-slate-800 dark:text-white mb-1">⚠️ Liquidation Warning</p>
+                      <p className="text-[11px] font-bold text-slate-800 dark:text-white mb-1 flex items-center gap-1.5">
+                        <TriangleAlert size={12} className="text-amber shrink-0" />
+                        Liquidation Warning
+                      </p>
                       <p className="text-[10px] text-slate-600 dark:text-slate-400 leading-tight">
                         Your health factor is 1.05. Add collateral to 7xR4...
                       </p>
