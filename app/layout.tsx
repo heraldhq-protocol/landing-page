@@ -4,6 +4,7 @@ import { Instrument_Sans, DM_Sans, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import JsonLd from "@/components/seo/JsonLd";
 import "./globals.css";
+import { AdtivityProvider } from "@/components/providers/AdtivityProvider";
 
 const instrumentSans = Instrument_Sans({
   subsets: ["latin"],
@@ -89,7 +90,9 @@ export default function RootLayout({
           }}
         />
         <RootProvider theme={{ forcedTheme: "dark" }}>
-          {children}
+          <AdtivityProvider>
+            {children}
+          </AdtivityProvider>
         </RootProvider>
         <Analytics />
       </body>

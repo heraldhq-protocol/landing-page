@@ -50,6 +50,7 @@ export default function NavBar() {
           <Link
             href="/"
             onClick={() => setMobileMenuOpen(false)}
+            data-adtivity-link-track="nav-logo"
             className="flex items-center gap-2.5 group pl-2"
           >
             <div className="relative w-7 h-7">
@@ -74,6 +75,7 @@ export default function NavBar() {
               <Link
                 key={link.name}
                 href={link.href}
+                data-adtivity-link-track={`nav-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
                 className="px-3 py-1.5 text-sm font-medium text-text-muted hover:text-text-primary transition-colors duration-200 rounded-full hover:bg-white/5"
               >
                 {link.name}
@@ -85,6 +87,7 @@ export default function NavBar() {
           <div className="hidden md:flex items-center gap-3">
             <Link
               href="/for-protocols"
+              data-adtivity-link-track="nav-for-protocols"
               className="text-sm font-medium text-text-muted hover:text-teal transition-colors duration-200 flex items-center gap-1 group"
             >
               For Protocols
@@ -92,6 +95,7 @@ export default function NavBar() {
             </Link>
             <Button
               asChild
+              data-adtivity-button-track="nav-launch-app"
               className="bg-teal text-bg-base hover:bg-teal/90 font-bold rounded-full px-5 h-8 text-xs shadow-[0_0_20px_rgba(0,200,150,0.2)] hover:shadow-[0_0_30px_rgba(0,200,150,0.35)] hover:-translate-y-0.5 transition-all duration-300"
             >
               <Link
@@ -167,7 +171,7 @@ export default function NavBar() {
               transition={{ delay: 0.05 * (navLinks.length + 2), type: "spring", stiffness: 300, damping: 30 }}
               className="mt-12 flex flex-col gap-4"
             >
-              <Button asChild className="w-full bg-teal text-bg-base font-bold h-12 rounded-2xl shadow-[0_0_30px_rgba(0,200,150,0.2)] text-base">
+              <Button asChild data-adtivity-button-track="mobile-register" className="w-full bg-teal text-bg-base font-bold h-12 rounded-2xl shadow-[0_0_30px_rgba(0,200,150,0.2)] text-base">
                 <Link href="https://notify.useherald.xyz/register" onClick={() => setMobileMenuOpen(false)}>
                   Register your wallet →
                 </Link>
