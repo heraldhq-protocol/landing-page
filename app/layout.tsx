@@ -1,11 +1,11 @@
 import { RootProvider } from "fumadocs-ui/provider/next";
 import type { Metadata } from "next";
-import { Instrument_Sans, DM_Sans, Geist_Mono } from "next/font/google";
+import { Unbounded, DM_Sans, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import JsonLd from "@/components/seo/JsonLd";
 import "./globals.css";
 
-const instrumentSans = Instrument_Sans({
+const unbounded = Unbounded({
   subsets: ["latin"],
   variable: "--font-display",
   weight: ["400", "500", "600", "700"],
@@ -65,7 +65,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body
-        className={`${instrumentSans.variable} ${dmSans.variable} ${geistMono.variable} antialiased`}
+        className={`${unbounded.variable} ${dmSans.variable} ${geistMono.variable} antialiased`}
       >
         <JsonLd 
           data={{
