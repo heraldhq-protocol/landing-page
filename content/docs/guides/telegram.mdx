@@ -1,0 +1,112 @@
+---
+title: Telegram Integration
+description: Learn how users interact with the Telegram bot and how protocols configure custom bots, group broadcasts, and topic routing.
+---
+
+# Telegram Integration
+
+Herald provides a privacy-first notification channel for Telegram. Users can receive direct, personalized notifications or join group broadcasts, while protocol teams can manage bot settings, custom bot profiles, and channel routing directly from the Herald Developer Dashboard.
+
+---
+
+## 1. User Handshake and Bot Commands
+
+To receive personalized alerts, users subscribe to your protocol using a **Join Link** or interact directly with the bot.
+
+![User Connection Flow](/images/user-flow.png)
+
+### Join Links
+To onboard users, share your protocol's unique join link:
+```
+https://notify.useherald.xyz/join/{protocolId}
+```
+When a user clicks this link, they are guided to connect their wallet and start the Telegram bot conversation. Herald handles all connection handshakes, cryptographic key generation, and on-chain registration automatically.
+
+### Bot Commands
+Users interacting with the Herald Telegram bot (or your custom bot) can manage their preferences directly using standard commands:
+
+* `/start` — Initializes the connection or updates an existing link.
+* `/help` — Lists available commands and support options.
+* `/status` — Displays active connection status and linked settings.
+* `/alerts` — Shows active notification categories with links to customize preferences.
+* `/stop` or `/disconnect` — Guides the user through disconnecting their account and permanently erasing their encrypted Telegram details from the blockchain.
+
+### Direct In-Line Muting
+Every notification delivered by Herald includes a **"Mute this protocol"** button. Tapping this button instantly mutes future notifications from that specific protocol for 30 days, without affecting messages from other protocols or requiring the user to disconnect their Telegram account.
+
+---
+
+## 2. Custom Telegram Bots (Growth Tier+)
+
+Protocols on the **Growth Tier** (or above) can configure their own custom Telegram bots to deliver branded notifications (e.g., `@MarginFiAlertsBot` instead of the shared `@HeraldBot`).
+
+![Custom Bot Flow](/images/custom-bot-flow.png)
+
+### Setup and Configuration
+
+1. **Create the Bot**: Message `@BotFather` on Telegram, create a new bot, and copy the provided API Token.
+2. **Save Token**: Enter the token in the **Developer Settings -> Channels -> Telegram** section of your Herald Developer Dashboard.
+3. **Webhook Setup**: Herald automatically registers and secures the webhook communication with Telegram.
+4. **Sync Profile**: Push your protocol's name, logo, and description directly to your custom bot from the Herald Dashboard.
+
+### Subscriber Migration
+
+If you transition from the shared `@HeraldBot` to a custom bot, existing subscribers must link to your new bot:
+
+1. **Migration Notification**: Upon configuring your custom bot, Herald prompts your active Telegram subscribers to connect to the new bot.
+2. **Verifying the Connection**: When the user opens the deep link and taps `/start` on your new custom bot, Herald automatically switches their delivery route to your custom bot.
+
+---
+
+## 3. Group and Channel Broadcasts
+
+Protocols can broadcast notifications directly to Telegram Groups or Channels (e.g., to announce liquidations, new proposals, or community updates).
+
+### Configuration
+
+1. Add your Telegram Bot to the target group or channel as an **Administrator** with permission to post messages.
+2. Retrieve the chat ID of the group or channel.
+3. Input the chat ID under **Telegram Group Chat** in the Developer Settings.
+
+### Branded Welcomes and Engagement
+
+* **Welcome Messages**: Define a custom HTML/Markdown welcome template in your settings. The bot will automatically greet new members who join the group:
+  ```html
+  👋 Welcome <b>{{name}}</b> to the community! Enable personalized alerts at notify.useherald.xyz.
+  ```
+* **Auto-Pin Notifications**: Configure the bot to automatically pin new critical alerts to the top of the group chat.
+* **Reaction Metrics**: Herald aggregates message reactions (e.g., 👍, 🔥, 🚀) left on group notifications, displaying engagement trends in your analytics dashboard.
+
+---
+
+## 4. Topic Thread Routing (Supergroups)
+
+If your group chat is a Telegram **Supergroup** with Topics enabled, you can route notifications dynamically to specific forum topics based on their category (e.g., routing votes to the `Governance` topic and updates to the `Announcements` topic).
+
+### Setup
+
+1. **Enable Topics**: Ensure your Telegram group is a supergroup and has "Topics" enabled in Telegram.
+2. **Auto-Create Topics**: Click **Create Forum Topics** in the Herald Developer Dashboard. Herald will automatically set up default topics:
+   - 🗳️ `Governance`
+   - 💰 `DeFi`
+   - 🛡️ `Security`
+   - 📢 `Marketing`
+   - ⚙️ `System`
+3. **Category Routing**: Herald automatically maps these topics to your notification categories. When sending a notification, specify the matching category in your API payload:
+
+```typescript
+// This notification is automatically routed to the "Governance" topic thread
+await herald.notify({
+  wallet: "GROUP_BROADCAST",
+  subject: "Governance Proposal #42 Live",
+  body: "A vote to upgrade the oracle is live. Cast your vote.",
+  category: "governance", 
+});
+```
+
+---
+
+## Next Steps
+
+- [REST API Reference](/docs/api/rest) — inspect parameters for custom bot webhooks and triggers.
+- [Integration Examples](/docs/guides/examples) — view complete backend notification scripts.
