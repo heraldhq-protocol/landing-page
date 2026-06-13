@@ -3,6 +3,7 @@ import HeroSection from "@/components/marketing/home/HeroSection";
 import DemoAnimation from "@/components/marketing/home/DemoAnimation";
 // import LogoMarquee from "@/components/marketing/home/LogoMarquee";
 import HowItWorks from "@/components/marketing/home/HowItWorks";
+import OldVsNew from "@/components/marketing/home/OldVsNew";
 import DualValueProp from "@/components/marketing/home/DualValueProp";
 import FeatureGrid from "@/components/marketing/home/FeatureGrid";
 import CodePreview from "@/components/marketing/home/CodePreview";
@@ -62,6 +63,10 @@ export default function HomePage() {
 
       <section id="how-it-works">
         <HowItWorks />
+      </section>
+
+      <section id="old-vs-new">
+        <OldVsNew />
       </section>
 
       <section id="features">
