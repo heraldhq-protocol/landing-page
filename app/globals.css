@@ -259,6 +259,43 @@ html {
   content: "";
 }
 
+/* Prose Table — override Tailwind's gray thead background for dark theme */
+.prose table thead tr {
+  background-color: var(--bg-elevated) !important;
+  border-bottom: 1px solid var(--bg-border-hi);
+}
+
+.prose table thead th {
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.625rem 0.75rem;
+  background-color: transparent;
+}
+
+.prose table tbody tr {
+  border-bottom: 1px solid var(--bg-border);
+}
+
+.prose table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.prose table tbody td {
+  padding: 0.625rem 0.75rem;
+  color: var(--text-primary);
+}
+
+.prose table {
+  border: 1px solid var(--bg-border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
 
 
 @layer base {
