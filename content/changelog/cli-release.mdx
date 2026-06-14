@@ -1,0 +1,28 @@
+---
+title: Herald CLI v0.2.0
+description: Official CLI for the Herald Protocol — send notifications, manage templates, and automate from the terminal.
+date: "2026-06-14"
+---
+
+We are shipping the **Herald CLI** (`@herald-protocol/cli`) — a first-class command-line tool for the Herald Protocol built for developers and AI agents alike.
+
+### What's new
+
+* **`herald notify send`** — send a notification to any Solana wallet in one command, with optional `--wait` to block until delivery confirmation.
+* **`herald notify batch`** — fan-out up to 100 notifications from a JSON file or stdin pipe.
+* **`herald notify broadcast`** — fan-out to all active protocol subscribers.
+* **`herald doctor`** — pre-flight health check: pings the gateway, verifies auth, checks all API scopes in parallel, and reports quota.
+* **Agent-first flags** — `--json` (machine-readable output), `--from-stdin` (pipe payloads), `--idempotency-key` (safe retries), `--wait` (blocking delivery), `--poll` (CI-safe status check), `--ci` (non-interactive mode).
+* **Granular exit codes** — scripts can branch on `4` (auth), `5` (rate-limit), `6` (network) without parsing output.
+* **`herald config`** — inspect and override gateway URL and other settings.
+* **Templates, webhooks, campaigns, analytics, scheduling** — all manageable from the CLI.
+
+### Install
+
+```bash
+npm install -g @herald-protocol/cli
+herald auth login
+herald doctor
+```
+
+View the full [CLI documentation](/docs/cli) and the [GitHub repository](https://github.com/heraldhq-protocol/herald-cli).

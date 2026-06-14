@@ -1,0 +1,284 @@
+---
+title: CI/CD & Agent Use
+description: How to use the Herald CLI in automated pipelines, CI/CD workflows, and AI agent tool-use scenarios.
+---
+
+# CI/CD & Agent Use
+
+The Herald CLI is designed to be **machine-first**. Every command works without a terminal, without interactive prompts, and without an operator watching.
+
+---
+
+## Core principles for automation
+
+### 1. Always pass `--json`
+
+```bash
+herald notify send --wallet … --subject … --body … --category system --json
+```
+
+With `--json`:
+- All output is raw `JSON.stringify` to stdout — no colors, no spinners, no padding
+- Errors are JSON envelopes: `{ "error": true, "code": "SEND_FAILED", "message": "…" }`
+- You can pipe directly to `jq`, log to structured loggers, or parse in any language
+
+### 2. Use env vars, not `auth login`
+
+```bash
+export HERALD_API_KEY=hrld_live_…
+export HERALD_PROTOCOL_ID=77a7cf6e-…
+
+herald notify send --wallet … --subject … --body … --category system --json
+```
+
+Env vars take priority over the config file. The CLI never prompts when they are set.
+
+### 3. Use `--ci` or `--no-interactive` to fail-fast
+
+```bash
+herald notify send --ci --json  # exits 1 immediately if any required flag is missing
+```
+
+Without interactive mode, missing flags produce an error envelope instead of a prompt.
+
+### 4. Check exit codes, not output
+
+```bash
+herald notify send … --json
+echo "Exit: $?"   # 0=success, 4=auth, 5=rate-limited, 6=network, etc.
+```
+
+| Code | Meaning |
+|---|---|
+| `0` | Success |
+| `1` | Generic error |
+| `2` | User cancelled |
+| `3` | Not found (404) |
+| `4` | Auth error (401 / 403) |
+| `5` | Rate limited (429) |
+| `6` | Network / connectivity error |
+
+---
+
+## Blocking delivery confirmation with `--wait`
+
+By default, `notify send` returns immediately after the notification is queued. For workflows that need confirmation of actual delivery before continuing:
+
+```bash
+herald notify send \
+  --wallet $WALLET \
+  --subject "Deploy complete" \
+  --body "v$VERSION deployed at $(date -u)" \
+  --category system \
+  --wait \
+  --wait-timeout 30000 \
+  --json
+```
+
+The command blocks for up to `--wait-timeout` milliseconds, polling every 2 seconds, and exits only when the status is `delivered` or `failed`. The JSON response contains the final delivery state.
+
+---
+
+## Idempotent sends with `--idempotency-key`
+
+Safe to retry from any CI runner, cron job, or agent loop:
+
+```bash
+herald notify send \
+  --wallet $WALLET \
+  --subject "Alert" \
+  --body "Body" \
+  --category defi \
+  --idempotency-key "incident-$INCIDENT_ID" \
+  --json
+```
+
+Arbitrary strings (not just UUIDs) are accepted — the CLI converts them to deterministic UUIDs via SHA-256 so the same string always maps to the same key. Retrying the exact same command with the same key will not create a duplicate notification.
+
+---
+
+## Piping from other tools with `--from-stdin`
+
+Read notification params as JSON from stdin — compose with `jq`, templating tools, or other CLI commands:
+
+```bash
+# From a file
+cat notify-payload.json | herald notify send --from-stdin --json
+
+# From jq
+echo '{"wallet":"…","amount":"1.5 SOL"}' \
+  | jq '{wallet: .wallet, subject: "Withdrawal confirmed", body: ("Amount: " + .amount), category: "defi"}' \
+  | herald notify send --from-stdin --json
+
+# From another command
+build-notify-payload.sh | herald notify send --from-stdin --idempotency-key "build-$CI_JOB_ID" --wait --json
+```
+
+**Stdin JSON schema:**
+```json
+{
+  "wallet": "string (required)",
+  "subject": "string (required)",
+  "body": "string (required)",
+  "category": "defi | governance | system | marketing | security (required)",
+  "priority": "low | normal | high | critical (optional)",
+  "channels": ["email", "telegram", "sms"]
+}
+```
+
+Flags (`--subject`, `--wallet`, etc.) override stdin values, so you can use stdin as defaults and override specific fields from the shell.
+
+---
+
+## Polling status until delivered
+
+```bash
+herald notify status $NOTIFICATION_ID --poll --poll-timeout 60000 --json
+```
+
+Unlike `--watch` (which uses ANSI cursor tricks and requires a TTY), `--poll` outputs a single clean JSON object once the terminal state is reached — safe in any CI environment.
+
+---
+
+## GitHub Actions example
+
+```yaml
+name: Notify on deploy
+
+on:
+  workflow_run:
+    workflows: [Deploy]
+    types: [completed]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Install Herald CLI
+        run: npm install -g @herald-protocol/cli
+
+      - name: Send deployment notification
+        env:
+          HERALD_API_KEY: ${{ secrets.HERALD_API_KEY }}
+          HERALD_PROTOCOL_ID: ${{ secrets.HERALD_PROTOCOL_ID }}
+        run: |
+          herald notify send \
+            --wallet "${{ vars.NOTIFY_WALLET }}" \
+            --subject "Deployed ${{ github.ref_name }}" \
+            --body "Deploy of ${{ github.sha }} completed at $(date -u)" \
+            --category system \
+            --idempotency-key "deploy-${{ github.sha }}" \
+            --wait \
+            --json
+```
+
+---
+
+## Pre-flight health check
+
+Run `herald doctor --json` at the top of any script to catch misconfigurations early:
+
+```bash
+#!/bin/bash
+set -e
+
+HEALTH=$(herald doctor --json)
+OK=$(echo "$HEALTH" | jq -r '.ok')
+
+if [ "$OK" != "true" ]; then
+  echo "Herald health check failed:"
+  echo "$HEALTH" | jq '.errors'
+  exit 1
+fi
+
+# Proceed with sends
+herald notify send …
+```
+
+The doctor checks:
+- Gateway reachability + latency
+- API key authentication
+- All five permission scopes (`notify:send`, `analytics:read`, `webhook:read`, `template:read`, `campaign:read`)
+- Current quota
+
+---
+
+## AI agent / LLM tool-use
+
+The CLI is designed to be called directly as a shell tool by AI agents. A few patterns that work well:
+
+### Tool definition (OpenAI function calling format)
+
+```json
+{
+  "name": "send_herald_notification",
+  "description": "Send a notification to a Solana wallet address via Herald Protocol. Returns delivery status.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "wallet": { "type": "string", "description": "Recipient Solana wallet address" },
+      "subject": { "type": "string", "description": "Notification subject (max 100 chars)" },
+      "body": { "type": "string", "description": "Notification body (Markdown supported)" },
+      "category": { "type": "string", "enum": ["defi", "governance", "system", "marketing", "security"] },
+      "idempotency_key": { "type": "string", "description": "Optional. Unique key to prevent duplicates on retry." }
+    },
+    "required": ["wallet", "subject", "body", "category"]
+  }
+}
+```
+
+### Corresponding shell invocation
+
+```bash
+herald notify send \
+  --wallet "$wallet" \
+  --subject "$subject" \
+  --body "$body" \
+  --category "$category" \
+  --idempotency-key "$idempotency_key" \
+  --wait \
+  --json
+```
+
+### Health check as first tool call
+
+Agents should call `herald doctor --json` once at the start of a session and halt if `ok` is `false`. This prevents cascading failures from auth or quota issues.
+
+---
+
+## Batch sends for agents
+
+When sending to a list of wallets, use `notify batch --from-stdin` — more efficient than looping over `notify send`:
+
+```bash
+# Agent builds the payload, pipes it to batch
+printf '%s\n' "$JSON_ARRAY" | herald notify batch \
+  --from-stdin \
+  --idempotency-key "$JOB_ID" \
+  --yes \
+  --json
+```
+
+The response is an array of per-notification results with `notification_id` and `status` for each item.
+
+---
+
+## MCP integration
+
+AI agents that support **Model Context Protocol** can access Herald docs and generate CLI commands automatically:
+
+```json
+{
+  "mcpServers": {
+    "herald-docs": {
+      "type": "url",
+      "url": "https://useherald.xyz/api/mcp"
+    }
+  }
+}
+```
+
+Ask the agent: *"How do I send a batch of governance notifications via the Herald CLI?"* — it will fetch the relevant docs and generate the exact command.
+
+See the full [MCP guide](https://docs.useherald.xyz/docs/guides/ai-agent-mcp) for configuration details.

@@ -1,0 +1,320 @@
+---
+title: Command Reference
+description: Every Herald CLI command, subcommand, and flag explained with examples.
+---
+
+# Command Reference
+
+All commands support `--json` for machine-readable output and `--help` for inline usage.
+
+---
+
+## Global flags
+
+| Flag | Description |
+|---|---|
+| `--json` | Output all results as raw JSON — no colors, no interactive prompts |
+| `--ci` | Non-interactive mode; exits immediately if required flags are missing |
+| `--no-interactive` | Alias for `--ci` |
+| `-v, --version` | Print the CLI version |
+
+---
+
+## herald auth
+
+Manage credentials stored in `~/.config/herald-cli/config.json`.
+
+### `auth login`
+
+```bash
+herald auth login
+```
+
+Prompts for API key and Protocol ID, then verifies them against the gateway.
+
+### `auth logout`
+
+```bash
+herald auth logout
+```
+
+Clears all stored credentials.
+
+### `auth whoami`
+
+```bash
+herald auth whoami
+herald auth whoami --json
+```
+
+Prints the authenticated protocol name, ID, tier, and key prefix.
+
+---
+
+## herald notify
+
+Send and inspect notifications.
+
+### `notify send`
+
+Send a single notification to a wallet address.
+
+```bash
+herald notify send \
+  --wallet <address> \
+  --subject "Alert title" \
+  --body "Alert body" \
+  --category defi
+```
+
+**All flags:**
+
+| Flag | Description |
+|---|---|
+| `-w, --wallet <address>` | Recipient Solana wallet address |
+| `-s, --subject <text>` | Notification subject line |
+| `-b, --body <text>` | Notification body (Markdown supported) |
+| `-c, --category <cat>` | `defi` \| `governance` \| `system` \| `marketing` \| `security` |
+| `-p, --priority <level>` | `low` \| `normal` \| `high` \| `critical` (default: `normal`) |
+| `--channels <list>` | Comma-separated delivery channels: `email,telegram,sms` |
+| `-t, --template-id <id>` | Email template ID (Growth tier+) |
+| `-k, --idempotency-key <key>` | Unique key to prevent duplicate sends on retry. Arbitrary strings are automatically converted to deterministic UUIDs. |
+| `--sandbox` | Send to your sandbox test contacts — no real notification sent. Requires an `hrld_test_` key. |
+| `--wait` | Block until the notification is `delivered` or `failed` before exiting |
+| `--wait-timeout <ms>` | Timeout for `--wait` in milliseconds (default: `30000`) |
+| `--from-stdin` | Read notification params as JSON from stdin instead of flags |
+
+**Examples:**
+
+```bash
+# Basic send
+herald notify send -w <wallet> -s "Vote live" -b "Proposal #7 is open" -c governance
+
+# Block until delivered (great for scripts)
+herald notify send -w <wallet> -s "Deploy done" -b "v1.2.0 is live" -c system --wait --json
+
+# Safe retry with idempotency key
+herald notify send -w <wallet> -s "Alert" -b "Body" -c defi \
+  --idempotency-key "deploy-$GIT_SHA"
+
+# Pipe params from another command
+echo '{"wallet":"…","subject":"…","body":"…","category":"system"}' \
+  | herald notify send --from-stdin --json
+```
+
+### `notify batch`
+
+Send up to 100 notifications from a JSON file or stdin.
+
+```bash
+# From file
+herald notify batch --file notifications.json
+
+# From stdin
+cat notifications.json | herald notify batch --from-stdin --yes --json
+```
+
+**Input format** — a JSON array of notification objects:
+
+```json
+[
+  { "wallet": "9TXw…", "subject": "Alert A", "body": "Body A", "category": "defi" },
+  { "wallet": "7xR4…", "subject": "Alert B", "body": "Body B", "category": "system" }
+]
+```
+
+| Flag | Description |
+|---|---|
+| `-f, --file <path>` | Path to JSON file |
+| `--from-stdin` | Read JSON array from stdin |
+| `-y, --yes` | Skip confirmation prompt |
+| `-k, --idempotency-key <key>` | Key prefix — each item gets `<key>-<index>` as its UUID |
+| `--dry-run` | Validate input and show count — no real sends |
+
+### `notify broadcast`
+
+Fan-out a notification to all active subscribers of your protocol.
+
+```bash
+herald notify broadcast \
+  --subject "Protocol upgrade v2 live" \
+  --body "Migration complete — no action required." \
+  --category system \
+  --yes
+```
+
+| Flag | Description |
+|---|---|
+| `-s, --subject <text>` | Notification subject |
+| `-b, --body <text>` | Notification body |
+| `-c, --category <cat>` | Category |
+| `-t, --template-id <id>` | Optional template |
+| `--no-receipt` | Skip ZK delivery receipt |
+| `-y, --yes` | Skip confirmation prompt |
+| `-k, --idempotency-key <key>` | Idempotency key for the broadcast |
+| `--dry-run` | Show estimated audience size without sending |
+
+### `notify status <id>`
+
+Check the delivery status of a notification.
+
+```bash
+herald notify status f85ba97f-a61f-403a-b2f7-4647c3badf87
+herald notify status <id> --json
+
+# CI-safe blocking mode — waits until delivered or failed
+herald notify status <id> --poll --poll-timeout 60000 --json
+
+# TTY watch mode — refreshes every 3 seconds
+herald notify status <id> --watch
+```
+
+### `notify list`
+
+```bash
+herald notify list
+herald notify list --status delivered --limit 50 --json
+```
+
+| Flag | Description |
+|---|---|
+| `--page <n>` | Page number (default: 1) |
+| `--limit <n>` | Results per page, 1–100 (default: 20) |
+| `--status <s>` | Filter: `delivered` \| `pending` \| `failed` |
+
+### `notify preview`
+
+Render a notification preview without sending — shows Telegram, SMS, and Email output.
+
+```bash
+herald notify preview \
+  --wallet <address> \
+  --subject "Alert" \
+  --body "Body text" \
+  --category defi
+```
+
+---
+
+## herald template
+
+Manage email templates.
+
+```bash
+herald template list
+herald template get <id>
+herald template preview <id>
+```
+
+---
+
+## herald webhook
+
+Manage webhook endpoints.
+
+```bash
+herald webhook list
+herald webhook create
+herald webhook delete <id>
+herald webhook test <id>
+```
+
+---
+
+## herald campaign
+
+Manage broadcast campaigns.
+
+```bash
+herald campaign list
+herald campaign create
+herald campaign get <id>
+```
+
+---
+
+## herald analytics
+
+```bash
+herald analytics usage        # Quota for the current billing period
+herald analytics engagement   # Open rate, click rate, unsubscribes
+```
+
+Both commands support `--json`.
+
+---
+
+## herald schedule
+
+Schedule one-time or recurring notifications.
+
+```bash
+herald schedule once    # One-time future send
+herald schedule cron    # Recurring with a cron expression
+herald schedule list    # List scheduled jobs
+herald schedule cancel <id>
+```
+
+---
+
+## herald protocol
+
+```bash
+herald protocol info         # Protocol name, tier, status, counts
+herald protocol subscription # Billing tier and quota details
+```
+
+---
+
+## herald config
+
+Inspect and override CLI configuration.
+
+```bash
+herald config get              # All config values (API key masked)
+herald config get gatewayUrl   # Single key
+herald config set gatewayUrl https://api.useherald.xyz
+herald config path             # Print config file location
+```
+
+---
+
+## herald doctor
+
+Pre-flight health check — gateway ping, auth, all API scopes, and quota.
+
+```bash
+herald doctor         # Human-readable output
+herald doctor --json  # Machine-readable — { ok, scopes, quota, errors }
+```
+
+Use before deploying a new integration or as the first step in a CI pipeline.
+
+---
+
+## herald sandbox
+
+Shortcut for `herald notify send --sandbox`. Sends to your test contacts (configured in Dashboard → Sandbox). Requires an `hrld_test_` key.
+
+```bash
+herald sandbox \
+  --subject "Test alert" \
+  --body "This is a sandbox send" \
+  --wallet <address>
+```
+
+---
+
+## Exit codes
+
+Scripts can branch on exit codes without parsing output:
+
+| Code | Meaning |
+|---|---|
+| `0` | Success |
+| `1` | Generic error |
+| `2` | User cancelled (interactive prompt) |
+| `3` | Not found (404) |
+| `4` | Auth error (401 / 403) |
+| `5` | Rate limited (429) |
+| `6` | Network error (connection refused, timeout, DNS failure) |

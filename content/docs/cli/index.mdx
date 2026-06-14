@@ -1,0 +1,84 @@
+---
+title: Herald CLI
+description: Install and authenticate the Herald Protocol CLI to send notifications, run health checks, and automate your protocol from the terminal.
+---
+
+# Herald CLI
+
+The Herald CLI (`herald`) lets you interact with the Herald Protocol directly from your terminal — no code required. It is designed for both humans and automated agents (CI/CD pipelines, LLM workflows, cron jobs).
+
+```bash
+# Install globally
+npm install -g @herald-protocol/cli
+
+# or with pnpm
+pnpm add -g @herald-protocol/cli
+```
+
+**Requires Node.js ≥ 18.**
+
+---
+
+## Authenticate
+
+```bash
+herald auth login
+```
+
+You will be prompted for your **API key** (`hrld_live_…`) and **Protocol ID** — both available in the [Herald Dashboard](https://app.useherald.xyz) under **API Keys**.
+
+Credentials are saved to `~/.config/herald-cli/config.json`.
+
+### CI/CD — use environment variables instead
+
+In automated environments, skip interactive login entirely:
+
+```bash
+export HERALD_API_KEY=hrld_live_…
+export HERALD_PROTOCOL_ID=77a7cf6e-…
+```
+
+The CLI always checks env vars first and falls back to the config file.
+
+---
+
+## Send your first notification
+
+```bash
+herald notify send \
+  --wallet 9TXw1ZfGvdWvjEhMGLAqFQwHo7xqj8JyBfCbiPJmpBTF \
+  --subject "Governance vote live" \
+  --body "Proposal #42 is open — cast your vote before Friday." \
+  --category governance
+```
+
+---
+
+## Run a health check
+
+```bash
+herald doctor
+```
+
+Pings the gateway, verifies your API key, checks all permission scopes, and reports quota — in under 2 seconds.
+
+```bash
+# Machine-readable output for CI
+herald doctor --json
+```
+
+---
+
+## Verify auth
+
+```bash
+herald auth whoami
+```
+
+---
+
+## Next steps
+
+- [**Command Reference**](/docs/cli/commands) — every command and flag explained
+- [**CI/CD & Agent Use**](/docs/cli/agents) — `--json`, `--wait`, `--from-stdin`, exit codes, GitHub Actions example
+- [**TypeScript SDK**](/docs/sdk/typescript) — for programmatic integration in your backend

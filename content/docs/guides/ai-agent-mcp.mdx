@@ -1,6 +1,6 @@
 ---
 title: AI Agent MCP
-description: Connect AI agents (Claude, Cursor, etc.) to Herald docs via MCP for assisted integration.
+description: Connect AI agents (Claude, Cursor, etc.) to Herald docs via MCP for assisted integration. Also covers using the Herald CLI as a direct tool for LLM agents.
 ---
 
 # AI Agent MCP
@@ -21,8 +21,22 @@ The endpoint implements the **MCP Streamable HTTP** transport (JSON-RPC 2.0). No
 |---|---|
 | `get_herald_context` | Full protocol context — architecture, SDK, API, specs, integration patterns |
 | `search_herald_docs` | Search documentation by keyword. Params: `query`, `maxResults` |
-| `get_integration_example` | Copy-paste code. Params: `pattern` (`backend`, `serverless`, `webhook`, `batch`, `registration-check`, `broadcast`, `subscribe`) |
-| `get_doc_page` | Read a doc page by slug. Params: `slug` (e.g. `quickstart/quickstart`, `sdk/typescript`) |
+| `get_integration_example` | Copy-paste code. Params: `pattern` — see table below |
+| `get_doc_page` | Read a doc page by slug. Params: `slug` (e.g. `quickstart/quickstart`, `cli/commands`) |
+
+### `get_integration_example` patterns
+
+| Pattern | Description |
+|---|---|
+| `backend` | Express server with liquidation alerts |
+| `serverless` | Next.js API route |
+| `webhook` | Webhook receiver with HMAC signature verification |
+| `batch` | Batch-send to 100 wallets |
+| `registration-check` | React component to check wallet registration |
+| `broadcast` | Broadcast to all subscribers |
+| `subscribe` | Manage wallet subscriptions |
+| `cli-send` | Herald CLI one-liner for terminal or CI/CD |
+| `cli-agent` | Herald CLI agent tool-use pattern with `--json`, `--wait`, `--from-stdin` |
 
 ---
 
@@ -46,6 +60,14 @@ Add to your `claude_desktop_config.json`:
 1. Go to **Settings > Features > MCP Servers**
 2. Add a new MCP server with URL: `https://useherald.xyz/api/mcp`
 
+## Configuring in Claude Code (CLI)
+
+```bash
+claude mcp add herald-docs --transport http https://useherald.xyz/api/mcp
+```
+
+---
+
 ## Testing via curl
 
 ```bash
@@ -62,13 +84,86 @@ curl -X POST https://useherald.xyz/api/mcp \
 # Search docs
 curl -X POST https://useherald.xyz/api/mcp \
   -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"search_herald_docs","arguments":{"query":"webhook signature"}}}'
+  -d '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"search_herald_docs","arguments":{"query":"CLI idempotency"}}}'
 
-# Get integration example
+# Get CLI send example
 curl -X POST https://useherald.xyz/api/mcp \
   -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":4,"method":"tools/call","params":{"name":"get_integration_example","arguments":{"pattern":"webhook"}}}'
+  -d '{"jsonrpc":"2.0","id":4,"method":"tools/call","params":{"name":"get_integration_example","arguments":{"pattern":"cli-send"}}}'
+
+# Get CLI agent pattern
+curl -X POST https://useherald.xyz/api/mcp \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":5,"method":"tools/call","params":{"name":"get_integration_example","arguments":{"pattern":"cli-agent"}}}'
 ```
+
+---
+
+## Using the Herald CLI as an agent tool
+
+Instead of calling the REST API directly, AI agents can invoke the **Herald CLI** as a shell tool. This is simpler to configure, produces structured JSON output, and handles auth, retries, and idempotency automatically.
+
+### Install once
+
+```bash
+npm install -g @herald-protocol/cli
+```
+
+### Tool definition (OpenAI / Claude tool-use format)
+
+```json
+{
+  "name": "herald_notify",
+  "description": "Send a notification to a Solana wallet via Herald Protocol. Use --wait to block until delivered. Use --idempotency-key to make retries safe.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "wallet":          { "type": "string", "description": "Recipient Solana wallet address" },
+      "subject":         { "type": "string", "description": "Subject line (max ~100 chars)" },
+      "body":            { "type": "string", "description": "Body text (Markdown supported)" },
+      "category":        { "type": "string", "enum": ["defi","governance","system","marketing","security"] },
+      "idempotency_key": { "type": "string", "description": "Unique key to prevent duplicate sends on retry" },
+      "wait":            { "type": "boolean", "description": "Block until delivered or failed (recommended for agents)" }
+    },
+    "required": ["wallet", "subject", "body", "category"]
+  }
+}
+```
+
+### Shell invocation
+
+```bash
+herald notify send \
+  --wallet "$wallet" \
+  --subject "$subject" \
+  --body "$body" \
+  --category "$category" \
+  --idempotency-key "$idempotency_key" \
+  --wait \
+  --json
+```
+
+### Recommended agent workflow
+
+1. **Health check first** — call `herald doctor --json` and halt if `ok` is `false`
+2. **Send with `--wait`** — get confirmed delivery in a single call instead of send + poll loop
+3. **Always use `--idempotency-key`** — pass a unique key derived from your job/run ID so retries don't duplicate
+4. **Read exit codes** — `0` success, `4` auth error, `5` rate-limited, `6` network down
+
+### Batch sends for agents
+
+```bash
+echo '[{"wallet":"…","subject":"…","body":"…","category":"system"}]' \
+  | herald notify batch \
+    --from-stdin \
+    --idempotency-key "$JOB_ID" \
+    --yes \
+    --json
+```
+
+See the full [CLI agent guide](/docs/cli/agents) for more patterns.
+
+---
 
 ## Protocol
 
