@@ -62,13 +62,25 @@ If you transition from the shared `@HeraldBot` to a custom bot, existing subscri
 
 Protocols can broadcast notifications directly to Telegram Groups or Channels (e.g., to announce liquidations, new proposals, or community updates).
 
-### Configuration
+### Secure Configuration (Link Group Flow)
 
-1. Add your Telegram Bot to the target group or channel as an **Administrator** with permission to post messages.
-2. Retrieve the chat ID of the group or channel.
-3. Input the chat ID under **Telegram Group Chat** in the Developer Settings.
+To protect your group setup from being tampered with by regular members, Herald uses a zero-config secure handshake:
 
-### Branded Welcomes and Engagement
+1. **Initiate setup**: Click the **Link Group / Channel** button on the Developer Dashboard. This generates a secure, 10-minute Redis nonce.
+2. **Add Bot via Link**: Open the generated Telegram deep-link (`https://t.me/useheraldbot?startgroup=setup_{nonce}` or `https://t.me/{customBotUsername}?startgroup=setup_{nonce}`) and add the bot to your group as an **Administrator**.
+3. **Automatic Verification**:
+   - When added, the bot automatically receives the `/start setup_{nonce}` command in the group chat.
+   - To prevent unauthorized linkage, the bot calls the Telegram API (`getChatMember`) to verify the message sender is a group creator or administrator.
+   - Once verified, Herald registers the `groupChatId` to your protocol, updates the nonce state to completed, and posts a success confirmation in the group chat.
+   - The Developer Dashboard immediately detects the success state, saves the configuration, and refreshes.
+
+### Security and Admin Commands
+
+Regular members are strictly restricted from modifying bot configurations:
+* **Creator / Administrator Check**: Commands like `/status` and setup handshakes verify the user's role before executing. Any command sent by a non-admin is silently ignored.
+* **Mute Categories**: Group admins can mute specific notification categories by clicking inline buttons. These buttons prompt an admin validation step to prevent unauthorized group users from tampering with category mutes.
+
+### Welcome Messages and Engagement
 
 * **Welcome Messages**: Define a custom HTML/Markdown welcome template in your settings. The bot will automatically greet new members who join the group:
   ```html
@@ -86,13 +98,14 @@ If your group chat is a Telegram **Supergroup** with Topics enabled, you can rou
 ### Setup
 
 1. **Enable Topics**: Ensure your Telegram group is a supergroup and has "Topics" enabled in Telegram.
-2. **Auto-Create Topics**: Click **Create Forum Topics** in the Herald Developer Dashboard. Herald will automatically set up default topics:
+2. **Securely Link Group**: Complete the **Link Group / Channel** configuration described above to establish the connection and verify admin permissions.
+3. **Auto-Create Topics**: Click **Create Forum Topics** in the Developer Dashboard. Herald will automatically set up default topics inside your supergroup:
    - 🗳️ `Governance`
    - 💰 `DeFi`
    - 🛡️ `Security`
    - 📢 `Marketing`
    - ⚙️ `System`
-3. **Category Routing**: Herald automatically maps these topics to your notification categories. When sending a notification, specify the matching category in your API payload:
+4. **Category Routing**: Herald automatically maps these topics to your notification categories. When sending a notification, specify the matching category in your API payload:
 
 ```typescript
 // This notification is automatically routed to the "Governance" topic thread

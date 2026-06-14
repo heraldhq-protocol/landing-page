@@ -1,0 +1,10 @@
+Γû▓ Next.js 16.2.3 (Turbopack)
+- Local:         http://localhost:3462
+- Network:       http://100.68.186.241:3462
+Γ£ô Ready in 5.1s
+[MDX] generated files in 105.92989999999918ms
+[MDX] started dev server
+Γùï Compiling proxy ...
+
+Γùï Compiling /api/mcp ...
+ POST /api/mcp 200 in 35.6s (next.js: 35.1s, application-code: 481ms)
