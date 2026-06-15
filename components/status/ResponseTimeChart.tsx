@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function ResponseTimeChart({ history }: Props) {
-  const displayHistory = history.slice(-40);
+  const displayHistory = history.slice(-288);
   const maxTime = Math.max(...displayHistory.map((h) => h.responseTime), 100);
 
   const avgLatency =

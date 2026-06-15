@@ -8,8 +8,7 @@ interface Props {
 }
 
 export default function UptimeGraph({ history }: Props) {
-  const totalSlots = 40;
-
+  const totalSlots = 288;
   const displayHistory = history.slice(-totalSlots);
   const padding = totalSlots - displayHistory.length;
 
